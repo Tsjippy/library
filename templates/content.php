@@ -137,6 +137,15 @@ if(is_tax() || is_archive()){
 					}
 					?>
 				</div>
+
+				<?php
+				$metas = [
+					'isbn' => 'url',
+					'
+				];
+				?>
+
+
 				
 				<div class='isbn book meta'>
 					<?php
