@@ -167,21 +167,8 @@ if(is_tax() || is_archive()){
 						echo "<img src='$imageUrl' alt='$meta' loading='lazy' class='book_icon'> $value";
 					}
 					
-					?>
-				</div>
-				
-				<div class='url book meta'>
-					<?php
-					$url		= get_post_meta(get_the_ID(), 'url', true);
-					if(!empty($url) && filter_var($url, FILTER_VALIDATE_URL) && $url != "https://www."){
-						$imageUrl 	= SIM\pathToUrl(MODULE_PATH.'pictures/url.png');
-						$icon 		= "<img src='$imageUrl' alt='book' loading='lazy' class='book_icon'>";
-						echo "<a href='$url' target='_blank'>$icon Visit website  »</a>";
-					}
-					?>
-				</div>
-
-				<?php
+				echo "</div>";
+				}
 				do_action('sim_inside_book_metas');
 				?>
 			</div>
