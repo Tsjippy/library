@@ -42,24 +42,26 @@ function afterPostSave($post, $frontEndPost){
     //store categories
     $frontEndPost->storeCustomCategories($post, 'books');
 
-    // ISBN
-    if(isset($_POST['isbn'])){
-        if(empty($_POST['isbn'])){
-            delete_post_meta($post->ID, 'isbn');
+    $metas = [
+					'subtitle' => 'string',
+					'author' => 'string',
+					'series' => 'string',
+					'isbn' => 'url',
+					'date' => 'date',
+					'age' => 'string',
+					'pages' => 'int',
+				];
+                
+    
+    foreach($metas as $meta=>$type){
+    if(isset($_POST[$meta])){
+        if(empty($_POST[$meta])){
+            delete_post_meta($post->ID, $meta);
         }else{
-            //Store serves
-            update_metadata( 'post', $post->ID, 'isbn', $_POST['isbn']);
+            //Store value
+            update_metadata( 'post', $post->ID, $meta, $_POST[$meta]);
         }
     }
-
-    //url
-    if(isset($_POST['url'])){
-        if(empty($_POST['url'])){
-            delete_post_meta($post->ID, 'url');
-        }else{
-            //Store serves
-            update_metadata( 'post', $post->ID, 'url', $_POST['url']);
-        }
     }
 }
 
@@ -76,11 +78,17 @@ function afterPostContent($frontendcontend){
 
     $postId     = $frontendcontend->postId;
     $postName   = $frontendcontend->postName;
-    $book   = get_post_meta($postId, 'book', true);
-    if(!is_array($book) && !empty($book)){
-        $book  = json_decode($book, true);
-    }
-
+    
+     $metas = [
+					'subtitle' => 'string',
+					'author' => 'string',
+					'series' => 'string',
+					'isbn' => 'url',
+					'date' => 'date',
+					'age' => 'string',
+					'pages' => 'int',
+				];
+    
     $url = get_post_meta($postId, 'url', true);
     ?>
     <style>
