@@ -93,6 +93,7 @@ if(is_tax() || is_archive()){
 
 			<div class='book metas'>
 				<div class='category book meta'>
+				 <h4>Genres</h4>
 					<?php
 					$categories = wp_get_post_terms(
 						get_the_ID(),
@@ -140,21 +141,32 @@ if(is_tax() || is_archive()){
 
 				<?php
 				$metas = [
+					'subtitle' => 'string',
+					'author' => 'string',
+					'series' => 'string',
 					'isbn' => 'url',
-					'
+					'date' => 'date',
+					'age' => 'string',
+					'pages' => 'int',
 				];
 				?>
 
-
-				
-				<div class='isbn book meta'>
-					<?php
-					$isbn		= get_post_meta(get_the_ID(),'isbn',true);
-					if(!empty($isbn)){
-						$imageUrl 	= SIM\pathToUrl(MODULE_PATH.'pictures/isbn.png');
-						$icon 		= "<img src='$imageUrl' alt='isbn' loading='lazy' class='book_icon'>";
-						echo "$icon $isbn";
+				foreach($metas as $meta=>$type){
+				 echo "<div class='$meta book meta'>";
+					
+					$value		= get_post_meta(get_the_ID(),$meta,true);
+					if(!empty($value)){
+					 
+					 if($type == 'url'){
+						 $value = "<a href='$value'>$value</a>";
+							}
+						elseif($type == 'date'){
+						 $value = $value;
+							}
+						$imageUrl 	= SIM\pathToUrl(MODULE_PATH."pictures/{$meta}.png");
+						echo "<img src='$imageUrl' alt='$meta' loading='lazy' class='book_icon'> $value";
 					}
+					
 					?>
 				</div>
 				
