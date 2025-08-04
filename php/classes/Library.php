@@ -275,6 +275,8 @@ class Library{
                                 )
                             );
 
+                            $location = $_REQUEST['location'];
+
                             if(count($posts) > 0){
                                 // Already in the database, so skip
                                 if(count($posts) > 1){
@@ -325,7 +327,24 @@ class Library{
                                         <td class='url'></td>
                                         <td>
                                             This book is already in the library.<br>
-                                            <a href='<?php $url    = get_permalink($post->ID); ?>' target='_blank'>View it here.</a>
+                                            <?php
+                                            $curLocation    = get_post_meta($post->ID, 'location', true);
+                                            if(empty($curLocation) || !is_array($curLocation)){
+                                                $curLocation = [];
+                                            }
+
+                                            if(!in_array($location, $curLocation)){
+                                                $curLocation[] = $location;
+                                                update_post_meta($post->ID, 'location', $curLocation);
+
+                                                ?>
+                                                <br>
+                                                I have added the location <strong><?php echo $location; ?></strong> to this book.<br>
+                                                <?php
+                                            }
+
+                                            ?>
+                                            <a href='<?php echo get_permalink($post->ID); ?>' target='_blank'>View it here.</a>
                                         </td>
                                     </tr>
                                 <?php
@@ -346,7 +365,7 @@ class Library{
                                             <textarea name='summary' class='summary' style='min-width: 300px;' rows=2><?php echo $data->summary; ?></textarea>
                                         </td>
                                         <td class='url'></td>
-                                        <td class='location hidden'><input type='text' name='location' value='<?php echo $_REQUEST['location']; ?>'></td>
+                                        <td class='location hidden'><input type='text' name='location' value='<?php echo $location; ?>'></td>
                                         <td>
                                             <div class='loadergif_wrapper hidden'><img class='loadergif' src='<?php echo \SIM\LOADERIMAGEURL;?>' width=50 loading='lazy'>Adding the book...</div>
                                             <button type='button' class='add-book sim button'>Add book to the library</button>
@@ -437,7 +456,20 @@ class Library{
         foreach(METAS as $meta => $type){
             // Add post meta
             if(!empty($_POST[$meta])){
-                add_post_meta($postId, $meta, $_POST[$meta]);
+                $value = sanitize_text_field($_POST[$meta]);
+
+                if($meta == 'location'){
+                    $curValue   = get_post_meta($postId, 'location', true);
+
+                    if(empty($curValue)){
+                        $curValue = [];
+                    }
+                    $curValue[] = $value;
+
+                    $value      = $curValue;
+                }
+
+                add_post_meta($postId, $meta, $value);
             }
         }
 

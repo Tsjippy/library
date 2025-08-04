@@ -135,7 +135,9 @@ if(is_tax() || is_archive()){
 							$value = "<a href='$value'>$value</a>";
 						}elseif($type == 'date'){
 							$value = $value;
-						}
+						}elseif(is_array($value)){
+							$value = implode('<br>', $value);
+						}	
 					
 						$imageUrl 	= SIM\pathToUrl(MODULE_PATH."pictures/{$meta}.png");
 						echo "<img src='$imageUrl' alt='$meta' loading='lazy' class='book_icon'> $value";
