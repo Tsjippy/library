@@ -2,6 +2,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- display multiple meta values
 
 ### Changed
 - width of summary
