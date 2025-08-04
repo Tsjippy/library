@@ -103,11 +103,6 @@ async function fileUpload(target){
 		let file	= target.files[index];
 		formData.append('files[]', file);
 	}
-
-	// No files remaining to upload after uploading videos
-	if(formData.get('files[]') == null){
-		return;
-	}
 	
 	//AJAX request
 	let request = new XMLHttpRequest();
@@ -362,5 +357,9 @@ document.addEventListener("change", event =>{
 
 			fileUpload(target);
 		}
+	}else if(target.matches('.title, .author')){
+		let tr = target.closest('tr');
+		// Update metadata for the book row
+		fetchMetaData(tr);
 	}
 });
