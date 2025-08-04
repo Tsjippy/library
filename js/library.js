@@ -240,8 +240,6 @@ async function fetchMetaData(tr){
 
 			let list = `<datalist id='${id}' class='author-selection'>`;
 
-			console.log(data['docs']);
-
 			data['docs'].forEach((doc) => {
 				if(doc['author_name'] != undefined){
 					list += `<option value='${doc['author_name'].join()}'>`;
@@ -264,10 +262,15 @@ async function fetchMetaData(tr){
            	let  smallUrl    = `https://covers.openlibrary.org/b/id/${image}-S.jpg`;
 		   	let  largeUrl    = `https://covers.openlibrary.org/b/id/${image}-L.jpg`;
 
-			tr.querySelector('.image').innerHTML = `<a href='${largeUrl}' target='_blank'><img src='${smallUrl}' class='book-image' loading='lazy'></a>`;
+			tr.querySelector('.image').innerHTML = `<input type='hidden' name='image' value='${image}'><a href='${largeUrl}' target='_blank'><img src='${smallUrl}' class='book-image' loading='lazy'></a>`;
         }
 
 		let subtitle	= title.split(':')[1] ?? '';
+		if(subtitle == ''){
+			subtitle	= title.split(',')[1] ?? '';
+		}
+		title			= title.split(':')[0].split(',')[0];
+		tr.querySelector('.title').value = title;
 
 		let isbn13		= bookData['isbn_13'] ?? '';
 		isbn13			= isbn13[0] ?? isbn13;

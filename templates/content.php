@@ -47,15 +47,23 @@ if(is_tax() || is_archive()){
 			if(is_user_logged_in()){
 			?>
 				<div class='author'>
-					Shared by: <a href='<?php echo SIM\maybeGetUserPageUrl(get_the_author_meta('ID')) ?>'><?php the_author(); ?></a>
+					Shared by: <a href='<?php echo SIM\maybeGetUserPageUrl(get_the_author_meta('ID')) ?>'><?php get_the_author(); ?></a>
 				</div>
 				<?php
-				if($archive){
+				$id			= get_post_meta(get_the_ID(), 'image', true);
+
+				if(!empty($id)){
+					if($archive){
+						$size	= 'S';
+					}else{
+						$size	= 'M';
+					}
+
+					$url		= "https://covers.openlibrary.org/b/id/$id-$size.jpg";
+
 					?>
 					<div class='picture' style='margin-top:10px;'>
-						<?php
-						the_post_thumbnail([250,200]);
-						?>
+						<img src='<?php echo $url;?>' class='book-image' loading='lazy'>
 					</div>
 					<?php
 				}
@@ -142,17 +150,21 @@ if(is_tax() || is_archive()){
 				<?php
 
 				foreach(METAS as $meta=>$type){
+					if($meta == 'image'){
+						continue;
+					}
+
 					echo "<div class='$meta book meta'>";
 					
-					$value		= get_post_meta(get_the_ID(),$meta,true);
+					$value		= get_post_meta(get_the_ID(), $meta, true);
 					if(!empty($value)){
 					 
-					 if($type == 'url'){
-						 $value = "<a href='$value'>$value</a>";
-							}
-						elseif($type == 'date'){
-						 $value = $value;
-							}
+						if($type == 'url'){
+							$value = "<a href='$value'>$value</a>";
+						}elseif($type == 'date'){
+							$value = $value;
+						}
+					
 						$imageUrl 	= SIM\pathToUrl(MODULE_PATH."pictures/{$meta}.png");
 						echo "<img src='$imageUrl' alt='$meta' loading='lazy' class='book_icon'> $value";
 					}

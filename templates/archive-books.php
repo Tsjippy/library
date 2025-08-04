@@ -26,7 +26,21 @@ if($skipWrapper){
 		get_header();
 	}
 
+	global $Modules;
+
+	$library		= getLibrary($Modules[MODULE_SLUG]);
+
 	?>
+	<div id='add-books_modal' class='modal <?php if(empty($_GET['addbooks'])){echo 'hidden';}?>'>
+		<div class="modal-content" style='max-width:100vw;'>
+			<span id="modal_close" class="close">&times;</span>
+			<div class="content">
+				<?php echo $library->getFileHtml();?>
+				<br>
+				<br>
+			</div>
+		</div>
+	</div>
 	<div id="primary">
 		<style>
 			@media (min-width: 991px){
@@ -36,6 +50,7 @@ if($skipWrapper){
 			}
 		</style>
 		<main id="main" class='inside-article'>
+			<button type='button' class='sim button add-books' onclick='Main.showModal(`add-books`)'>Add books</button>
 			<?php displayBookArchive();?>
 		</main>
 	</div>

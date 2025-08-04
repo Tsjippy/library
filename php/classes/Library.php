@@ -183,7 +183,7 @@ class Library{
             <div class='image-selector-wrap'>
                 <h4>Select picture</h4>
                 <label>
-                    Select one ore multiple picture(s) to check for a book or multiple books on bookshelf<br>
+                    Select one ore multiple picture(s) to check for a book or multiple books on bookshelf<br><br>
                     <input type='file' name='image-selector' accept='image/png, image/jpeg, image/webp' class='formbuilder' multiple>
                 </label>
             </div>
@@ -248,8 +248,8 @@ class Library{
                                     <td class='url'></td>
                                     <td>
                                         <div class='loadergif_wrapper hidden'><img class='loadergif' src='<?php echo \SIM\LOADERIMAGEURL;?>' width=50 loading='lazy'>Adding the book...</div>
-                                        <button type='button' class='add-book'>Add book to the library</button>
-                                        <button type='button' class='delete-book'>Delete</button>
+                                        <button type='button' class='add-book sim button'>Add book to the library</button>
+                                        <button type='button' class='delete-book sim button'>Delete</button>
                                     </td>
                                 </tr>
                             <?php
@@ -319,7 +319,7 @@ class Library{
 
 					// try to update again
 					$postId 	= wp_insert_post( $post, true, false);
-					$post['ID']		= $postId;
+					$post['ID']	= $postId;
 
 					if(is_wp_error($postId)){
 						return $postId;
@@ -332,7 +332,7 @@ class Library{
 			return new WP_Error('Inserting post error', "Could not create the book!");
 		}
 
-        foreach(['isbn', 'location', 'quantity', 'url', 'image'] as $meta){
+        foreach(METAS as $meta => $type){
             // Add post meta
             if(!empty($_POST[$meta])){
                 add_post_meta($postId, $meta, $_POST[$meta]);
@@ -341,9 +341,6 @@ class Library{
 
         $url    = get_permalink($postId);
 
-        return "<a href='$url'>View the book</a>";
+        return "<a href='$url' target='_blank'>View the book</a>";
     }
-
-    //https://openlibrary.org/api/books?bibkeys=ISBN%3A0849956211&format=json&jscmd=viewapi
-    //https://openlibrary.org/search.json?q=Jeanette%20Lockerbie
 }
