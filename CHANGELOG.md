@@ -2,7 +2,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- enrich meta data from openlibrary
+- images
 
 ### Changed
 
