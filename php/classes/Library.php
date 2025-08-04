@@ -144,9 +144,7 @@ class Library{
                             properties: [
                                 'title' => new Schema(type: DataType::STRING),
                                 'author' => new Schema(type: DataType::STRING),
-                                'isbn' => new Schema(type: DataType::STRING),
                                 'summary' => new Schema(type: DataType::STRING),
-                                'image' => new Schema(type: DataType::STRING),
                             ],
                             required: ['title'],
                         )
@@ -154,7 +152,7 @@ class Library{
                 )
             )
             ->generateContent([
-                'Check this bookshelf picture, give JSON output with titles, optional authors, find ISBNs from internet, add summary, add cover image',
+                'Check this bookshelf picture, give JSON output with titles, optional authors, optional summary from internet',
                 new Blob(
                     mimeType: MimeType::from($this->imageMimeType),
                     data: $this->imageData
@@ -164,7 +162,41 @@ class Library{
         return $this->getTable($result->json());
     }
 
+    /**
+     * Prints the html to select a file
+     */
+    public function getFileHtml(){
+        ob_start();
+        wp_enqueue_script('sim_library_script');
+		?>
+        <div class='file_upload_wrap'>
+            <div class='loadergif_wrapper hidden'>
+                <span class='uploadmessage'></span>
+                <img class='loadergif' src='<?php echo \SIM\LOADERIMAGEURL;?>' loading='lazy' style='height: 30px;'>
+            </div>
+
+            <div id="progress-wrapper" class="hidden">
+                <progress id="upload_progress" value="0" max="100"></progress>
+                <span id="progress_percentage">   0%</span>
+            </div>
+
+            <div class='image-selector-wrap'>
+                <h4>Select picture</h4>
+                <label>
+                    Select one ore multiple picture(s) to check for a book or multiple books on bookshelf<br>
+                    <input type='file' name='image-selector' accept='image/png, image/jpeg, image/webp' class='formbuilder' multiple>
+                </label>
+            </div>
+        </div>
+
+
+		<?php
+        return ob_get_clean();
+    }
+
     public function getTable($json){
+        //$this->enrichData($json);
+
         wp_enqueue_script('sim_library_script');
 
         ob_start();
@@ -173,14 +205,21 @@ class Library{
         <p>
             Please check the details below and chnage them where needed before approving them to be added to the library.
         </p>
-            <table class='sim table'>
+            <table class='sim-table'>
                 <thead>
                     <tr>
                         <th>Picture</th>
                         <th>Title</th>
                         <th>Author</th>
-                        <th>ISBN</th>
+                        <th>Subtitle</th>
+                        <th class='hidden'>ISBN 13</th>
+                        <th class='hidden'>ISBN 10</th>
+                        <th>Series</th>
+                        <th>Year</th>
+                        <th>Languague</th>
+                        <th>Pages</th>
                         <th>Summary</th>
+                        <th>URL</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -188,23 +227,25 @@ class Library{
                 <tbody>
                     <?php
                         foreach($json as $index=>$data){
+                            if(empty($data->author)){
+                                $data->author	= '';
+                            }
                             ?>
                                 <tr>
-                                    <td>
-                                        <img src='<?php echo $data->image; ?>' height='50'>
-                                    </td>
+                                    <td class='image'></td>
                                     <td>
                                         <input type='text' name='title' class='title' value='<?php echo $data->title; ?>'>
                                     </td>
                                     <td>
                                         <input type='text' name='author' class='author' value='<?php echo $data->author; ?>'>
                                     </td>
-                                    <td>
-                                        <input type='text' name='isbn' class='isbn' value='<?php echo $data->isbn; ?>' style='max-width: 120px;'>
+                                    <td class='placeholder' colspan='7' style='text-align: center;'>
+                                        <img class='loadergif' src='<?php echo \SIM\LOADERIMAGEURL;?>' width=50 loading='lazy'>Fetching the book details...
                                     </td>
                                     <td>
-                                        <textarea name='summary' class='summary' style='min-width: 300px;' rows=5><?php echo $data->summary; ?></textarea>
+                                        <textarea name='summary' class='summary' style='min-width: 300px;' rows=2><?php echo $data->summary; ?></textarea>
                                     </td>
+                                    <td class='url'></td>
                                     <td>
                                         <div class='loadergif_wrapper hidden'><img class='loadergif' src='<?php echo \SIM\LOADERIMAGEURL;?>' width=50 loading='lazy'>Adding the book...</div>
                                         <button type='button' class='add-book'>Add book to the library</button>
@@ -302,4 +343,7 @@ class Library{
 
         return "<a href='$url'>View the book</a>";
     }
+
+    //https://openlibrary.org/api/books?bibkeys=ISBN%3A0849956211&format=json&jscmd=viewapi
+    //https://openlibrary.org/search.json?q=Jeanette%20Lockerbie
 }

@@ -140,19 +140,9 @@ if(is_tax() || is_archive()){
 				</div>
 
 				<?php
-				$metas = [
-					'subtitle' => 'string',
-					'author' => 'string',
-					'series' => 'string',
-					'isbn' => 'url',
-					'date' => 'date',
-					'age' => 'string',
-					'pages' => 'int',
-				];
-				?>
 
-				foreach($metas as $meta=>$type){
-				 echo "<div class='$meta book meta'>";
+				foreach(METAS as $meta=>$type){
+					echo "<div class='$meta book meta'>";
 					
 					$value		= get_post_meta(get_the_ID(),$meta,true);
 					if(!empty($value)){
@@ -167,8 +157,9 @@ if(is_tax() || is_archive()){
 						echo "<img src='$imageUrl' alt='$meta' loading='lazy' class='book_icon'> $value";
 					}
 					
-				echo "</div>";
+					echo "</div>";
 				}
+
 				do_action('sim_inside_book_metas');
 				?>
 			</div>

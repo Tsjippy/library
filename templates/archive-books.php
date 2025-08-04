@@ -20,7 +20,7 @@ if($wp_query->is_embed){
 wp_enqueue_style('sim_taxonomy_style');
 
 if($skipWrapper){
-	displayLocationArchive();
+	displayBookArchive();
 }else{
 	if(!isset($skipHeader) || !$skipHeader){
 		get_header();
@@ -36,7 +36,7 @@ if($skipWrapper){
 			}
 		</style>
 		<main id="main" class='inside-article'>
-			<?php displayLocationArchive();?>
+			<?php displayBookArchive();?>
 		</main>
 	</div>
 	<?php
@@ -47,7 +47,7 @@ if($skipWrapper){
 	}
 }
 
-function displayLocationArchive(){
+function displayBookArchive(){
 	//Variable containing the current books page we are on
 	$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
 
@@ -60,11 +60,6 @@ function displayLocationArchive(){
 	
 	if ( $booksQuery->have_posts() ){
 		do_action('sim_before_archive', 'book');
-
-		if(is_user_logged_in()){
-			$mapId = SIM\getModuleOption(MODULE_SLUG, 'directions_map_id');
-			echo do_shortcode("[ultimate_maps id='$mapId']");
-		}
 		
 		while ( $booksQuery->have_posts() ) :
 			$booksQuery->the_post();

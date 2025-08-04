@@ -41,27 +41,16 @@ function afterPostSave($post, $frontEndPost){
 
     //store categories
     $frontEndPost->storeCustomCategories($post, 'books');
-
-    $metas = [
-					'subtitle' => 'string',
-					'author' => 'string',
-					'series' => 'string',
-					'isbn' => 'url',
-					'date' => 'date',
-					'age' => 'string',
-					'pages' => 'int',
-				];
-                
     
-    foreach($metas as $meta=>$type){
-    if(isset($_POST[$meta])){
-        if(empty($_POST[$meta])){
-            delete_post_meta($post->ID, $meta);
-        }else{
-            //Store value
-            update_metadata( 'post', $post->ID, $meta, $_POST[$meta]);
+    foreach(METAS as $meta=>$type){
+        if(isset($_POST[$meta])){
+            if(empty($_POST[$meta])){
+                delete_post_meta($post->ID, $meta);
+            }else{
+                //Store value
+                update_metadata( 'post', $post->ID, $meta, $_POST[$meta]);
+            }
         }
-    }
     }
 }
 
@@ -79,17 +68,6 @@ function afterPostContent($frontendcontend){
     $postId     = $frontendcontend->postId;
     $postName   = $frontendcontend->postName;
     
-     $metas = [
-					'subtitle' => 'string',
-					'author' => 'string',
-					'series' => 'string',
-					'isbn' => 'url',
-					'date' => 'date',
-					'age' => 'string',
-					'pages' => 'int',
-				];
-    
-    $url = get_post_meta($postId, 'url', true);
     ?>
     <style>
         .form-table, .form-table th, .form-table, td{
@@ -104,22 +82,33 @@ function afterPostContent($frontendcontend){
             
         <fieldset id="book" class="frontendform">
             <legend>
-                <h4>Location details</h4>
+                <h4>Book details</h4>
             </legend>
 
             <table class="form-table">
-                <tr>
-                    <th><label for="isbn">ISBN number</label></th>
-                    <td>
-                        <input type='isbn' class='formbuilder' name='isbn' value='<?php echo get_post_meta($postId, 'isbn', true); ?>'>
-                    </td>
-                </tr>
-                <tr>
-                    <th><label for="url">More info</label></th>
-                    <td>
-                        <input type='url' class='formbuilder' name='url' value='<?php echo $url; ?>'>
-                    </td>
-                </tr>
+                <?php
+                foreach(METAS as $meta=>$type){
+                    if($type=='url'){
+                        $type   = 'text';
+                    }
+                    switch ($meta){
+                        case 'isbn':
+                            $text   = "ISBN number";
+                            break;
+                        
+                        default:
+                            $text   = $meta;
+                    }
+                    ?>
+                    <tr>
+                        <th><label for="<?php echo $meta;?>"><?php echo ucfirst($text);?></label></th>
+                        <td>
+                            <input type='<?php echo $type;?>' class='formbuilder' name='<?php echo $meta;?>' value='<?php echo get_post_meta($postId, $meta, true); ?>'>
+                        </td>
+                    </tr>
+                <?php
+                }
+                ?>
             </table>
         </fieldset>
     </div>
