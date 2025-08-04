@@ -174,7 +174,7 @@ class Library{
             LEFT JOIN {$wpdb->posts} p ON p.ID = pm.post_id
             WHERE pm.meta_key = %s
             AND p.post_type = %s",
-            'location',
+            'locations',
             'book'
         );
 
@@ -328,14 +328,10 @@ class Library{
                                         <td>
                                             This book is already in the library.<br>
                                             <?php
-                                            $curLocation    = get_post_meta($post->ID, 'location', true);
-                                            if(empty($curLocation) || !is_array($curLocation)){
-                                                $curLocation = [];
-                                            }
+                                            $locations    = get_post_meta($post->ID, 'locations');
 
-                                            if(!in_array($location, $curLocation)){
-                                                $curLocation[] = $location;
-                                                update_post_meta($post->ID, 'location', $curLocation);
+                                            if(!in_array($location, $locations)){
+                                                add_post_meta($post->ID, 'locations', $location);
 
                                                 ?>
                                                 <br>
@@ -365,7 +361,7 @@ class Library{
                                             <textarea name='summary' class='summary' style='min-width: 300px;text-wrap: auto;' rows=2><?php echo $data->summary; ?></textarea>
                                         </td>
                                         <td class='url'></td>
-                                        <td class='location hidden'><input type='text' name='location' value='<?php echo $location; ?>'></td>
+                                        <td class='locations hidden'><input type='text' name='locations' value='<?php echo $location; ?>'></td>
                                         <td>
                                             <div class='loadergif_wrapper hidden'><img class='loadergif' src='<?php echo \SIM\LOADERIMAGEURL;?>' width=50 loading='lazy'>Adding the book...</div>
                                             <button type='button' class='add-book sim button'>Add book to the library</button>
@@ -459,14 +455,12 @@ class Library{
                 $value = sanitize_text_field($_POST[$meta]);
 
                 if($meta == 'location'){
-                    $curValue   = get_post_meta($postId, 'location', true);
-
-                    if(empty($curValue)){
-                        $curValue = [];
+                    $locations   = get_post_meta($postId, 'locations');
+                    
+                    // only add a new location if needed
+                    if(in_array($value, $locations)){
+                        continue;
                     }
-                    $curValue[] = $value;
-
-                    $value      = $curValue;
                 }
 
                 add_post_meta($postId, $meta, $value);
