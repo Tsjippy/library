@@ -43,65 +43,36 @@ if(is_tax() || is_archive()){
 		}
 		?>
 		<div class='entry-content<?php if($archive){echo ' archive';}?>'>
-			<?php
-			if(is_user_logged_in()){
-			?>
-				<div class='author'>
-					Shared by: <a href='<?php echo SIM\maybeGetUserPageUrl(get_the_author_meta('ID')) ?>'><?php get_the_author(); ?></a>
+			<?php			
+			$id			= get_post_meta(get_the_ID(), 'image', true);
+
+			if(!empty($id)){
+				if($archive){
+					$size	= 'S';
+				}else{
+					$size	= 'M';
+				}
+
+				$url		= "https://covers.openlibrary.org/b/id/$id-$size.jpg";
+
+				?>
+				<div class='picture' style='margin-top:10px;'>
+					<img src='<?php echo $url;?>' class='book-image' loading='lazy'>
 				</div>
 				<?php
-				$id			= get_post_meta(get_the_ID(), 'image', true);
-
-				if(!empty($id)){
-					if($archive){
-						$size	= 'S';
-					}else{
-						$size	= 'M';
-					}
-
-					$url		= "https://covers.openlibrary.org/b/id/$id-$size.jpg";
-
-					?>
-					<div class='picture' style='margin-top:10px;'>
-						<img src='<?php echo $url;?>' class='book-image' loading='lazy'>
-					</div>
-					<?php
-				}
 			}
-			
-			?>	
-			<div class="description book">
-				<?php
-				//Only show summary on archive pages
-				if($archive){
-					$excerpt = force_balance_tags(wp_kses_post( get_the_excerpt()));
-					if(empty($excerpt)){
-						$url = get_permalink();
-						echo "<br><a href='$url'>View description »</a>";
-					}else{
-						echo $excerpt;
-					}
-				//Show everything including category specific content
-				}else{
-					if(empty($post->post_content)){
-						echo apply_filters('sim_empty_description', 'No content found...', $post);
-					}
 
-					the_content();
-				}
-
-				wp_link_pages(
-					array(
-						'before' => '<div class="page-links">Pages:',
-						'after'  => '</div>',
-					)
-				);
+			if(is_user_logged_in()){
 				?>
-			</div>
+				<div class='author'>
+					Shared by: <a href='<?php echo SIM\maybeGetUserPageUrl(get_the_author_meta('ID')) ?>'><?php echo get_the_author(); ?></a>
+				</div>
+				<?php
+			}
 
+			?>	
 			<div class='book metas'>
 				<div class='category book meta'>
-				 <h4>Genres</h4>
 					<?php
 					$categories = wp_get_post_terms(
 						get_the_ID(),
@@ -114,8 +85,9 @@ if(is_tax() || is_archive()){
 					);
 					
 					if(!empty($categories)){
+						?><h4>Genres</h4><?php
 						$url	= SIM\pathToUrl(MODULE_PATH.'pictures/category.png');
-						echo "<img src='$url' alt='category' loading='lazy' class='book_icon'>";
+						echo "<img src='$url' alt='category' loading='lazy' class='book-icon'>";
 						
 						//First loop over the cat to see if any parent cat needs to be removed
 						foreach($categories as $id=>$category){
@@ -173,6 +145,35 @@ if(is_tax() || is_archive()){
 				}
 
 				do_action('sim_inside_book_metas');
+				?>
+			</div>
+
+			<div class="description book">
+				<?php
+				//Only show summary on archive pages
+				if($archive){
+					$excerpt = force_balance_tags(wp_kses_post( get_the_excerpt()));
+					if(empty($excerpt)){
+						$url = get_permalink();
+						echo "<br><a href='$url'>View description »</a>";
+					}else{
+						echo $excerpt;
+					}
+				//Show everything including category specific content
+				}else{
+					if(empty($post->post_content)){
+						echo apply_filters('sim_empty_description', 'No content found...', $post);
+					}
+
+					the_content();
+				}
+
+				wp_link_pages(
+					array(
+						'before' => '<div class="page-links">Pages:',
+						'after'  => '</div>',
+					)
+				);
 				?>
 			</div>
 		</div>

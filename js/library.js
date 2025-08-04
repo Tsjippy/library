@@ -2,62 +2,6 @@ import { addStyles } from '../../../plugins/sim-plugin/includes/js/imports.js';
 
 console.log("library.js loaded");
 
-
-function catChanged(target){
-	var parentId = target.closest('.infobox').dataset.parent;
-	
-	var parentDiv = target.closest('.categories');
-	
-	if(target.checked){
-		//An recipetype is just selected, find all element with its value as parent attribute
-		parentDiv.querySelectorAll("[data-parent='"+target.value+"']").forEach(el=>{
-			//Make this subcategory visible
-			el.classList.remove('hidden');
-			
-			//Show the label
-			parentDiv.querySelector('#subcategorylabel').classList.remove('hidden');
-		});
-		
-	//If we just deselected a parent category
-	}else if(parentId == undefined){
-		//Hide the label if there is no category visible anymore
-		if(parentDiv.querySelector('.childtypes input[type="checkbox"]:checked') == null){
-			parentDiv.querySelector('#subcategorylabel').classList.add('hidden');
-		
-			//An recipetype is just deselected, find all element with its value as parent attribute
-			parentDiv.querySelectorAll("[data-parent='"+target.value+"']").forEach(el=>{
-				//Make this subcategory invisible
-				el.classList.add('hidden');
-			});
-		}
-	}
-}
-
-async function addCatType(target){
-	let parentDiv, parentData;
-	let response	= await FormSubmit.submitForm(target, 'frontend_posting/add_category');
-
-	if(response){
-		//Get the newly added category parent id
-		let parentCat  	= target.closest('form').querySelector('[name="cat_parent"]').value;
-		let postType	= target.closest('form').querySelector('[name="post_type"]').value;
-		let catName		= target.closest('form').querySelector('[name="cat_name"]').value;
-		
-		
-		//Add the new category as checkbox
-		let html = `
-		<div class="infobox" ${parentData}>
-			<input type="checkbox" class="${postType}type" id="${postType}type[]" value="${response.id}" checked>
-			<label class="option-label category-select">${catName}</label>
-		</div>
-		`
-		parentDiv.insertAdjacentHTML('afterBegin', html);
-		Main.hideModals();
-
-		Main.displayMessage(`Succesfully added the ${catName} category`);
-	}
-}
-
 async function addBook(target){
 	let cell			= target.closest('td');
 	let row				= target.closest('tr');
@@ -186,9 +130,6 @@ function readyStateChanged(e){
 }
 
 function fileUploadSucces(result){
-	
-	console.log(JSON.parse(result));
-
 	fileUploadWrap.innerHTML	= JSON.parse(result).data + fileUploadWrap.innerHTML;
 	
 	Main.displayMessage("The files have been processed succesfully.", 'success', true);
@@ -287,7 +228,18 @@ async function fetchMetaData(tr){
 		html += `<td><input type='text' name='language' class='language' value='${language}'></td>`;
 		html += `<td><input type='text' name='pages' class='pages' value='${bookData['number_of_pages'] ?? ''}'></td>`;
 
-		tr.querySelector('.placeholder').outerHTML = html;
+		let placeholder	= tr.querySelector('.placeholder');
+		if(placeholder == null){
+			tr.querySelector('.subtitle').value = subtitle;
+			tr.querySelector('.isbn13').value 	= isbn13;
+			tr.querySelector('.isbn10').value 	= isbn10;
+			tr.querySelector('.series').value 	= bookData['series'] ?? '';
+			tr.querySelector('.year').value 	= year;
+			tr.querySelector('.language').value = language;
+			tr.querySelector('.pages').value 	= bookData['number_of_pages'] ?? '';
+		}else{
+			placeholder.outerHTML = html;
+		}
 
         let summary      = bookData['description'] != undefined ? bookData['description']['value'] != undefined ? bookData['description']['value'] : '' : '';
 		if(summary != ''){
@@ -318,18 +270,9 @@ document.addEventListener("click", event =>{
 	}else if(target.matches(`.delete-book`)){
 		target.remove();
 	}
-	
-	// SHow add category modal
-	if(target.classList.contains('add_cat')){
-		document.getElementById('add_'+target.dataset.type+'_type').classList.remove('hidden');
-	}
-
-	if(target.matches('.add_category .form_submit')){
-		addCatType(target);
-	}
 });
 
-document.addEventListener("change", event =>{
+document.addEventListener("change", async event =>{
 	let target = event.target;
 
 	if(target.name == 'image-selector'){
@@ -359,7 +302,10 @@ document.addEventListener("change", event =>{
 		}
 	}else if(target.matches('.title, .author')){
 		let tr = target.closest('tr');
+		
 		// Update metadata for the book row
-		fetchMetaData(tr);
+		await fetchMetaData(tr);
+
+		Main.displayMessage("Updated details succesfully.", 'success', true);
 	}
 });

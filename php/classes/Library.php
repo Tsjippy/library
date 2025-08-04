@@ -290,7 +290,7 @@ class Library{
 			'post_title'    => $data['title'],
 			'post_content'  => $data['summary'],
 			'post_status'   => 'publish',
-			'post_author'   => $_POST['author']
+			'post_author'   => get_current_user_id()
 		);
 
         if(!empty($data['categories'])){

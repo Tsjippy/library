@@ -4,7 +4,7 @@ use SIM;
 
 add_filter('sim_frontend_posting_modals', __NAMESPACE__.'\postingModals');
 function postingModals($types){
-    $types[]	= 'books';
+    $types[]	= 'book';
     return $types;
 }
 
