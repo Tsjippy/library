@@ -3,6 +3,7 @@
 
 ### Added
 - refetch meta data when title or author changed
+- update book meta
 
 ### Changed
 
