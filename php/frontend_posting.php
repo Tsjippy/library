@@ -103,7 +103,7 @@ function afterPostContent($frontendcontend){
                     <tr>
                         <th><label for="<?php echo $meta;?>"><?php echo ucfirst($text);?></label></th>
                         <td>
-                            <input type='<?php echo $type;?>' class='formbuilder' name='<?php echo $meta;?>' value='<?php echo get_post_meta($postId, $meta, true); ?>'>
+                            <input type='<?php echo $type;?>' class='formbuilder' name='<?php echo $meta;?>' value='<?php echo implode(';', get_post_meta($postId, $meta); ?>'>
                         </td>
                     </tr>
                 <?php
