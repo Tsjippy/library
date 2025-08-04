@@ -321,7 +321,7 @@ class Library{
                                         <td>
                                             <?php echo get_post_meta($post->ID, 'pages', true);?>
                                         </td>
-                                        <td>
+                                        <td style='min-width: 300px;text-wrap: auto;'>
                                             <?php echo $data->summary;?>
                                         </td>
                                         <td class='url'></td>
@@ -362,7 +362,7 @@ class Library{
                                             <img class='loadergif' src='<?php echo \SIM\LOADERIMAGEURL;?>' width=50 loading='lazy'>Fetching the book details...
                                         </td>
                                         <td>
-                                            <textarea name='summary' class='summary' style='min-width: 300px;' rows=2><?php echo $data->summary; ?></textarea>
+                                            <textarea name='summary' class='summary' style='min-width: 300px;text-wrap: auto;' rows=2><?php echo $data->summary; ?></textarea>
                                         </td>
                                         <td class='url'></td>
                                         <td class='location hidden'><input type='text' name='location' value='<?php echo $location; ?>'></td>
