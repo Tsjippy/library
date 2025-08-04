@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- width of summary
 
 ### Fixed
 
