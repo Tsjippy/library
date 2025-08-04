@@ -2,6 +2,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- refetch meta data when title or author changed
 
 ### Changed
 
