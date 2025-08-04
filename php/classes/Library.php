@@ -142,9 +142,9 @@ class Library{
                         items: new Schema(
                             type: DataType::OBJECT,
                             properties: [
-                                'title' => new Schema(type: DataType::STRING),
-                                'author' => new Schema(type: DataType::STRING),
-                                'summary' => new Schema(type: DataType::STRING),
+                                'title'     => new Schema(type: DataType::STRING),
+                                'author'    => new Schema(type: DataType::STRING),
+                                'summary'   => new Schema(type: DataType::STRING),
                             ],
                             required: ['title'],
                         )
@@ -180,7 +180,6 @@ class Library{
 
         return $wpdb->get_col( $sql );
     }
-
 
     /**
      * Prints the html to select a file
@@ -225,8 +224,6 @@ class Library{
     }
 
     public function getTable($json){
-        //$this->enrichData($json);
-
         wp_enqueue_script('sim_library_script');
 
         ob_start();

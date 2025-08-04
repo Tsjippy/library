@@ -128,9 +128,10 @@ if(is_tax() || is_archive()){
 
 					echo "<div class='$meta book meta'>";
 					
-					$value		= get_post_meta(get_the_ID(), $meta, true);
-					if(!empty($value)){
-					 
+					$values		= get_post_meta(get_the_ID(), $meta);
+					if(!empty($values)){
+						$value	= implode('<br>', $values);
+
 						if($type == 'url'){
 							$value = "<a href='$value'>$value</a>";
 						}elseif($type == 'date'){
@@ -140,7 +141,9 @@ if(is_tax() || is_archive()){
 						}	
 					
 						$imageUrl 	= SIM\pathToUrl(MODULE_PATH."pictures/{$meta}.png");
-						echo "<img src='$imageUrl' alt='$meta' loading='lazy' class='book_icon'> $value";
+						echo "<div class='flex meta-wrapper'>";
+							echo "<img src='$imageUrl' alt='$meta' loading='lazy' class='book_icon' title='$meta'><div>$value</div>";
+						echo "</div>";
 					}
 					
 					echo "</div>";
