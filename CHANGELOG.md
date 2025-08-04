@@ -3,6 +3,7 @@
 
 ### Added
 - check for duplicate books
+- support for multiple locations/copies
 
 ### Changed
 
