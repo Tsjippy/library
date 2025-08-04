@@ -2,14 +2,21 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- display multiple meta values
 
 ### Changed
-- width of summary
 
 ### Fixed
 
 ### Updated
+
+## [1.0.3] - 2025-08-04
+
+
+### Added
+- display multiple meta values
+
+### Changed
+- width of summary
 
 ## [1.0.2] - 2025-08-04
 
