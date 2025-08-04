@@ -163,6 +163,26 @@ class Library{
     }
 
     /**
+     * Get book locations from the database
+     */
+    public function getLocations(){
+        global $wpdb;
+
+        $sql = $wpdb->prepare(
+            "SELECT DISTINCT pm.meta_value
+            FROM {$wpdb->postmeta} pm
+            LEFT JOIN {$wpdb->posts} p ON p.ID = pm.post_id
+            WHERE pm.meta_key = %s
+            AND p.post_type = %s",
+            'location',
+            'book'
+        );
+
+        return $wpdb->get_col( $sql );
+    }
+
+
+    /**
      * Prints the html to select a file
      */
     public function getFileHtml(){
@@ -181,6 +201,16 @@ class Library{
             </div>
 
             <div class='image-selector-wrap'>
+                <h4>Book location</h4>
+                <input type='text' class='book-location' placeholder='Enter the location of the books' style='width: -webkit-fill-available;' list='book-locations'>
+                <datalist id='book-locations'>
+                    <?php
+                        foreach($this->getLocations() as $location){
+                            echo "<option value='$location'>";
+                        }
+                    ?>
+                </datalist>
+
                 <h4>Select picture</h4>
                 <label>
                     Select one ore multiple picture(s) to check for a book or multiple books on bookshelf<br><br>
@@ -230,29 +260,101 @@ class Library{
                             if(empty($data->author)){
                                 $data->author	= '';
                             }
-                            ?>
-                                <tr>
-                                    <td class='image'></td>
-                                    <td>
-                                        <input type='text' name='title' class='title' value='<?php echo $data->title; ?>'>
-                                    </td>
-                                    <td>
-                                        <input type='text' name='author' class='author' value='<?php echo $data->author; ?>'>
-                                    </td>
-                                    <td class='placeholder' colspan='7' style='text-align: center;'>
-                                        <img class='loadergif' src='<?php echo \SIM\LOADERIMAGEURL;?>' width=50 loading='lazy'>Fetching the book details...
-                                    </td>
-                                    <td>
-                                        <textarea name='summary' class='summary' style='min-width: 300px;' rows=2><?php echo $data->summary; ?></textarea>
-                                    </td>
-                                    <td class='url'></td>
-                                    <td>
-                                        <div class='loadergif_wrapper hidden'><img class='loadergif' src='<?php echo \SIM\LOADERIMAGEURL;?>' width=50 loading='lazy'>Adding the book...</div>
-                                        <button type='button' class='add-book sim button'>Add book to the library</button>
-                                        <button type='button' class='delete-book sim button'>Delete</button>
-                                    </td>
-                                </tr>
-                            <?php
+
+                            // Check if already there
+                            $posts = get_posts(
+                                array(
+                                    'post_type'              => 'book',
+                                    'title'                  => $data->title,
+                                    'post_status'            => 'all',
+                                    'numberposts'            => -1,
+                                    'update_post_term_cache' => false,
+                                    'update_post_meta_cache' => false,           
+                                    'orderby'                => 'post_date ID',
+                                    'order'                  => 'ASC',
+                                )
+                            );
+
+                            if(count($posts) > 0){
+                                // Already in the database, so skip
+                                if(count($posts) > 1){
+                                    foreach($posts as $post){
+                                        if(get_post_meta($post->ID, 'author', true) ==  $data->author){
+                                            // More than one book found, we show this one
+                                            break;
+                                        }
+                                    }
+                                }else{
+                                    $post           = $posts[0];
+                                }
+
+                                // More than one book found, we show the last one
+                                $data->author   = get_post_meta($post->ID, 'author', true);
+                                $data->summary  = $post->post_content;
+                                $imageId        = get_post_meta($post->ID, 'image', true);
+
+                                $image          = "<img src='https://covers.openlibrary.org/b/id/$imageId-S.jpg' class='book-image' loading='lazy'>";
+
+                                ?>
+                                    <tr class='existing-book'>
+                                        <td class='image'><?php echo $image; ?></td>
+                                        <td>
+                                            <?php echo $data->title; ?>
+                                        </td>
+                                        <td>
+                                            <?php echo $data->author; ?>
+                                        </td>
+                                        <td>
+                                            <?php echo get_post_meta($post->ID, 'subtitle', true);?>
+                                        </td>
+                                        <td>
+                                            <?php echo get_post_meta($post->ID, 'series', true);?>
+                                        </td>
+                                        <td>
+                                            <?php echo get_post_meta($post->ID, 'year', true);?>
+                                        </td>
+                                        <td>
+                                            <?php echo get_post_meta($post->ID, 'language', true);?>
+                                        </td>
+                                        <td>
+                                            <?php echo get_post_meta($post->ID, 'pages', true);?>
+                                        </td>
+                                        <td>
+                                            <?php echo $data->summary;?>
+                                        </td>
+                                        <td class='url'></td>
+                                        <td>
+                                            This book is already in the library.<br>
+                                            <a href='<?php $url    = get_permalink($post->ID); ?>' target='_blank'>View it here.</a>
+                                        </td>
+                                    </tr>
+                                <?php
+                            }else{
+                                ?>
+                                    <tr>
+                                        <td class='image'></td>
+                                        <td>
+                                            <input type='text' name='title' class='title' value='<?php echo $data->title; ?>'>
+                                        </td>
+                                        <td>
+                                            <input type='text' name='author' class='author' value='<?php echo $data->author; ?>'>
+                                        </td>
+                                        <td class='placeholder' colspan='7' style='text-align: center;'>
+                                            <img class='loadergif' src='<?php echo \SIM\LOADERIMAGEURL;?>' width=50 loading='lazy'>Fetching the book details...
+                                        </td>
+                                        <td>
+                                            <textarea name='summary' class='summary' style='min-width: 300px;' rows=2><?php echo $data->summary; ?></textarea>
+                                        </td>
+                                        <td class='url'></td>
+                                        <td class='location hidden'><input type='text' name='location' value='<?php echo $_REQUEST['location']; ?>'></td>
+                                        <td>
+                                            <div class='loadergif_wrapper hidden'><img class='loadergif' src='<?php echo \SIM\LOADERIMAGEURL;?>' width=50 loading='lazy'>Adding the book...</div>
+                                            <button type='button' class='add-book sim button'>Add book to the library</button>
+                                            <button type='button' class='delete-book sim button'>Delete</button>
+                                        </td>
+                                    </tr>
+                                <?php
+                            }
                         }
                     ?>
                 </tbody>

@@ -9,7 +9,6 @@ async function addBook(target){
 
 	row.querySelectorAll('input, textarea').forEach(input=>formData.append(input.name, input.value));
 	row.querySelectorAll('td > img').forEach(img=>formData.append('image', img.src));
-	console.log(target);
 
 	target.classList.add('hidden');
 	cell.querySelector(`.loadergif_wrapper`).classList.remove('hidden');
@@ -17,8 +16,6 @@ async function addBook(target){
 	let response	= await FormSubmit.fetchRestApi('library/add_book', formData);
 	
 	if(response){
-		console.log(response);
-
 		cell.innerHTML	= response;
 
 		Main.displayMessage(response.message);
@@ -41,6 +38,9 @@ async function fileUpload(target){
 	
 	//Add the ajax action name
 	formData.append('action', 'process_library_upload');
+
+	let location	= fileUploadWrap.querySelector(`.book-location`).value;
+	formData.append('location', location);
 
 	//Add all the files to the formData
 	for (let index = 0; index < totalFiles; index++) {
@@ -160,7 +160,7 @@ async function fetchMetaData(tr){
 		let title	= tr.querySelector('.title').value;
 
 		// Only search for the first author
-		let author	= tr.querySelector('.author').value.split(', ')[0].split('and')[0].split('/')[0].split('with')[0].trim();
+		let author	= tr.querySelector('.author').value.split(', ')[0].split(' and ')[0].split('/')[0].split('with')[0].trim();
 		let url     = `https://openlibrary.org/search.json?q=`+encodeURIComponent(`title:${title}`);
 		if(author != ''){
 			url += encodeURIComponent(` author:${author}`);
@@ -268,7 +268,7 @@ document.addEventListener("click", event =>{
 	if(target.matches(`.add-book`)){
 		addBook(target);
 	}else if(target.matches(`.delete-book`)){
-		target.remove();
+		target.closest('tr').remove();
 	}
 });
 
@@ -277,6 +277,7 @@ document.addEventListener("change", async event =>{
 
 	if(target.name == 'image-selector'){
 		target.closest('.image-selector-wrap').classList.add('hidden');
+
 		fileUploadWrap	= target.closest('.file_upload_wrap');
 		fileUploadWrap.querySelectorAll('.image-preview').forEach(el => el.remove());
 		

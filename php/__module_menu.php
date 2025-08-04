@@ -18,7 +18,8 @@ const METAS = [
     'languague' => 'text',
     'age'       => 'text',
     'pages'     => 'number',
-	'image'		=> 'text'
+	'image'		=> 'text',
+	'location'	=> 'text'
 ];
 
 require( MODULE_PATH  . 'lib/vendor/autoload.php');
