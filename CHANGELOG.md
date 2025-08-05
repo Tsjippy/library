@@ -2,13 +2,18 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- seperate summary query
 
 ### Changed
 
 ### Fixed
 
 ### Updated
+
+## [1.0.4] - 2025-08-05
+
+
+### Added
+- seperate summary query
 
 ## [1.0.3] - 2025-08-04
 
