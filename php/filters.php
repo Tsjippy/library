@@ -38,3 +38,15 @@ function ajaxUploadFiles(){
         wp_send_json_error('No files uploaded');
     }
 }
+
+/**
+ * Register a 'genre' taxonomy for post type 'book', with a rewrite to match book CPT slug.
+ *
+ * @see register_post_type for registering post types.
+ */
+function wpdocs_create_book_tax_rewrite() {
+    register_taxonomy( 'author', 'book', array(
+        'rewrite'      => array( 'slug' => 'books/author' )
+    ) );
+}
+add_action( 'init', 'wpdocs_create_book_tax_rewrite', 0 );
