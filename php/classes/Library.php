@@ -227,7 +227,8 @@ class Library{
         wp_enqueue_script('sim_library_script');
 
         ob_start();
-        ?>   
+        ?>
+        <div class='book-table-wrapper'>
         <h4>Books Identified in the picture</h4>
         <p>
             Please check the details below and change them where needed before adding them to the library.
