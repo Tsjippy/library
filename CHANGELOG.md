@@ -2,13 +2,18 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- pages
 
 ### Changed
 
 ### Fixed
 
 ### Updated
+
+## [1.0.5] - 2025-08-05
+
+
+### Added
+- pages
 
 ## [1.0.4] - 2025-08-05
 
