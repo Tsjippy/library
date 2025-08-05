@@ -247,7 +247,8 @@ async function fetchMetaData(tr){
             url      = `https://openlibrary.org${key}`;
 			tr.querySelector('.url').innerHTML = `<a href='${url}' target='_blank'>View on Open Library</a>`;
 
-			if(summary == ''){
+			// Fetch the summary if not already set or needs to be updated
+			if(summary == '' || placeholder == null){
 				// Fetch the summary from the Open Library API
 				const descriptionResponse 	= await fetch(url+'.json');
 				const description 			= await descriptionResponse.json();
