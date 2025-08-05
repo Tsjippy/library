@@ -8,6 +8,7 @@
 ### Changed
 
 ### Fixed
+- issue when ' in input value
 
 ### Updated
 
