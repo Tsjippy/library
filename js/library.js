@@ -284,6 +284,9 @@ document.addEventListener("change", async event =>{
 			}
 		location = location.value;
 		
+		// Remove previous result tables
+		document.querySelectorAll('.book-table-wrapper').forEach(el => el.remove());
+		
 		target.closest('.image-selector-wrap').classList.add('hidden');
 		fileUploadWrap.querySelectorAll('.image-preview').forEach(el => el.remove());
 		
