@@ -26,7 +26,7 @@ async function addBook(target){
 }
 
 let fileUploadWrap, totalFiles;
-async function fileUpload(target){
+async function fileUpload(target, location){
 	totalFiles 		= target.files.length;
 
 	if (totalFiles < 0){
@@ -39,7 +39,6 @@ async function fileUpload(target){
 	//Add the ajax action name
 	formData.append('action', 'process_library_upload');
 
-	let location	= fileUploadWrap.querySelector(`.book-location`).value;
 	formData.append('location', location);
 
 	//Add all the files to the formData
@@ -276,9 +275,16 @@ document.addEventListener("change", async event =>{
 	let target = event.target;
 
 	if(target.name == 'image-selector'){
+			fileUploadWrap	= target.closest('.file_upload_wrap');
+		
+		let location	= fileUploadWrap.querySelector(`.book-location`);
+		const isValid = location.reportValidity();
+		if (!isValid) {
+			return;
+			}
+		location = location.value;
+		
 		target.closest('.image-selector-wrap').classList.add('hidden');
-
-		fileUploadWrap	= target.closest('.file_upload_wrap');
 		fileUploadWrap.querySelectorAll('.image-preview').forEach(el => el.remove());
 		
 		for (const file of target.files) {
