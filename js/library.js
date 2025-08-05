@@ -201,10 +201,14 @@ async function fetchMetaData(tr){
 			tr.querySelector('.image').innerHTML = `<input type='hidden' name='image' value='${image}'><a href='${largeUrl}' target='_blank'><img src='${smallUrl}' class='book-image' loading='lazy'></a>`;
         }
 
-		let subtitle	= title.split(':')[1] ?? '';
+		let subtitle	= bookData['subtitle'] ?? '';
+		if(subtitle == ''){
+			subtitle		= title.split(':')[1] ?? '';
+		}
 		if(subtitle == ''){
 			subtitle	= title.split(',')[1] ?? '';
 		}
+		
 		title			= title.split(':')[0].split(',')[0];
 		tr.querySelector('.title').value = title;
 
