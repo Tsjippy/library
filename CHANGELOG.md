@@ -3,6 +3,7 @@
 
 ### Added
 - update summary if needed
+- check for duplicate when adding book
 
 ### Changed
 
