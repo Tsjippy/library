@@ -229,10 +229,10 @@ class Library{
         ob_start();
         ?>
         <div class='book-table-wrapper'>
-        <h4>Books Identified in the picture</h4>
-        <p>
-            Please check the details below and change them where needed before adding them to the library.
-        </p>
+            <h4>Books Identified in the picture</h4>
+            <p>
+                Please check the details below and change them where needed before adding them to the library.
+            </p>
             <table class='sim-table'>
                 <thead>
                     <tr>

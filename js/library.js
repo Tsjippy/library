@@ -240,16 +240,28 @@ async function fetchMetaData(tr){
 			placeholder.outerHTML = html;
 		}
 
-        let summary      = bookData['description'] != undefined ? bookData['description']['value'] != undefined ? bookData['description']['value'] : '' : '';
-		if(summary != ''){
-			tr.querySelector('.summary').value = summary;
-		}
+        let summary      	= tr.querySelector('.summary').value
+		summary				= bookData['description'] != undefined ? bookData['description']['value'] != undefined ? bookData['description']['value'] : summary : summary;
 
 		let key        = bookData['key'] ?? '';
         if(key != ''){
             url      = `https://openlibrary.org${key}`;
 			tr.querySelector('.url').innerHTML = `<a href='${url}' target='_blank'>View on Open Library</a>`;
+
+			if(summary == ''){
+				// Fetch the summary from the Open Library API
+				const descriptionResponse 	= await fetch(url+'.json');
+				const description 			= await descriptionResponse.json();
+
+				summary = description['description'] ?? '';	
+				
+				summary = summary.value ?? summary;
+			}
         }
+
+		if(summary != ''){
+			tr.querySelector('.summary').value = summary;
+		}
 
 	} catch(e){
 		console.error('Error fetching book data:', e);
@@ -274,14 +286,15 @@ document.addEventListener("click", event =>{
 document.addEventListener("change", async event =>{
 	let target = event.target;
 
-	if(target.name == 'image-selector'){
-			fileUploadWrap	= target.closest('.file_upload_wrap');
+	if(target.name == 'image-selector' && target.files.length > 0){
+		fileUploadWrap	= target.closest('.file_upload_wrap');
 		
+		// Make sure we have a location
 		let location	= fileUploadWrap.querySelector(`.book-location`);
-		const isValid = location.reportValidity();
+		const isValid 	= location.reportValidity();
 		if (!isValid) {
 			return;
-			}
+		}
 		location = location.value;
 		
 		// Remove previous result tables
@@ -308,7 +321,7 @@ document.addEventListener("change", async event =>{
 			}
 			reader.readAsDataURL(file);
 
-			fileUpload(target);
+			fileUpload(target, location);
 		}
 	}else if(target.matches('.title, .author')){
 		let tr = target.closest('tr');
