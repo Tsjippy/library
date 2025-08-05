@@ -201,7 +201,7 @@ class Library{
 
             <div class='image-selector-wrap'>
                 <h4>Book location</h4>
-                <input type='text' class='book-location' placeholder='Enter the location of the books' style='width: -webkit-fill-available;' list='book-locations'>
+                <input type='text' class='book-location' placeholder='Enter the location of the books' required style='width: -webkit-fill-available;' list='book-locations'>
                 <datalist id='book-locations'>
                     <?php
                         foreach($this->getLocations() as $location){
