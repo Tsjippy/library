@@ -22,6 +22,8 @@ async function addBook(target){
 	}else{
 		target.classList.remove('hidden');
 		cell.querySelector(`.loadergif_wrapper`).classList.add('hidden');
+
+		target.remove();
 	}
 }
 
@@ -202,15 +204,6 @@ async function fetchMetaData(tr){
         }
 
 		let subtitle	= bookData['subtitle'] ?? '';
-		if(subtitle == ''){
-			subtitle		= title.split(':')[1] ?? '';
-		}
-		if(subtitle == ''){
-			subtitle	= title.split(',')[1] ?? '';
-		}
-		
-		title			= title.split(':')[0].split(',')[0];
-		tr.querySelector('.title').value = title;
 
 		let isbn		= JSON.stringify(bookData['isbn'] ?? '');
 

@@ -29,7 +29,7 @@ function ajaxUploadFiles(){
             }
         }
         
-        if($result){
+        if($result){ 
             wp_send_json_success($result);
         }else{
             wp_send_json_error('Failed to process the image');
@@ -38,3 +38,11 @@ function ajaxUploadFiles(){
         wp_send_json_error('No files uploaded');
     }
 }
+
+function include_custom_post_types_in_search($query) {
+    if ($query->is_search && !is_admin()) {
+        $query->set('post_type', array('post', 'page', 'your_custom_post_type_slug'));
+    }
+    return $query;
+}
+add_filter('pre_get_posts', __NAMESPACE__.'\include_custom_post_types_in_search');
