@@ -353,10 +353,10 @@ class Library{
                                     <tr>
                                         <td class='image'></td>
                                         <td>
-                                            <input type='text' name='title' class='title' value='<?php echo $data->title; ?>'>
+                                            <input type='text' name='title' class='title' value="<?php echo $data->title; ?>">
                                         </td>
                                         <td>
-                                            <input type='text' name='author' class='author' value='<?php echo $data->author; ?>'>
+                                            <input type='text' name='author' class='author' value="<?php echo $data->author; ?>">
                                         </td>
                                         <td class='placeholder' colspan='7' style='text-align: center;'>
                                             <img class='loadergif' src='<?php echo \SIM\LOADERIMAGEURL;?>' width=50 loading='lazy'>Fetching the book details...
@@ -365,7 +365,7 @@ class Library{
                                             <textarea name='summary' class='summary' style='min-width: 300px;text-wrap: auto;' rows=2><?php echo $data->summary; ?></textarea>
                                         </td>
                                         <td class='url'></td>
-                                        <td class='locations hidden'><input type='text' name='locations' value='<?php echo $location; ?>'></td>
+                                        <td class='locations hidden'><input type='text' name='locations' value="<?php echo $location; ?>"></td>
                                         <td>
                                             <div class='loadergif_wrapper hidden'><img class='loadergif' src='<?php echo \SIM\LOADERIMAGEURL;?>' width=50 loading='lazy'>Adding the book...</div>
                                             <button type='button' class='add-book sim button'>Add book to the library</button>
@@ -408,7 +408,7 @@ class Library{
         if(!empty($this->checkForDuplicates($data['title']))){
             return new WP_Error('duplicate', 'This book is already in the library!');
         }
-        
+
         //New post
 		$post = array(
 			'post_type'		=> 'book',

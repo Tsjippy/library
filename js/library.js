@@ -162,18 +162,16 @@ async function fetchMetaData(tr){
 		let author	= tr.querySelector('.author').value.split(', ')[0].split(' and ')[0].split('/')[0].split('with')[0].trim();
 		let url     = `https://openlibrary.org/search.json?q=`+encodeURIComponent(`title:${title}`);
 		if(author != ''){
-			url += encodeURIComponent(` author:${author}`);
-		}else{
-			url += '&limit=1';
+			url += encodeURIComponent(` author:${author}`)+'&limit=1';
 		}
-		url += '&fields=key,title,subtitle,alternative_subtitle,cover_i,isbn,language,number_of_pages_median,first_publish_year,description';
+		url += '&fields=key,title,author_name,subtitle,alternative_subtitle,cover_i,isbn,language,number_of_pages_median,first_publish_year,description';
 
 		const response 	= await fetch(url);
 		const data 		= await response.json();
 		let bookData    = data['docs'][0] ?? [];
 
 		if(author == ''){
-			let id	= `authorlist-${title.replaceAll(" ", "_")}`;
+			let id	= `authorlist-${title.replaceAll(" ", "_").replaceAll("'", "")}`;
 			tr.querySelector('.author').setAttribute("list", id);
 
 			let list = `<datalist id='${id}' class='author-selection'>`;
