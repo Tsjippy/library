@@ -223,6 +223,25 @@ class Library{
         return ob_get_clean();
     }
 
+    /**
+     * Checks if a book is already in the database
+     */
+    private function checkForDuplicates($title){
+        // Check if already there
+        return get_posts(
+            array(
+                'post_type'              => 'book',
+                'title'                  => $title,
+                'post_status'            => 'all',
+                'numberposts'            => -1,
+                'update_post_term_cache' => false,
+                'update_post_meta_cache' => false,           
+                'orderby'                => 'post_date ID',
+                'order'                  => 'ASC',
+            )
+        );
+    }
+
     public function getTable($json){
         wp_enqueue_script('sim_library_script');
 
@@ -258,19 +277,7 @@ class Library{
                                 $data->author	= '';
                             }
 
-                            // Check if already there
-                            $posts = get_posts(
-                                array(
-                                    'post_type'              => 'book',
-                                    'title'                  => $data->title,
-                                    'post_status'            => 'all',
-                                    'numberposts'            => -1,
-                                    'update_post_term_cache' => false,
-                                    'update_post_meta_cache' => false,           
-                                    'orderby'                => 'post_date ID',
-                                    'order'                  => 'ASC',
-                                )
-                            );
+                            $posts      = $this->checkForDuplicates($data->title);
 
                             $location = $_REQUEST['location'];
 
@@ -398,6 +405,10 @@ class Library{
     }
 
     public function createBook($data){
+        if(!empty($this->checkForDuplicates($data['title']))){
+            return new WP_Error('duplicate', 'This book is already in the library!');
+        }
+        
         //New post
 		$post = array(
 			'post_type'		=> 'book',
