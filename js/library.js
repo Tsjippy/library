@@ -163,7 +163,10 @@ async function fetchMetaData(tr){
 		let url     = `https://openlibrary.org/search.json?q=`+encodeURIComponent(`title:${title}`);
 		if(author != ''){
 			url += encodeURIComponent(` author:${author}`);
+		}else{
+			url += '&limit=1';
 		}
+		url += '&fields=key,title,subtitle,alternative_subtitle,cover_i,isbn,language,number_of_pages_median,first_publish_year,description';
 
 		const response 	= await fetch(url);
 		const data 		= await response.json();
@@ -207,11 +210,7 @@ async function fetchMetaData(tr){
 		title			= title.split(':')[0].split(',')[0];
 		tr.querySelector('.title').value = title;
 
-		let isbn13		= bookData['isbn_13'] ?? '';
-		isbn13			= isbn13[0] ?? isbn13;
-
-		let isbn10		= bookData['isbn_10'] ?? '';
-		isbn10			= isbn10[0] ?? isbn10;
+		let isbn		= JSON.stringify(bookData['isbn'] ?? '');
 
 		let year		= bookData['first_publish_year'] ?? '';
 		year			= year[0] ?? year;
@@ -219,23 +218,23 @@ async function fetchMetaData(tr){
 		let language	= bookData['language'] ?? '';
 		language		= language[0] ?? language;
 
+		let pageCount		= bookData['number_of_pages'] ?? bookData['number_of_pages_median'] ?? '';
+
 		let html = `<td><input type='text' name='subtitle' class='subtitle' value='${subtitle}'></td>`;
-		html += `<td class='hidden'><input type='text' name='isbn13' class='isbn13' value='${isbn13}'></td>`;
-		html += `<td class='hidden'><input type='text' name='isbn10' class='isbn10' value='${isbn10}'></td>`;
+		html += `<td class='hidden'><input type='text' name='isbn' class='isbn' value='${isbn}'></td>`;
 		html += `<td><input type='text' name='series' class='series' value='${bookData['series'] ?? ''}'></td>`;
 		html += `<td><input type='text' name='year' class='year' value='${year}'></td>`;
 		html += `<td><input type='text' name='language' class='language' value='${language}'></td>`;
-		html += `<td><input type='text' name='pages' class='pages' value='${bookData['number_of_pages'] ?? ''}'></td>`;
+		html += `<td><input type='text' name='pages' class='pages' value='${pageCount}'></td>`;
 
 		let placeholder	= tr.querySelector('.placeholder');
 		if(placeholder == null){
 			tr.querySelector('.subtitle').value = subtitle;
-			tr.querySelector('.isbn13').value 	= isbn13;
-			tr.querySelector('.isbn10').value 	= isbn10;
+			tr.querySelector('.isbn').value 	= isbn;
 			tr.querySelector('.series').value 	= bookData['series'] ?? '';
 			tr.querySelector('.year').value 	= year;
 			tr.querySelector('.language').value = language;
-			tr.querySelector('.pages').value 	= bookData['number_of_pages'] ?? '';
+			tr.querySelector('.pages').value 	= pageCount;
 		}else{
 			placeholder.outerHTML = html;
 		}

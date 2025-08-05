@@ -240,8 +240,7 @@ class Library{
                         <th>Title</th>
                         <th>Author</th>
                         <th>Subtitle</th>
-                        <th class='hidden'>ISBN 13</th>
-                        <th class='hidden'>ISBN 10</th>
+                        <th class='hidden'>ISBN</th>
                         <th>Series</th>
                         <th>Year</th>
                         <th>Languague</th>
