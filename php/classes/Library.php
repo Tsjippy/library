@@ -230,7 +230,7 @@ class Library{
         ?>   
         <h4>Books Identified in the picture</h4>
         <p>
-            Please check the details below and chnage them where needed before approving them to be added to the library.
+            Please check the details below and change them where needed before adding them to the library.
         </p>
             <table class='sim-table'>
                 <thead>
