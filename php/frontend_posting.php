@@ -10,14 +10,16 @@ function postingModals($types){
 
 add_action('sim_frontend_post_before_content', __NAMESPACE__.'\beforeContent');
 function beforeContent($frontEndContent){
+    foreach(['book', 'author'] as $tax){
     $categories = get_categories( array(
         'orderby' 	=> 'name',
         'order'   	=> 'ASC',
-        'taxonomy'	=> 'books',
+        'taxonomy'	=> $tax.'s',
         'hide_empty'=> false,
     ) );
 
-    $frontEndContent->showCategories('book', $categories);
+    $frontEndContent->showCategories($tax, $categories);
+    }
 }
 
 add_action('sim_frontend_post_content_title', __NAMESPACE__.'\contentTitle');
@@ -41,6 +43,7 @@ function afterPostSave($post, $frontEndPost){
 
     //store categories
     $frontEndPost->storeCustomCategories($post, 'books');
+    $frontEndPost->storeCustomCategories($post, 'authors');
     
     foreach(METAS as $meta=>$type){
         if(isset($_POST[$meta])){
