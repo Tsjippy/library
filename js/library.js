@@ -185,12 +185,17 @@ async function fetchMetaData(tr){
 			list += `</datalist>`;
 			tr.querySelector('.author').insertAdjacentHTML('afterEnd', list);
 		}else{
-			author 	= bookData['author_name'] ?? author;
+			let authors 	= bookData['author_name'] ?? [author];
+			authors.forEach(author => {
+				});
 
 			if(typeof(author) === 'object'){
-				author	= author.join() ?? author;
-			}
-			tr.querySelector('.author').value = bookData['author_name'] ?? author;
+				author	= author.jo
+			}else{
+				console.error(author);
+				tr.querySelector('.author').value = author;
+				}
+			
 		}
 
 		let image        = bookData['cover_i'] ?? '';
