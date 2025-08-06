@@ -2,16 +2,10 @@
 namespace SIM\LIBRARY;
 use SIM;
 
-add_filter( 'post_thumbnail_html', __NAMESPACE__.'\setExternalImage', 999, 5 );
-function setExternalImage($html, $postId, $postThumbnailId, $size, $attr ){
-    return $html;
-}
-
-
 // Make sure the template path includes the library folder, not the books folder
 add_filter('sim-template-filter', __NAMESPACE__.'\changeModuleName');
 function changeModuleName($templateFile){
-    return str_replace('/books/', '/library/', $templateFile);
+    return str_replace(['/books/', '/book-locations/', '/authors/'], '/library/', $templateFile);
 }
 
 add_action ( 'wp_ajax_process_library_upload', __NAMESPACE__.'\ajaxUploadFiles');
@@ -48,14 +42,14 @@ function includeBooksInSearch($query) {
 add_filter('pre_get_posts', __NAMESPACE__.'\includeBooksInSearch');
 
 /**
- * Register a 'genre' taxonomy for post type 'book', with a rewrite to match book CPT slug.
+ * Register a 'authors' taxonomy for post type 'book', with a rewrite to match book CPT slug.
  *
  * @see register_post_type for registering post types.
  */
-function createAuthorTax() {
-    $taxonomyName		= 'authors';
-	$plural				= 'Authors';
-    $single             = 'author';
+function createBookTaxonomies($single) {
+    $taxonomyName		= $single.'s';
+	$single				= ucfirst(str_replace('book-', '', $single));
+	$plural				= $single.'s';
 
 	/*
 		CREATE CATEGORIES
@@ -75,7 +69,7 @@ function createAuthorTax() {
 		'separate_items_with_commas' 	=> "Separate $single type with commas",
 		'add_or_remove_items' 			=> "Add or remove $single type",
 		'choose_from_most_used' 		=> "Choose from the most used $single types",
-		'menu_name' 					=> ucfirst($single)." Categories",
+		'menu_name' 					=> $plural,
 	);
 	
 	$args = array(
@@ -83,10 +77,10 @@ function createAuthorTax() {
 		'public' 			=> true,
 		'show_ui' 			=> true,
 		'show_in_rest' 		=> true,
-		'hierarchical' 		=> true,
+		'hierarchical' 		=> false,
 		'rewrite' 			=> array(
-			'slug' 			=> $taxonomyName,	//archive pages on /plural/
-			'hierarchical' 	=> true,
+			'slug' 			=> 'book/'.$taxonomyName,	//archive pages on /plural/
+			'hierarchical' 	=> false,
 			'has_archive'	=> true
 		),
 		'query_var' 		=> true,
@@ -98,9 +92,43 @@ function createAuthorTax() {
 	register_taxonomy( $taxonomyName, 'book', $args );
 
 	//redirect plural to archive page as well
-	add_rewrite_rule($taxonomyName.'/?$','index.php?post_type=book','top');
+	add_rewrite_rule('books/'.$taxonomyName.'/?$', "index.php?post_type=book&taxonomy_name=$taxonomyName",'top');
 
 	// Clear the permalinks after the post type has been registered.
     flush_rewrite_rules();
 }
-add_action( 'init', __NAMESPACE__.'\createAuthorTax', 0 );
+add_action( 'init', function(){
+	createBookTaxonomies('author');
+	createBookTaxonomies('book-location');
+
+	add_filter(
+		'widget_categories_args',
+		function ( $catArgs) {
+			//if we are on a events page, change to display the event types
+			if(is_tax('books') || is_page('book') || get_post_type() == 'book'){
+				$catArgs['taxonomy'] 		= 'books';
+				$catArgs['hierarchical']	= true;
+				$catArgs['hide_empty'] 		= false;
+			}
+			
+			return $catArgs;
+		}
+	);
+}, 0 );
+
+add_filter('sim-theme-archive-page-title', __NAMESPACE__.'\changeArchiveTitle', 10, 2);
+function changeArchiveTitle($title, $category){
+	if($category->taxonomy == 'authors'){
+		$splittedName 	= explode(', ', $category->name);
+
+		if(count($splittedName) > 1){
+			$lastName 		= $splittedName[0];
+			$firstnames 	= implode(' ', array_slice($splittedName, 1));
+			$title 			= "Books by $firstnames $lastName";
+		}else{	
+			$title = 'Books by '.ucfirst($category->name);
+		}
+	}
+	
+	return $title;
+}

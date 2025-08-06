@@ -404,6 +404,53 @@ class Library{
 		return $wpdb->insert_id;
     }
 
+    /**
+     * Processes the authors
+     * 
+     * @param string $authorString
+     * @param int $postId
+     * 
+     * @return array
+     */
+    public function processAuthors($authorString, $postId){
+        if(empty($authorString)){
+            return [];
+        }
+        
+        $authors = explode(',', $authorString);
+
+        // Add authors meta fields
+        foreach($authors as &$author){
+            $author         = strtolower(sanitize_text_field($author));
+            $authorNames    = explode(' ', $author);
+
+            // Last name first
+            $author         = ucfirst(end($authorNames)).', ';
+
+            // Remove the last name from the array
+            array_pop($authorNames);
+
+            // Add the rest of the names
+            $author         .= implode(' ', array_map('ucfirst', $authorNames));
+
+            if(!empty($author)){
+                $curValues  = get_post_meta($postId, 'authors');
+
+                if(!in_array($author, $curValues)){
+                    // Add the author to the post meta
+                    add_post_meta($postId, 'authors', $author);
+                }
+            }
+        }
+
+        wp_set_post_terms($postId, $authors, 'authors', true);
+
+        return $authors;
+    }
+
+    /**
+     * Creates a book post in the database
+     */
     public function createBook($data){
         if(!empty($this->checkForDuplicates($data['title']))){
             return new WP_Error('duplicate', 'This book is already in the library!');
@@ -460,15 +507,29 @@ class Library{
         foreach(METAS as $meta => $type){
             // Add post meta
             if(!empty($_POST[$meta])){
-                $value = sanitize_text_field($_POST[$meta]);
+                if(is_array($_POST[$meta])){
+                    $value = array_map('sanitize_text_field', $_POST[$meta]);
+                }else{
+                    $value = sanitize_text_field($_POST[$meta]);
+                }
 
-                if($meta == 'location'){
+                if($meta == 'locations'){
                     $locations   = get_post_meta($postId, 'locations');
                     
                     // only add a new location if needed
                     if(in_array($value, $locations)){
                         continue;
                     }
+
+                    wp_set_post_terms($postId, $value, 'locations', true);
+                }elseif($meta == 'authors'){
+                    if(is_array($value)){
+                        foreach($value as $index=>$author){
+                            $this->processAuthors($author, $postId);
+                        }
+                    }
+
+                    continue;
                 }
 
                 add_post_meta($postId, $meta, $value);

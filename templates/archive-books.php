@@ -64,14 +64,34 @@ if($skipWrapper){
 
 function displayBookArchive(){
 	//Variable containing the current books page we are on
-	$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+	$paged 		= (get_query_var('paged')) ? get_query_var('paged') : 1;
 
-	$booksQuery = new \WP_Query(array(
-		'post_type'			=>'book',
-		'post_status'		=>'publish',
+	$args		= [
+		'post_type'			=> 'book',
+		'post_status'		=> 'publish',
 		'paged'           	=> $paged,
-		'posts_per_page'  	=> 10 )
-	);
+		'posts_per_page'  	=> -1, // Show all books
+	];
+
+	$exploded 	= explode('/books/', $_SERVER['REQUEST_URI']);
+	if(!empty($exploded[1])){
+		$taxonomy	= trim($exploded[1], '/');
+		
+		// get all terms in the taxonomy
+		$terms = get_terms( $taxonomy ); 
+		// convert array of term objects to array of term IDs
+		$term_slugs = wp_list_pluck( $terms, 'slug' );
+
+		$args['tax_query'] 		= [
+			[
+				'taxonomy'	=> $taxonomy,
+				'field' 	=> 'slug',
+				'terms' 	=> $term_slugs,
+			] 
+		];
+	}
+
+	$booksQuery = new \WP_Query($args);
 	
 	if ( $booksQuery->have_posts() ){
 		do_action('sim_before_archive', 'book');

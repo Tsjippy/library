@@ -10,16 +10,14 @@ function postingModals($types){
 
 add_action('sim_frontend_post_before_content', __NAMESPACE__.'\beforeContent');
 function beforeContent($frontEndContent){
-    foreach(['book', 'author'] as $tax){
     $categories = get_categories( array(
         'orderby' 	=> 'name',
         'order'   	=> 'ASC',
-        'taxonomy'	=> $tax.'s',
+        'taxonomy'	=> 'books',
         'hide_empty'=> false,
     ) );
 
-    $frontEndContent->showCategories($tax, $categories);
-    }
+    $frontEndContent->showCategories('book', $categories);
 }
 
 add_action('sim_frontend_post_content_title', __NAMESPACE__.'\contentTitle');
@@ -41,17 +39,48 @@ function afterPostSave($post, $frontEndPost){
         return;
     }
 
+    global $Modules;
+
+	$library		= getLibrary($Modules[MODULE_SLUG]);
+
     //store categories
     $frontEndPost->storeCustomCategories($post, 'books');
-    $frontEndPost->storeCustomCategories($post, 'authors');
-    
+
     foreach(METAS as $meta=>$type){
         if(isset($_POST[$meta])){
             if(empty($_POST[$meta])){
                 delete_post_meta($post->ID, $meta);
+            }elseif($type == 'array'){
+                $curValues = get_post_meta($post->ID, $meta);
+                $newValues = array_map('sanitize_text_field', $_POST[$meta]);
+
+                $deleted  = array_diff($curValues, $newValues);
+                foreach($deleted as $value){
+                    delete_metadata( 'post', $post->ID, $meta, $value);
+
+                    if($meta == 'authors' || $meta == 'locations'){
+                        //Remove author or location from the post
+                        $term = get_term_by('name', $value, $meta);
+
+                        wp_remove_object_terms($post->ID, $term->term_id, $meta);
+                    }
+                }
+
+                $added    = array_diff($newValues, $curValues);
+                foreach($added as $value){
+                    if($meta == 'authors'){
+                        $library->processAuthors($value, $post->ID);
+                    }else{
+                        add_metadata( 'post', $post->ID, $meta, $value);
+
+                        if($meta == 'book-locations'){
+                            wp_set_post_terms($post->ID, $value, 'locations', true);
+                        }
+                    }
+                }
             }else{
                 //Store value
-                update_metadata( 'post', $post->ID, $meta, $_POST[$meta]);
+                update_metadata( 'post', $post->ID, $meta, sanitize_text_field($_POST[$meta]));
             }
         }
     }
@@ -60,6 +89,8 @@ function afterPostSave($post, $frontEndPost){
 //add meta data fields
 add_action('sim_frontend_post_after_content', __NAMESPACE__.'\afterPostContent', 10, 2);
 function afterPostContent($frontendcontend){
+
+    pluginUpdate('1.0.5');
 
     if(!empty($frontendcontend->post) && $frontendcontend->post->post_type != 'book'){
         return;
@@ -94,6 +125,7 @@ function afterPostContent($frontendcontend){
                     if($type=='url'){
                         $type   = 'text';
                     }
+
                     switch ($meta){
                         case 'isbn':
                             $text   = "ISBN number";
@@ -102,11 +134,47 @@ function afterPostContent($frontendcontend){
                         default:
                             $text   = $meta;
                     }
+
                     ?>
                     <tr>
                         <th><label for="<?php echo $meta;?>"><?php echo ucfirst($text);?></label></th>
                         <td>
-                            <input type='<?php echo $type;?>' class='formbuilder' name='<?php echo $meta;?>' value='<?php echo implode(';', get_post_meta($postId, $meta)); ?>'>
+                            <?php
+                            if($type == 'array'){
+                                $type   = 'text';
+
+                                $values = get_post_meta($postId, $meta);
+                                if(empty($values)){
+                                    $values[] = '';
+                                }
+
+                                ?>
+                                <div class="clone_divs_wrapper">
+                                    <?php
+                                    foreach($values as $index=>$value){
+                                        if(is_array($value)){
+                                            $value = implode(',', $value);
+                                        } 
+
+                                        ?>
+                                        <div id="<?php echo $meta;?>_div_<?php echo $index;?>" class="clone_div" data-divid="<?php echo $index;?>">
+                                            <div class='buttonwrapper'>
+                                                <input type='<?php echo $type;?>' class='formbuilder' name='<?php echo $meta;?>[]' value='<?php echo $value; ?>' style='width: calc(100% - 70px);'>
+                                                <button type="button" class="add button" style="flex: 1;">+</button>
+                                            </div>
+                                        </div>
+                                        <?php
+                                    }
+                                    ?>
+                                </div>
+                                <?php
+                            }else{
+                                $value = get_post_meta($postId, $meta, true);
+                                ?>
+                                <input type='<?php echo $type;?>' class='formbuilder' name='<?php echo $meta;?>' value='<?php echo $value; ?>'>
+                                <?php
+                            }
+                            ?>
                         </td>
                     </tr>
                 <?php
