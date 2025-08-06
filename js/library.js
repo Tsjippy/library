@@ -1,5 +1,3 @@
-import { addStyles } from '../../../plugins/sim-plugin/includes/js/imports.js';
-
 console.log("library.js loaded");
 
 async function addBook(target){
