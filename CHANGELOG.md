@@ -5,6 +5,7 @@
 - update summary if needed
 - check for duplicate when adding book
 - subtitle
+- search in books
 
 ### Changed
 
