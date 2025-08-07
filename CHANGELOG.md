@@ -6,6 +6,7 @@
 - check for duplicate when adding book
 - subtitle
 - search in books
+- sort authors on last name
 
 ### Changed
 
