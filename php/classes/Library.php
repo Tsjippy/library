@@ -48,7 +48,6 @@ class Library{
 			title tinytext NOT NULL,
 			author text,
 			summary LONGTEXT,
-			isbn text,
 			picture text,
 			url text,
 			PRIMARY KEY  (id)
@@ -86,7 +85,7 @@ class Library{
                     "content" => [
                         [
                             "type" => "input_text",
-                            "text" => "Check this bookshelf picture, give JSON output with titles, optional authors, optional ISBN from internet"
+                            "text" => "Check this bookshelf picture, give JSON output with titles, optional authors, optional summary from internet"
                         ],
                         [
                             "type" => "input_image",
@@ -143,7 +142,7 @@ class Library{
                             type: DataType::OBJECT,
                             properties: [
                                 'title'     => new Schema(type: DataType::STRING),
-                                'author'    => new Schema(type: DataType::STRING),
+                                'authors'   => new Schema(type: DataType::STRING),
                                 'summary'   => new Schema(type: DataType::STRING),
                             ],
                             required: ['title'],
@@ -174,7 +173,7 @@ class Library{
             LEFT JOIN {$wpdb->posts} p ON p.ID = pm.post_id
             WHERE pm.meta_key = %s
             AND p.post_type = %s",
-            'locations',
+            'location',
             'book'
         );
 
@@ -257,9 +256,8 @@ class Library{
                     <tr>
                         <th>Picture</th>
                         <th>Title</th>
-                        <th>Author</th>
+                        <th>Authors</th>
                         <th>Subtitle</th>
-                        <th class='hidden'>ISBN</th>
                         <th>Series</th>
                         <th>Year</th>
                         <th>Languague</th>
@@ -273,8 +271,8 @@ class Library{
                 <tbody>
                     <?php
                         foreach($json as $index=>$data){
-                            if(empty($data->author)){
-                                $data->author	= '';
+                            if(empty($data->authors)){
+                                $data->authors	= '';
                             }
 
                             $posts      = $this->checkForDuplicates($data->title);
@@ -285,7 +283,7 @@ class Library{
                                 // Already in the database, so skip
                                 if(count($posts) > 1){
                                     foreach($posts as $post){
-                                        if(get_post_meta($post->ID, 'author', true) ==  $data->author){
+                                        if(get_post_meta($post->ID, 'author') ==  $data->authors){
                                             // More than one book found, we show this one
                                             break;
                                         }
@@ -295,7 +293,7 @@ class Library{
                                 }
 
                                 // More than one book found, we show the last one
-                                $data->author   = get_post_meta($post->ID, 'author', true);
+                                $data->authors  = get_post_meta($post->ID, 'author');
                                 $data->summary  = $post->post_content;
                                 $imageId        = get_post_meta($post->ID, 'image', true);
 
@@ -308,7 +306,7 @@ class Library{
                                             <?php echo $data->title; ?>
                                         </td>
                                         <td>
-                                            <?php echo $data->author; ?>
+                                            <?php echo implode("<br>", $data->authors); ?>
                                         </td>
                                         <td>
                                             <?php echo get_post_meta($post->ID, 'subtitle', true);?>
@@ -332,10 +330,10 @@ class Library{
                                         <td>
                                             This book is already in the library.<br>
                                             <?php
-                                            $locations    = get_post_meta($post->ID, 'locations');
+                                            $locations    = get_post_meta($post->ID, 'location');
 
                                             if(!in_array($location, $locations)){
-                                                add_post_meta($post->ID, 'locations', $location);
+                                                add_post_meta($post->ID, 'location', $location);
 
                                                 ?>
                                                 <br>
@@ -356,7 +354,21 @@ class Library{
                                             <input type='text' name='title' class='title' value="<?php echo $data->title; ?>">
                                         </td>
                                         <td>
-                                            <input type='text' name='author' class='author' value="<?php echo $data->author; ?>">
+                                            <div class="authors clone_divs_wrapper">
+                                                <?php
+                                                $authors = array_map('trim', explode(',', $data->authors));
+                                                foreach($authors as $index => $author){
+                                                    ?>
+                                                    <div id="<?php echo $author;?>_div_<?php echo $index;?>" class="clone_div" data-divid="<?php echo $index;?>">
+                                                        <div class='buttonwrapper'>
+                                                            <input type='text' name='author[]' class='author' value="<?php echo $author; ?>">
+                                                            <button type="button" class="add button" style="flex: 1;">+</button>
+                                                        </div>
+                                                    </div>
+                                                    <?php
+                                                }
+                                                ?>
+                                            </div>
                                         </td>
                                         <td class='placeholder' colspan='7' style='text-align: center;'>
                                             <img class='loadergif' src='<?php echo \SIM\LOADERIMAGEURL;?>' width=50 loading='lazy'>Fetching the book details...
@@ -365,7 +377,7 @@ class Library{
                                             <textarea name='summary' class='summary' style='min-width: 300px;text-wrap: auto;' rows=2><?php echo $data->summary; ?></textarea>
                                         </td>
                                         <td class='url'></td>
-                                        <td class='locations hidden'><input type='text' name='locations' value="<?php echo $location; ?>"></td>
+                                        <td class='location hidden'><input type='text' name='location' value="<?php echo $location; ?>"></td>
                                         <td>
                                             <div class='loadergif_wrapper hidden'><img class='loadergif' src='<?php echo \SIM\LOADERIMAGEURL;?>' width=50 loading='lazy'>Adding the book...</div>
                                             <button type='button' class='add-book sim button'>Add book to the library</button>
@@ -416,7 +428,7 @@ class Library{
         if(empty($authorString)){
             return [];
         }
-        
+
         $authors = explode(',', $authorString);
 
         // Add authors meta fields
@@ -434,11 +446,11 @@ class Library{
             $author         .= implode(' ', array_map('ucfirst', $authorNames));
 
             if(!empty($author)){
-                $curValues  = get_post_meta($postId, 'authors');
+                $curValues  = get_post_meta($postId, 'author');
 
                 if(!in_array($author, $curValues)){
                     // Add the author to the post meta
-                    add_post_meta($postId, 'authors', $author);
+                    add_post_meta($postId, 'author', $author);
                 }
             }
         }
@@ -452,21 +464,24 @@ class Library{
      * Creates a book post in the database
      */
     public function createBook($data){
-        if(!empty($this->checkForDuplicates($data['title']))){
+        $title          = ucfirst(strtolower(sanitize_text_field($data['title'])));
+        $summary        = sanitize_textarea_field($data['summary']);
+
+        if(!empty($this->checkForDuplicates($title ))){
             return new WP_Error('duplicate', 'This book is already in the library!');
         }
 
         //New post
 		$post = array(
 			'post_type'		=> 'book',
-			'post_title'    => $data['title'],
-			'post_content'  => $data['summary'],
+			'post_title'    => $title ,
+			'post_content'  => $summary ,
 			'post_status'   => 'publish',
 			'post_author'   => get_current_user_id()
 		);
 
         if(!empty($data['categories'])){
-            $post['post_category'] = $data['categories'];
+            $post['post_category'] = array_map('sanitize_text_field', $_POST['categories']);
         }
 
         // Insert the post into the database.
@@ -513,16 +528,16 @@ class Library{
                     $value = sanitize_text_field($_POST[$meta]);
                 }
 
-                if($meta == 'locations'){
-                    $locations   = get_post_meta($postId, 'locations');
+                if($meta == 'location'){
+                    $locations   = get_post_meta($postId, 'location');
                     
                     // only add a new location if needed
                     if(in_array($value, $locations)){
                         continue;
                     }
 
-                    wp_set_post_terms($postId, $value, 'locations', true);
-                }elseif($meta == 'authors'){
+                    wp_set_post_terms($postId, $value, 'book-locations', true);
+                }elseif($meta == 'author'){
                     if(is_array($value)){
                         foreach($value as $index=>$author){
                             $this->processAuthors($author, $postId);

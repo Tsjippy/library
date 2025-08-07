@@ -80,13 +80,13 @@ function displayBookArchive(){
 		// get all terms in the taxonomy
 		$terms = get_terms( $taxonomy ); 
 		// convert array of term objects to array of term IDs
-		$term_slugs = wp_list_pluck( $terms, 'slug' );
+		//$term_slugs = wp_list_pluck( $terms, 'slug' );
 
 		$args['tax_query'] 		= [
 			[
 				'taxonomy'	=> $taxonomy,
 				'field' 	=> 'slug',
-				'terms' 	=> $term_slugs,
+				'terms' 	=> $terms[0]->slug,
 			] 
 		];
 	}

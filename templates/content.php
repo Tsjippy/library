@@ -136,10 +136,12 @@ if(is_tax() || is_archive()){
 							if(!empty($value)){
 								if($type == 'url'){
 									$value = "<a href='$value'>$value</a>";
-								}elseif($meta == 'authors' || $meta == 'book-locations'){
+								}elseif($meta == 'author' || $meta == 'location'){
+									$taxonomy = $meta == 'author' ? 'authors' : 'book-locations';
+
 									$terms = wp_get_post_terms(
 										get_the_ID(),
-										$meta,
+										$taxonomy,
 										array(
 											'orderby'   => 'name',
 											'order'     => 'ASC',
@@ -149,6 +151,18 @@ if(is_tax() || is_archive()){
 									
 									$links	= [];
 									foreach($terms as $id=>$termName){
+										if($meta == 'author'){
+											$splittedName 	= explode(', ', $termName);
+
+											if(count($splittedName) > 1){
+												$lastName 		= $splittedName[0];
+												$firstnames 	= implode(' ', array_slice($splittedName, 1));
+												$termName 			= "$firstnames $lastName";
+											}else{	
+												$termName = ucfirst($category->name);
+											}
+										}
+
 										$url		= get_category_link($id);
 										$links[]	= "<a href='$url' target='_blank'>$termName</a>";
 									}

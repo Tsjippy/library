@@ -58,23 +58,25 @@ function afterPostSave($post, $frontEndPost){
                 foreach($deleted as $value){
                     delete_metadata( 'post', $post->ID, $meta, $value);
 
-                    if($meta == 'authors' || $meta == 'locations'){
+                    if($meta == 'author' || $meta == 'location'){
+                        $taxonomy = $meta == 'author' ? 'authors' : 'book-locations';
+                        
                         //Remove author or location from the post
-                        $term = get_term_by('name', $value, $meta);
+                        $term = get_term_by('name', $value, $taxonomy);
 
-                        wp_remove_object_terms($post->ID, $term->term_id, $meta);
+                        wp_remove_object_terms($post->ID, $term->term_id, $taxonomy);
                     }
                 }
 
                 $added    = array_diff($newValues, $curValues);
                 foreach($added as $value){
-                    if($meta == 'authors'){
+                    if($meta == 'author'){
                         $library->processAuthors($value, $post->ID);
                     }else{
                         add_metadata( 'post', $post->ID, $meta, $value);
 
-                        if($meta == 'book-locations'){
-                            wp_set_post_terms($post->ID, $value, 'locations', true);
+                        if($meta == 'location'){
+                            wp_set_post_terms($post->ID, $value, 'book-locations', true);
                         }
                     }
                 }
@@ -90,7 +92,7 @@ function afterPostSave($post, $frontEndPost){
 add_action('sim_frontend_post_after_content', __NAMESPACE__.'\afterPostContent', 10, 2);
 function afterPostContent($frontendcontend){
 
-    pluginUpdate('1.0.5');
+    //pluginUpdate('1.0.5');
 
     if(!empty($frontendcontend->post) && $frontendcontend->post->post_type != 'book'){
         return;
@@ -127,10 +129,6 @@ function afterPostContent($frontendcontend){
                     }
 
                     switch ($meta){
-                        case 'isbn':
-                            $text   = "ISBN number";
-                            break;
-                        
                         default:
                             $text   = $meta;
                     }

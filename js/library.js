@@ -1,3 +1,5 @@
+import { cloneNode } from "../../forms/js/forms";
+
 console.log("library.js loaded");
 
 async function addBook(target){
@@ -159,12 +161,12 @@ async function fetchMetaData(tr){
 		let title	= tr.querySelector('.title').value;
 
 		// Only search for the first author
-		let author	= tr.querySelector('.author').value.split(', ')[0].split(' and ')[0].split('/')[0].split('with')[0].trim();
+		let author	= tr.querySelector('.author').value.trim();
 		let url     = `https://openlibrary.org/search.json?q=`+encodeURIComponent(`title:${title}`);
 		if(author != ''){
 			url += encodeURIComponent(` author:${author}`)+'&limit=1';
 		}
-		url += '&fields=key,title,author_name,subtitle,alternative_subtitle,cover_i,isbn,language,number_of_pages_median,first_publish_year,description';
+		url += '&fields=key,title,author_name,subtitle,alternative_subtitle,cover_i,language,number_of_pages_median,first_publish_year,description';
 
 		const response 	= await fetch(url);
 		const data 		= await response.json();
@@ -172,7 +174,7 @@ async function fetchMetaData(tr){
 
 		if(author == ''){
 			let id	= `authorlist-${title.replaceAll(" ", "_").replaceAll("'", "")}`;
-			tr.querySelector('.author').setAttribute("list", id);
+			tr.querySelectorAll('.author').forEach(el => el.setAttribute("list", id));
 
 			let list = `<datalist id='${id}' class='author-selection'>`;
 
@@ -183,19 +185,20 @@ async function fetchMetaData(tr){
 			});
 
 			list += `</datalist>`;
-			tr.querySelector('.author').insertAdjacentHTML('afterEnd', list);
+			tr.querySelector('.authors').insertAdjacentHTML('afterEnd', list);
 		}else{
 			let authors 	= bookData['author_name'] ?? [author];
-			authors.forEach(author => {
-				});
+			let wrapper 	= tr.querySelector(`.authors.clone_divs_wrapper`);
+			let baseElement = wrapper.querySelector(`.clone_div`);
 
-			if(typeof(author) === 'object'){
-				author	= author.jo
-			}else{
-				console.error(author);
-				tr.querySelector('.author').value = author;
-				}
+			authors.forEach(author => {
+				let clone		= cloneNode(baseElement);
+				clone.querySelector('.author').value = author;
+
+				wrapper.appendChild(clone);
+			});		
 			
+			baseElement.remove()
 		}
 
 		let image        = bookData['cover_i'] ?? '';
@@ -208,8 +211,6 @@ async function fetchMetaData(tr){
 
 		let subtitle	= bookData['subtitle'] ?? '';
 
-		let isbn		= JSON.stringify(bookData['isbn'] ?? '');
-
 		let year		= bookData['first_publish_year'] ?? '';
 		year			= year[0] ?? year;
 
@@ -219,7 +220,6 @@ async function fetchMetaData(tr){
 		let pageCount		= bookData['number_of_pages'] ?? bookData['number_of_pages_median'] ?? '';
 
 		let html = `<td><input type='text' name='subtitle' class='subtitle' value='${subtitle}'></td>`;
-		html += `<td class='hidden'><input type='text' name='isbn' class='isbn' value='${isbn}'></td>`;
 		html += `<td><input type='text' name='series' class='series' value='${bookData['series'] ?? ''}'></td>`;
 		html += `<td><input type='text' name='year' class='year' value='${year}'></td>`;
 		html += `<td><input type='text' name='language' class='language' value='${language}'></td>`;
@@ -228,7 +228,6 @@ async function fetchMetaData(tr){
 		let placeholder	= tr.querySelector('.placeholder');
 		if(placeholder == null){
 			tr.querySelector('.subtitle').value = subtitle;
-			tr.querySelector('.isbn').value 	= isbn;
 			tr.querySelector('.series').value 	= bookData['series'] ?? '';
 			tr.querySelector('.year').value 	= year;
 			tr.querySelector('.language').value = language;

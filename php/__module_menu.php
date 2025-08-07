@@ -10,15 +10,14 @@ DEFINE(__NAMESPACE__.'\MODULE_PATH', plugin_dir_path(__DIR__));
 
 const METAS = [
     'subtitle'  		=> 'text',
-    'authors'   		=> 'array',
+    'author'   			=> 'array',
     'series'    		=> 'text',
-    'isbn'    			=> 'text',
     'year'      		=> 'number',
     'languague' 		=> 'text',
     'age'       		=> 'text',
     'pages'     		=> 'number',
 	'image'				=> 'text',
-	'book-locations'	=> 'array'
+	'location'			=> 'array'
 ];
 
 require( MODULE_PATH  . 'lib/vendor/autoload.php');
