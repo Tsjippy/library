@@ -73,22 +73,19 @@ function displayBookArchive(){
 		'posts_per_page'  	=> -1, // Show all books
 	];
 
+	// Redirect to the first term if no term is specified
 	$exploded 	= explode('/books/', $_SERVER['REQUEST_URI']);
 	if(!empty($exploded[1])){
 		$taxonomy	= trim($exploded[1], '/');
 		
 		// get all terms in the taxonomy
 		$terms = get_terms( $taxonomy ); 
-		// convert array of term objects to array of term IDs
-		//$term_slugs = wp_list_pluck( $terms, 'slug' );
 
-		$args['tax_query'] 		= [
-			[
-				'taxonomy'	=> $taxonomy,
-				'field' 	=> 'slug',
-				'terms' 	=> $terms[0]->slug,
-			] 
-		];
+		if(!empty($terms)){
+			$link	= get_category_link($terms[0]->term_id);
+			wp_redirect($link);
+			exit;
+		}
 	}
 
 	$booksQuery = new \WP_Query($args);

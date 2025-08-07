@@ -44,6 +44,7 @@ function moduleDeActivated($options){
 
 add_filter('sim_submenu_library_description', __NAMESPACE__.'\moduleDescription', 10, 3);
 function moduleDescription($description, $moduleName){
+	pluginUpdate('1.0.5');
 	ob_start();
 	?>
 	<p>

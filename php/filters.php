@@ -128,6 +128,8 @@ function changeArchiveTitle($title, $category){
 		}else{	
 			$title = 'Books by '.ucfirst($category->name);
 		}
+	}elseif($category->taxonomy == 'book-locations'){
+		$title = 'Books at '.ucfirst($category->name);
 	}
 	
 	return $title;

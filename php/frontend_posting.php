@@ -92,8 +92,6 @@ function afterPostSave($post, $frontEndPost){
 add_action('sim_frontend_post_after_content', __NAMESPACE__.'\afterPostContent', 10, 2);
 function afterPostContent($frontendcontend){
 
-    //pluginUpdate('1.0.5');
-
     if(!empty($frontendcontend->post) && $frontendcontend->post->post_type != 'book'){
         return;
     }
