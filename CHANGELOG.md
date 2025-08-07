@@ -2,6 +2,17 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Updated
+
+## [1.0.6] - 2025-08-07
+
+
+### Added
 - update summary if needed
 - check for duplicate when adding book
 - subtitle
@@ -9,13 +20,9 @@
 - sort authors on last name
 - redirect to first term on author or locations page
 
-### Changed
-
 ### Fixed
 - issue when ' in input value
 - authors archive page
-
-### Updated
 
 ## [1.0.5] - 2025-08-05
 
