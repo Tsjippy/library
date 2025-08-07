@@ -156,7 +156,7 @@ function moduleFunctions($functionHtml, $settings){
 	}
 	
 	if(!empty($_REQUEST['updatemeta'])){
-		wp_schedule_single_event(time(), 'updatemetas');
+		wp_schedule_single_event(time(), 'sim-updatemetas');
 	}else{
 		?>
 		<br>
