@@ -273,6 +273,8 @@ class Library{
                         foreach($json as $index=>$data){
                             if(empty($data->authors)){
                                 $data->authors	= '';
+                            }else{
+                                $data->authors	= trim(preg_split("/([\/&,+]|\bwith\b|\band\b)/", $data->authors)[0]);
                             }
 
                             $posts      = $this->checkForDuplicates($data->title);
@@ -283,7 +285,7 @@ class Library{
                                 // Already in the database, so skip
                                 if(count($posts) > 1){
                                     foreach($posts as $post){
-                                        if(get_post_meta($post->ID, 'author') ==  $data->authors){
+                                        if(in_array($data->authors, get_post_meta($post->ID, 'author'))){
                                             // More than one book found, we show this one
                                             break;
                                         }
@@ -434,7 +436,6 @@ class Library{
 
         if(empty($matches)){
             // If the author is in the format "Last, First"
-            $author = ucfirst(strtolower(trim($matches[2]))).' '.ucfirst(strtolower(trim($matches[1])));
             $author         = strtolower(sanitize_text_field($author));
             $authorNames    = explode(' ', $author);
 

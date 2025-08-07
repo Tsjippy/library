@@ -311,6 +311,7 @@ document.addEventListener("change", async event =>{
 				img.src 			= e.target.result;
 				img.classList.add('book-image');
 				img.style.maxHeight	= "100px";
+				img.style.padding	=  "0";
 
 				div.appendChild(img);
 				
