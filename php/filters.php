@@ -114,6 +114,10 @@ add_action( 'init', function(){
 			return $catArgs;
 		}
 	);
+
+	add_action('sim-updatemetas', function(){
+		updateBookMetas();
+	});
 }, 0 );
 
 add_filter('sim-theme-archive-page-title', __NAMESPACE__.'\changeArchiveTitle', 10, 2);

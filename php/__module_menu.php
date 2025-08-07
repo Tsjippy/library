@@ -110,6 +110,39 @@ function emailSettings($optionsHtml, $settings){
 	return $optionsHtml.ob_get_clean();
 }
 
+function updateBookMetas(){
+	SIM\printArray('Starting Updating Metas');
+	$library		= new Library();
+
+	$books = get_posts(
+		array(
+			'orderby' 		=> 'post_title',
+			'order' 		=> 'asc',
+			'post_status' 	=> 'any',
+			'post_type'     => 	'book',
+			'posts_per_page'=> -1
+		)
+	);
+
+	foreach($books as $book){
+		$title		= $book->post_title;
+		$authors	= get_post_meta($book->ID, 'author');
+		$data		= $library->openLibrary($title, $authors[0] ?? '');
+
+		if(empty($data) || empty($data['author_name'])){
+			continue;
+		}
+
+		if($data['author_name'] != $authors){
+			foreach($data['author_name'] as $author){
+				$library->processAuthors($author, $book->ID);
+			}
+		}
+	}
+
+	SIM\printArray('Finished Updating Metas');
+}
+
 add_filter('sim_module_library_functions', __NAMESPACE__.'\moduleFunctions', 10, 2);
 function moduleFunctions($functionHtml, $settings){
 	$library		= getLibrary($settings);
@@ -120,6 +153,18 @@ function moduleFunctions($functionHtml, $settings){
 		echo $library->processImage($_FILES['books']['tmp_name']);
 	}else{
 		echo $library->getFileHtml();
+	}
+	
+	if(!empty($_REQUEST['updatemeta'])){
+		wp_schedule_single_event(time(), 'updatemetas');
+	}else{
+		?>
+		<br>
+		<br>
+		<form method='post'>
+			<input type='hidden' name='updatemeta' value='updatemeta'>
+			<button class='button sim small'>Update Book Metas</button>
+		<?php
 	}
 
 	return $functionHtml.ob_get_clean();

@@ -74,6 +74,38 @@ class Library{
         }
     }
 
+    public function openLibrary($title = '', $author = ''){
+        $url = "https://openlibrary.org/search.json?q=";
+
+        if(!empty($title)){
+            $url .= urlencode("title: $title");
+        }   
+
+        if(!empty($author)){
+            $url .= urlencode(" author: $author");
+        }
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // Return the transfer as a string
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        $data = json_decode($response, true);
+
+        if(empty($data['docs'])){
+            return [];
+        }
+
+        foreach($data['docs'] as $index => $doc){
+            if($doc['title'] != $title){
+                continue;
+            }
+
+            return $doc;
+        }
+    }
+
     private function chatGPT(){
         $url            = 'https://api.openai.com/v1/chat/completions';
 
@@ -431,12 +463,14 @@ class Library{
             return [];
         }
 
+        $author = sanitize_text_field($author);
+
         // Lastname first
         preg_match('/([a-zA-Z]+),\s*([a-zA-Z\s]+)/', $author, $matches);
 
         // If the author is not already in the format "Last, First"
         if(empty($matches)){
-            $author         = strtolower(sanitize_text_field($author));
+            $author         = strtolower($author);
             $authorNames    = explode(' ', $author);
             $author         = ucfirst(trim(end($authorNames)));
 
@@ -458,10 +492,10 @@ class Library{
             if(!in_array($author, $curValues)){
                 // Add the author to the post meta
                 add_post_meta($postId, 'author', $author);
+
+                wp_set_post_terms($postId, [$author], 'authors', true);
             }
         }
-
-        wp_set_post_terms($postId, [$author], 'authors', true);
     }
 
     /**
