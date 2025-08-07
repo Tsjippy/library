@@ -2,16 +2,23 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- moobile view
-- author remove button
 
 ### Changed
 
 ### Fixed
-- issue when author name already in right format
-- image processing
 
 ### Updated
+
+## [1.0.7] - 2025-08-07
+
+
+### Added
+- moobile view
+- author remove button
+
+### Fixed
+- issue when author name already in right format
+- image processing
 
 ## [1.0.6] - 2025-08-07
 
