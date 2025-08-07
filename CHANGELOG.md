@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- issue when author has only one name
 
 ### Updated
 
