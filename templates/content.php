@@ -18,17 +18,42 @@ if(is_tax() || is_archive()){
 ?>
 <style>
 	.metas{
-		margin-top:10px;
-		display: flex;
-		flex-wrap: wrap;
+		margin-top:		10px;
+		display: 		flex;
+		flex-wrap: 		wrap;
 	}
 
 	.book.meta{
-		margin-right: 10px;
+		margin-right: 	10px;
 	}
 
 	.cat_card{
-		padding: 10px;
+		padding: 		10px;
+	}
+
+	div.picture{
+		margin-top:		10px;
+		text-align: 	center;
+	}
+
+	.book-image{
+		min-width: 		150px;
+		padding:		10px;
+	}
+
+	@media only screen and (min-width: 600px) {
+		.entry-content{
+			display: 	flex;
+		}
+		.book-image{
+			padding-top: 	50px;
+		}
+	}
+
+	@media only screen and (max-width: 600px) {
+		.book.meta{
+			flex-basis: 	45%;
+		}
 	}
 </style>
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
@@ -42,7 +67,7 @@ if(is_tax() || is_archive()){
 			do_action( 'sim_before_content');
 		}
 		?>
-		<div class='entry-content<?php if($archive){echo ' archive';}?>' style='display: flex;'>
+		<div class='entry-content<?php if($archive){echo ' archive';}?>'>
 			<?php			
 			$id			= get_post_meta(get_the_ID(), 'image', true);
 
@@ -51,8 +76,8 @@ if(is_tax() || is_archive()){
 				$url	= "https://covers.openlibrary.org/b/id/$id-$size.jpg";
 
 				?>
-				<div class='picture' style='margin-top:10px;'>
-					<img src='<?php echo $url;?>' class='book-image' loading='lazy' style='min-width: 150px;padding:10px;padding-top: 50px;'>
+				<div class='picture'>
+					<img src='<?php echo $url;?>' class='book-image' loading='lazy'>
 				</div>
 				<?php
 			}
@@ -71,20 +96,21 @@ if(is_tax() || is_archive()){
 
 				?>	
 				<div class='book metas'>
-					<div class='category book meta'>
-						<?php
-						$categories = wp_get_post_terms(
-							get_the_ID(),
-							'books',
-							array(
-								'orderby'   => 'name',
-								'order'     => 'ASC',
-								'fields'    => 'id=>name'
-							)
-						);
-						
-						if(!empty($categories)){
-							?><h4>Genres</h4><?php
+					<?php
+					$categories = wp_get_post_terms(
+						get_the_ID(),
+						'books',
+						array(
+							'orderby'   => 'name',
+							'order'     => 'ASC',
+							'fields'    => 'id=>name'
+						)
+					);
+					
+					if(!empty($categories)){
+						?>
+						<div class='category book meta'>
+							<h4>Genres</h4><?php
 							$url	= SIM\pathToUrl(MODULE_PATH.'pictures/category.png');
 							echo "<img src='$url' alt='category' loading='lazy' class='book-icon'>";
 							
@@ -114,77 +140,75 @@ if(is_tax() || is_archive()){
 									echo ', ';
 								}
 							}
-						}
 						?>
-					</div>
-
-					<?php
+						</div>
+						<?php
+					}
 
 					foreach(METAS as $meta=>$type){
 						if($meta == 'image'){
 							continue;
 						}
 
-						echo "<div class='$meta book meta'>";
+						$single	= true;
+						if($type == 'array'){
+							$single	= false;
+						}
+						$value		= get_post_meta(get_the_ID(), $meta, $single);
 
-							$single	= true;
-							if($type == 'array'){
-								$single	= false;
-							}
-							$value		= get_post_meta(get_the_ID(), $meta, $single);
+						if(!empty($value)){
+							if($type == 'url'){
+								$value = "<a href='$value'>$value</a>";
+							}elseif($meta == 'author' || $meta == 'location'){
+								$taxonomy = $meta == 'author' ? 'authors' : 'book-locations';
 
-							if(!empty($value)){
-								if($type == 'url'){
-									$value = "<a href='$value'>$value</a>";
-								}elseif($meta == 'author' || $meta == 'location'){
-									$taxonomy = $meta == 'author' ? 'authors' : 'book-locations';
+								$terms = wp_get_post_terms(
+									get_the_ID(),
+									$taxonomy,
+									array(
+										'orderby'   => 'name',
+										'order'     => 'ASC',
+										'fields'    => 'id=>name'
+									)
+								);
+								
+								$links	= [];
+								foreach($terms as $id=>$termName){
+									if($meta == 'author'){
+										$splittedName 	= explode(', ', $termName);
 
-									$terms = wp_get_post_terms(
-										get_the_ID(),
-										$taxonomy,
-										array(
-											'orderby'   => 'name',
-											'order'     => 'ASC',
-											'fields'    => 'id=>name'
-										)
-									);
-									
-									$links	= [];
-									foreach($terms as $id=>$termName){
-										if($meta == 'author'){
-											$splittedName 	= explode(', ', $termName);
-
-											if(count($splittedName) > 1){
-												$lastName 		= $splittedName[0];
-												$firstnames 	= implode(' ', array_slice($splittedName, 1));
-												$termName 			= "$firstnames $lastName";
-											}else{	
-												$termName = ucfirst($category->name);
-											}
-										}
-
-										$url		= get_category_link($id);
-										$links[]	= "<a href='$url' target='_blank'>$termName</a>";
-									}
-
-									$value = implode('<br>', $links);
-								}elseif(is_array($value)){
-									if(is_array($value[0])){
-										//If the value is an array of arrays, we need to implode the inner arrays
-										foreach($value as $index=>$innerValue){
-											$value[$index] = implode(', ', $innerValue);
+										if(count($splittedName) > 1){
+											$lastName 		= $splittedName[0];
+											$firstnames 	= implode(' ', array_slice($splittedName, 1));
+											$termName 			= "$firstnames $lastName";
+										}else{	
+											$termName = ucfirst($category->name);
 										}
 									}
-									$value = implode('<br>', $value);
-								}	
-							
-								$imageUrl 	= SIM\pathToUrl(MODULE_PATH."pictures/{$meta}.png");
+
+									$url		= get_category_link($id);
+									$links[]	= "<a href='$url' target='_blank'>$termName</a>";
+								}
+
+								$value = implode('<br>', $links);
+							}elseif(is_array($value)){
+								if(is_array($value[0])){
+									//If the value is an array of arrays, we need to implode the inner arrays
+									foreach($value as $index=>$innerValue){
+										$value[$index] = implode(', ', $innerValue);
+									}
+								}
+								$value = implode('<br>', $value);
+							}	
+														
+							$imageUrl 	= SIM\pathToUrl(MODULE_PATH."pictures/{$meta}.png");
+
+							echo "<div class='$meta book meta'>";
 								echo "<div class='flex meta-wrapper'>";
 									echo "<img src='$imageUrl' alt='$meta' loading='lazy' class='book_icon' title='$meta'><div>$value</div>";
 								echo "</div>";
-							}
-						
-						echo "</div>";
+							echo "</div>";
+						}
 					}
 
 					do_action('sim_inside_book_metas');
