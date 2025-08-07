@@ -8,6 +8,7 @@
 ### Changed
 
 ### Fixed
+- issue when author name already in right format
 
 ### Updated
 
