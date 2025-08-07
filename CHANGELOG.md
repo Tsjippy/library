@@ -7,6 +7,7 @@
 - subtitle
 - search in books
 - sort authors on last name
+- redirect to first term on author or locations page
 
 ### Changed
 
