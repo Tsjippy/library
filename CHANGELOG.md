@@ -13,6 +13,7 @@
 
 ### Fixed
 - issue when ' in input value
+- authors archive page
 
 ### Updated
 
