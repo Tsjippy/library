@@ -182,14 +182,14 @@ if(is_tax() || is_archive()){
 											$firstnames 	= implode(' ', array_slice($splittedName, 1));
 											$termName 			= "$firstnames $lastName";
 										}else{	
-											$termName = ucfirst($category->name);
+											$termName = ucfirst($termName);
 										}
 									}
 
 									if(empty($termName)){
 										continue;
 									}
-									
+
 									$url		= get_category_link($id);
 									$links[]	= "<a href='$url' target='_blank'>$termName</a>";
 								}

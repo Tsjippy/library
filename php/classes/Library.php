@@ -434,19 +434,22 @@ class Library{
         // Lastname first
         preg_match('/([a-zA-Z]+),\s*([a-zA-Z\s]+)/', $author, $matches);
 
+        // If the author is not already in the format "Last, First"
         if(empty($matches)){
-            // If the author is in the format "Last, First"
             $author         = strtolower(sanitize_text_field($author));
             $authorNames    = explode(' ', $author);
+            $author         = ucfirst(trim(end($authorNames)));
 
-            // Last name first
-            $author         = ucfirst(end($authorNames)).', ';
+            if(count($authorNames) > 1){
+                // Last name first
+                $author         = $author .', ';
 
-            // Remove the last name from the array
-            array_pop($authorNames);
+                // Remove the last name from the array
+                array_pop($authorNames);
 
-            // Add the rest of the names
-            $author         .= implode(' ', array_map('ucfirst', $authorNames));
+                // Add the rest of the names
+                $author         .= implode(' ', array_map('trim', array_map('ucfirst', $authorNames)));
+            }
         }
 
         if(!empty($author)){
