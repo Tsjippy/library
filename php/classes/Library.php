@@ -424,15 +424,17 @@ class Library{
      * 
      * @return array
      */
-    public function processAuthors($authorString, $postId){
-        if(empty($authorString)){
+    public function processAuthors($author, $postId){
+        if(empty($author)){
             return [];
         }
 
-        $authors = explode(',', $authorString);
+        // Lastname first
+        preg_match('/([a-zA-Z]+),\s*([a-zA-Z\s]+)/', $author, $matches);
 
-        // Add authors meta fields
-        foreach($authors as &$author){
+        if(empty($matches)){
+            // If the author is in the format "Last, First"
+            $author = ucfirst(strtolower(trim($matches[2]))).' '.ucfirst(strtolower(trim($matches[1])));
             $author         = strtolower(sanitize_text_field($author));
             $authorNames    = explode(' ', $author);
 
@@ -444,20 +446,18 @@ class Library{
 
             // Add the rest of the names
             $author         .= implode(' ', array_map('ucfirst', $authorNames));
+        }
 
-            if(!empty($author)){
-                $curValues  = get_post_meta($postId, 'author');
+        if(!empty($author)){
+            $curValues  = get_post_meta($postId, 'author');
 
-                if(!in_array($author, $curValues)){
-                    // Add the author to the post meta
-                    add_post_meta($postId, 'author', $author);
-                }
+            if(!in_array($author, $curValues)){
+                // Add the author to the post meta
+                add_post_meta($postId, 'author', $author);
             }
         }
 
-        wp_set_post_terms($postId, $authors, 'authors', true);
-
-        return $authors;
+        wp_set_post_terms($postId, [$author], 'authors', true);
     }
 
     /**
@@ -536,7 +536,7 @@ class Library{
                         continue;
                     }
 
-                    wp_set_post_terms($postId, $value, 'book-locations', true);
+                    wp_set_post_terms($postId, [$value], 'book-locations', true);
                 }elseif($meta == 'author'){
                     if(is_array($value)){
                         foreach($value as $index=>$author){

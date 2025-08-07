@@ -76,7 +76,7 @@ function afterPostSave($post, $frontEndPost){
                         add_metadata( 'post', $post->ID, $meta, $value);
 
                         if($meta == 'location'){
-                            wp_set_post_terms($post->ID, $value, 'book-locations', true);
+                            wp_set_post_terms($post->ID, [$value], 'book-locations', true);
                         }
                     }
                 }

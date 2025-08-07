@@ -32,7 +32,7 @@ function pluginUpdate($oldVersion){
         $results = $wpdb->get_results($query);
 
         foreach($results as $result){
-            wp_set_post_terms($result->ID, $result->meta_value, 'book-locations', true);
+            wp_set_post_terms($result->ID, [$result->meta_value], 'book-locations', true);
 
             add_post_meta($result->ID, 'location', $result->meta_value);
             delete_post_meta($result->ID, 'locations');

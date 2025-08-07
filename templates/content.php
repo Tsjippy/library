@@ -186,6 +186,10 @@ if(is_tax() || is_archive()){
 										}
 									}
 
+									if(empty($termName)){
+										continue;
+									}
+									
 									$url		= get_category_link($id);
 									$links[]	= "<a href='$url' target='_blank'>$termName</a>";
 								}
