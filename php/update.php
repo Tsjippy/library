@@ -2,8 +2,6 @@
 namespace SIM\LIBRARY;
 use SIM;
 
-use function Crontrol\Event\delete;
-
 add_action('sim_library_module_update', __NAMESPACE__.'\pluginUpdate');
 function pluginUpdate($oldVersion){
     require_once ABSPATH . 'wp-admin/includes/upgrade.php';
@@ -23,8 +21,6 @@ function pluginUpdate($oldVersion){
 
         foreach($results as $result){
             $library->processAuthors($result->meta_value, $result->ID);
-
-            delete_post_meta($result->ID, 'author');
         }
 
         $query  = "SELECT pm.meta_value, p.ID
