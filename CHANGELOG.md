@@ -3,6 +3,7 @@
 
 ### Added
 - moobile view
+- author remove button
 
 ### Changed
 
