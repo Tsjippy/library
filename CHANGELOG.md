@@ -9,6 +9,7 @@
 
 ### Fixed
 - issue when author name already in right format
+- image processing
 
 ### Updated
 
