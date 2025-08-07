@@ -157,6 +157,7 @@ function afterPostContent($frontendcontend){
                                             <div class='buttonwrapper'>
                                                 <input type='<?php echo $type;?>' class='formbuilder' name='<?php echo $meta;?>[]' value='<?php echo $value; ?>' style='width: calc(100% - 70px);'>
                                                 <button type="button" class="add button" style="flex: 1;">+</button>
+                                                <button type="button" class="remove button" style="flex: 1;">-</button>
                                             </div>
                                         </div>
                                         <?php
