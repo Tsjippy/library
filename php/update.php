@@ -20,7 +20,7 @@ function pluginUpdate($oldVersion){
         $results = $wpdb->get_results($query);
 
         foreach($results as $result){
-            $library->processAuthors($result->meta_value, $result->ID);
+            $library->processAuthor($result->meta_value, $result->ID);
         }
 
         $query  = "SELECT pm.meta_value, p.ID

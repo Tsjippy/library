@@ -242,7 +242,10 @@ async function fetchMetaData(tr){
 		let key        = bookData['key'] ?? '';
         if(key != ''){
             url      = `https://openlibrary.org${key}`;
-			tr.querySelector('.url').innerHTML = `<a href='${url}' target='_blank'>View on Open Library</a>`;
+			tr.querySelector('.url').innerHTML = `
+			<input type='hidden' name='url' value='${url}'>
+			<a href='${url}' target='_blank'>View on Open Library</a>
+			`;
 
 			// Fetch the summary if not already set or needs to be updated
 			if(summary == '' || placeholder == null){

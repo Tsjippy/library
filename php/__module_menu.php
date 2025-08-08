@@ -17,7 +17,8 @@ const METAS = [
     'age'       		=> 'text',
     'pages'     		=> 'number',
 	'image'				=> 'text',
-	'location'			=> 'array'
+	'location'			=> 'array',
+	'url'				=> 'url',
 ];
 
 require( MODULE_PATH  . 'lib/vendor/autoload.php');
@@ -130,13 +131,38 @@ function updateBookMetas(){
 		$data		= $library->openLibrary($title, $authors[0] ?? '');
 
 		if(empty($data) || empty($data['author_name'])){
-			continue;
+			$data		= $library->openLibrary($title);
+
+			if(empty($data) || empty($data['author_name'])){
+				continue;
+			}
 		}
 
 		if($data['author_name'] != $authors){
+			delete_post_meta($book->ID, 'author');
+			wp_delete_object_term_relationships($book->ID, 'authors');
+
 			foreach($data['author_name'] as $author){
-				$library->processAuthors($author, $book->ID);
+				$library->processAuthor($author, $book->ID);
 			}
+
+			update_post_meta($book->ID, 'image', $data['cover_i']);
+
+			if($title != $data['title']){
+				wp_update_post(
+					array(
+						'ID'			=> $book->ID,
+						'post_title'	=> $data['title']
+					)
+				);
+			}
+
+			delete_post_meta($book->ID, 'subtitle');
+			if(!empty($data['subtitle'])){
+				update_post_meta($book->ID, 'subtitle', $data['subtitle']);
+			}
+
+			update_post_meta($book->ID, 'url', 'https://openlibrary.org/'.$data['key']);
 		}
 	}
 
@@ -157,10 +183,17 @@ function moduleFunctions($functionHtml, $settings){
 	
 	if(!empty($_REQUEST['updatemeta'])){
 		wp_schedule_single_event(time(), 'sim-updatemetas');
+
+		?>
+		<div class='success'>
+			<p>Updating book metas in the background. This can take a while.</p>
+		</div>
+		<?php	
 	}else{
 		?>
 		<br>
 		<br>
+		<h4>Sync Books with OpenLibrary.org</h4>
 		<form method='post'>
 			<input type='hidden' name='updatemeta' value='updatemeta'>
 			<button class='button sim small'>Update Book Metas</button>

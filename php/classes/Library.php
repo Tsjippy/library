@@ -93,17 +93,19 @@ class Library{
 
         $data = json_decode($response, true);
 
-        if(empty($data['docs'])){
+        if(empty($data) || empty($data['docs'])){
             return [];
         }
 
         foreach($data['docs'] as $index => $doc){
-            if($doc['title'] != $title){
+            if(strtolower($doc['title']) != strtolower($title)){
                 continue;
             }
 
             return $doc;
         }
+
+        return $data['docs'][0];
     }
 
     private function chatGPT(){
@@ -360,7 +362,9 @@ class Library{
                                         <td style='min-width: 300px;text-wrap: auto;'>
                                             <?php echo $data->summary;?>
                                         </td>
-                                        <td class='url'></td>
+                                        <td class='url'>
+                                            <?php echo get_post_meta($post->ID, 'url', true);?>
+                                        </td>
                                         <td>
                                             This book is already in the library.<br>
                                             <?php
@@ -451,14 +455,14 @@ class Library{
     }
 
     /**
-     * Processes the authors
+     * Processes the author
      * 
-     * @param string $authorString
+     * @param string $author
      * @param int $postId
      * 
      * @return array
      */
-    public function processAuthors($author, $postId){
+    public function processAuthor($author, $postId){
         if(empty($author)){
             return [];
         }
@@ -496,6 +500,8 @@ class Library{
                 wp_set_post_terms($postId, [$author], 'authors', true);
             }
         }
+
+        return $author;
     }
 
     /**
@@ -578,7 +584,7 @@ class Library{
                 }elseif($meta == 'author'){
                     if(is_array($value)){
                         foreach($value as $index=>$author){
-                            $this->processAuthors($author, $postId);
+                            $this->processAuthor($author, $postId);
                         }
                     }
 
