@@ -158,7 +158,7 @@ if(is_tax() || is_archive()){
 
 						if(!empty($value)){
 							if($type == 'url'){
-								$value = "<a href='$value'>$value</a>";
+								$value = "<a href='$value' target='_blank'>".basename($value)."</a>";
 							}elseif($meta == 'author' || $meta == 'location'){
 								$taxonomy = $meta == 'author' ? 'authors' : 'book-locations';
 

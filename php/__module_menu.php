@@ -161,9 +161,9 @@ function updateBookMetas(){
 			if(!empty($data['subtitle'])){
 				update_post_meta($book->ID, 'subtitle', $data['subtitle']);
 			}
-
-			update_post_meta($book->ID, 'url', 'https://openlibrary.org/'.$data['key']);
 		}
+
+		update_post_meta($book->ID, 'url', 'https://openlibrary.org/'.$data['key']);
 	}
 
 	SIM\printArray('Finished Updating Metas');
