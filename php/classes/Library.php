@@ -401,6 +401,7 @@ class Library{
                                                         <div class='buttonwrapper'>
                                                             <input type='text' name='author[]' class='author' value="<?php echo $author; ?>">
                                                             <button type="button" class="add button" style="flex: 1;">+</button>
+                                                            <button type="button" class="remove button" style="flex: 1;">-</button>
                                                         </div>
                                                     </div>
                                                     <?php

@@ -172,7 +172,7 @@ async function fetchMetaData(tr){
 		const data 		= await response.json();
 		let bookData    = data['docs'][0] ?? [];
 
-		if(author == ''){
+		if(bookData.length == 0 && author == ''){
 			let id	= `authorlist-${title.replaceAll(" ", "_").replaceAll("'", "")}`;
 			tr.querySelectorAll('.author').forEach(el => el.setAttribute("list", id));
 
@@ -329,7 +329,5 @@ document.addEventListener("change", async event =>{
 		
 		// Update metadata for the book row
 		await fetchMetaData(tr);
-
-		Main.displayMessage("Updated details succesfully.", 'success', true);
 	}
 });
