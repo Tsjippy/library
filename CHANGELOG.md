@@ -3,6 +3,7 @@
 
 ### Added
 - update meta action
+- url meta with link to openlibrary
 
 ### Changed
 
