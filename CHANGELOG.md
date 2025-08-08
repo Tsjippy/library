@@ -2,14 +2,22 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- update meta action
 
 ### Changed
 
 ### Fixed
-- issue when author has only one name
 
 ### Updated
+
+## [1.0.8] - 2025-08-08
+
+
+### Added
+- update meta action
+- url meta with link to openlibrary
+
+### Fixed
+- issue when author has only one name
 
 ## [1.0.7] - 2025-08-07
 
