@@ -9,6 +9,12 @@
 
 ### Updated
 
+## [1.1.0] - 2025-08-08
+
+
+### Fixed
+- removed annoying message
+
 ## [1.0.9] - 2025-08-08
 
 
