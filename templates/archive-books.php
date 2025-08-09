@@ -11,6 +11,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+// Redirect to the first term if no term is specified
+$exploded 	= explode('/books/', $_SERVER['REQUEST_URI']);
+if(!empty($exploded[1])){
+	$taxonomy	= trim($exploded[1], '/');
+	
+	// get all terms in the taxonomy
+	$terms = get_terms( $taxonomy ); 
+
+	if(!empty($terms)){
+		$link	= get_category_link($terms[0]->term_id);
+		wp_redirect($link);
+		exit;
+	}
+}
+
 global $wp_query;
 
 if($wp_query->is_embed){
@@ -26,21 +41,10 @@ if($skipWrapper){
 		get_header();
 	}
 
-	global $Modules;
-
-	$library		= getLibrary($Modules[MODULE_SLUG]);
+	require_once( __DIR__.'/shared.php');
+	addBooksModal();
 
 	?>
-	<div id='add-books_modal' class='modal <?php if(empty($_GET['addbooks'])){echo 'hidden';}?>'>
-		<div class="modal-content" style='max-width:100vw;'>
-			<span id="modal_close" class="close">&times;</span>
-			<div class="content">
-				<?php echo $library->getFileHtml();?>
-				<br>
-				<br>
-			</div>
-		</div>
-	</div>
 	<div id="primary">
 		<style>
 			@media (min-width: 991px){
@@ -72,21 +76,6 @@ function displayBookArchive(){
 		'paged'           	=> $paged,
 		'posts_per_page'  	=> -1, // Show all books
 	];
-
-	// Redirect to the first term if no term is specified
-	$exploded 	= explode('/books/', $_SERVER['REQUEST_URI']);
-	if(!empty($exploded[1])){
-		$taxonomy	= trim($exploded[1], '/');
-		
-		// get all terms in the taxonomy
-		$terms = get_terms( $taxonomy ); 
-
-		if(!empty($terms)){
-			$link	= get_category_link($terms[0]->term_id);
-			wp_redirect($link);
-			exit;
-		}
-	}
 
 	$booksQuery = new \WP_Query($args);
 	
