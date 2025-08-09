@@ -49,7 +49,7 @@ if($skipWrapper){
 				}
 			}
 		</style>
-		<main id="main" class='inside-article'>
+		<main id="main" class='inside-article' style='max-width:100vw;'>
 			<button type='button' class='sim button add-books' onclick='Main.showModal(`add-books`)'>Add books</button>
 			<?php displayBookArchive();?>
 		</main>
