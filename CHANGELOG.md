@@ -4,11 +4,16 @@
 ### Added
 
 ### Changed
-- clear add books modal on opening
 
 ### Fixed
 
 ### Updated
+
+## [1.1.1] - 2025-08-09
+
+
+### Changed
+- clear add books modal on opening
 
 ## [1.1.0] - 2025-08-08
 
