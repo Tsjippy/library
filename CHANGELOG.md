@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- clear add books modal on opening
 
 ### Fixed
 
