@@ -245,7 +245,7 @@ class Library{
 
                 <h4>Select picture</h4>
                 <label>
-                    Select one ore multiple picture(s) to check for a book or multiple books on bookshelf<br><br>
+                    Select one or multiple picture(s) to check for a book or multiple books on bookshelf<br><br>
                     <input type='file' name='image-selector' accept='image/png, image/jpeg, image/webp' class='formbuilder' multiple>
                 </label>
             </div>
@@ -280,7 +280,7 @@ class Library{
 
         ob_start();
         ?>
-        <div class='book-table-wrapper'>
+        <div class='book-table-wrapper' style='max-width:100vw;'>
             <h4>Books Identified in the picture</h4>
             <p>
                 Please check the details below and change them where needed before adding them to the library.
@@ -363,7 +363,7 @@ class Library{
                                             <?php echo $data->summary;?>
                                         </td>
                                         <td class='url'>
-                                            <?php echo get_post_meta($post->ID, 'url', true);?>
+                                            <a href='<?php echo get_post_meta($post->ID, 'url', true);?>' target='_blank'>View on OpenLibrary</a>
                                         </td>
                                         <td>
                                             This book is already in the library.<br>
