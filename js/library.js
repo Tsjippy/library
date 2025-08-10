@@ -279,8 +279,6 @@ document.addEventListener("click", event =>{
 	if(fileUploadWrap != undefined && target.matches(`.add-books`)){
 		fileUploadWrap.querySelectorAll('.image-preview, .book-table-wrapper').forEach(el => el.remove());
 	}else if(target.matches(`.add-book`)){
-		fileUploadWrap.querySelectorAll('.image-preview, .book-table-wrapper').forEach(el => el.remove());
-
 		addBook(target);
 	}else if(target.matches(`.delete-book`)){
 		target.closest('tr').remove();
