@@ -237,7 +237,7 @@ async function fetchMetaData(tr){
 		}
 
         let summary      	= tr.querySelector('.summary').value
-		summary				= bookData['description'] != undefined ? bookData['description']['value'] != undefined ? bookData['description']['value'] : summary : summary;
+		summary				= bookData['description'] != undefined ? bookData['description']['value'] != undefined ? bookData['description']['value'] : '' : '';
 
 		let key        = bookData['key'] ?? '';
         if(key != ''){
