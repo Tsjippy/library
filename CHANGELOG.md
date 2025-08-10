@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- bug when adding book to library
 
 ### Updated
+
+## [1.1.2] - 2025-08-10
+
+
+### Fixed
+- bug when adding book to library
 
 ## [1.1.1] - 2025-08-09
 
