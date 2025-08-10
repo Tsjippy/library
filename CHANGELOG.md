@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- bug when adding book to library
 
 ### Updated
 
