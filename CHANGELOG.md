@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- label issue on mobile
 
 ### Updated
 
