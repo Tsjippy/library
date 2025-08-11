@@ -1,4 +1,5 @@
 import { cloneNode } from "../../forms/js/forms";
+import { setTableLabel } from "../../../plugins/sim-plugin/includes/js/table.js";
 
 console.log("library.js loaded");
 
@@ -132,6 +133,8 @@ function readyStateChanged(e){
 
 function fileUploadSucces(result){
 	fileUploadWrap.innerHTML	= JSON.parse(result).data + fileUploadWrap.innerHTML;
+
+	setTableLabel();
 	
 	Main.displayMessage("The files have been processed succesfully.", 'success', true);
 
@@ -166,12 +169,13 @@ async function fetchMetaData(tr){
 		if(author != ''){
 			url += encodeURIComponent(` author:${author}`)+'&limit=1';
 		}
-		url += '&fields=key,title,author_name,subtitle,alternative_subtitle,cover_i,language,number_of_pages_median,first_publish_year,description';
+		url += '&fields=key,title,author_name,subtitle,alternative_subtitle,cover_i,language,number_of_pages_median,first_publish_year,description,subjects';
 
 		const response 	= await fetch(url);
 		const data 		= await response.json();
 		let bookData    = data['docs'][0] ?? [];
 
+		// If no book data found, create a list with possible authors
 		if(bookData.length == 0 && author == ''){
 			let id	= `authorlist-${title.replaceAll(" ", "_").replaceAll("'", "")}`;
 			tr.querySelectorAll('.author').forEach(el => el.setAttribute("list", id));
@@ -247,15 +251,18 @@ async function fetchMetaData(tr){
 			<a href='${url}' target='_blank'>View on Open Library</a>
 			`;
 
-			// Fetch the summary if not already set or needs to be updated
-			if(summary == '' || placeholder == null){
-				// Fetch the summary from the Open Library API
-				const descriptionResponse 	= await fetch(url+'.json');
-				const description 			= await descriptionResponse.json();
+			// Fetch the summary from the Open Library API
+			const workResponse 	= await fetch(url+'.json');
+			const workJson 		= await workResponse.json();
 
-				summary = description['description'] ?? '';	
-				
-				summary = summary.value ?? summary;
+			summary = workJson['description'] ?? '';	
+			
+			summary = summary.value ?? summary;
+
+			if(	workJson['subjects'] != undefined ){
+				workJson['subjects'].forEach((subject) => {
+					tr.querySelectorAll(`.category[data-name="${subject}"]`).forEach((el) => el.checked = true);
+				});
 			}
         }
 
@@ -277,7 +284,7 @@ document.addEventListener("click", event =>{
 	let target = event.target;
 
 	if(fileUploadWrap != undefined && target.matches(`.add-books`)){
-		fileUploadWrap.querySelectorAll('.image-preview, .book-table-wrapper').forEach(el => el.remove());
+		fileUploadWrap.querySelectorAll('.image-preview, .book.table-wrapper').forEach(el => el.remove());
 	}else if(target.matches(`.add-book`)){
 		addBook(target);
 	}else if(target.matches(`.delete-book`)){

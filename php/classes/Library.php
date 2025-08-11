@@ -86,8 +86,8 @@ class Library{
         }
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // Return the transfer as a string
+        curl_setopt($ch, CURLOPT_URL, "$url&fields=key,title,author_name,subtitle,alternative_subtitle,cover_i,language,number_of_pages_median,first_publish_year,description,subjects");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
         $response = curl_exec($ch);
         curl_close($ch);
 
@@ -100,6 +100,20 @@ class Library{
         foreach($data['docs'] as $index => $doc){
             if(strtolower($doc['title']) != strtolower($title)){
                 continue;
+            }
+
+            if(!empty($doc['key'])){
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, "https://openlibrary.org{$doc['key']}.json");
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
+                $response = curl_exec($ch);
+                curl_close($ch);
+
+                $workData   = json_decode($response, true);
+
+                if(!empty($workData)){
+                    $doc        = array_merge($doc, $workData);
+                }
             }
 
             return $doc;
@@ -278,9 +292,18 @@ class Library{
     public function getTable($json){
         wp_enqueue_script('sim_library_script');
 
+        $categories	= get_categories( array(
+            'orderby' 		=> 'name',
+            'order'   		=> 'ASC',
+            'taxonomy'		=> 'books',
+            'hide_empty' 	=> false,
+        ) );
+
+        $location = $_REQUEST['location'];
+
         ob_start();
         ?>
-        <div class='book-table-wrapper' style='max-width:100vw;'>
+        <div class='book table-wrapper' style='max-width:100vw;'>
             <h4>Books Identified in the picture</h4>
             <p>
                 Please check the details below and change them where needed before adding them to the library.
@@ -297,6 +320,7 @@ class Library{
                         <th>Languague</th>
                         <th>Pages</th>
                         <th>Summary</th>
+                        <th>Categories</th>
                         <th>URL</th>
                         <th>Actions</th>
                     </tr>
@@ -312,8 +336,6 @@ class Library{
                             }
 
                             $posts      = $this->checkForDuplicates($data->title);
-
-                            $location = $_REQUEST['location'];
 
                             if(count($posts) > 0){
                                 // Already in the database, so skip
@@ -337,7 +359,9 @@ class Library{
 
                                 ?>
                                     <tr class='existing-book'>
-                                        <td class='image'><?php echo $image; ?></td>
+                                        <td class='image'>
+                                            <?php echo $image; ?>
+                                        </td>
                                         <td>
                                             <?php echo $data->title; ?>
                                         </td>
@@ -361,6 +385,19 @@ class Library{
                                         </td>
                                         <td style='min-width: 300px;text-wrap: auto;'>
                                             <?php echo $data->summary;?>
+                                        </td>
+                                        <td>
+                                            <?php
+                                                foreach($categories as $category){
+                                                    $checked	= '';
+                                                    if(is_array($post->post_category) && in_array($category->cat_ID, $post->post_category)){
+                                                        $checked 	= 'checked';
+                                                    }
+                                                    echo "<label><input type='checkbox' name='category_id[]' class='option-label category' value='$category->cat_ID' $checked data-name='$category->name'>";
+
+						                            echo "$category->name</label>";
+                                                }
+                                            ?>
                                         </td>
                                         <td class='url'>
                                             <a href='<?php echo get_post_meta($post->ID, 'url', true);?>' target='_blank'>View on OpenLibrary</a>
@@ -387,7 +424,8 @@ class Library{
                             }else{
                                 ?>
                                     <tr>
-                                        <td class='image'></td>
+                                        <td class='image'>
+                                        </td>
                                         <td>
                                             <input type='text' name='title' class='title' value="<?php echo $data->title; ?>">
                                         </td>
@@ -414,6 +452,15 @@ class Library{
                                         </td>
                                         <td>
                                             <textarea name='summary' class='summary' style='min-width: 300px;text-wrap: auto;' rows=2><?php echo $data->summary; ?></textarea>
+                                        </td>
+                                        <td>
+                                            <?php
+                                                foreach($categories as $category){
+                                                    echo "<input type='checkbox' name='category_id[]' value='$category->cat_ID'>";
+
+						                            echo "<label class='option-label category-select'>$category->name</label>";
+                                                }
+                                            ?>
                                         </td>
                                         <td class='url'></td>
                                         <td class='location hidden'><input type='text' name='location' value="<?php echo $location; ?>"></td>

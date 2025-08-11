@@ -125,6 +125,13 @@ function updateBookMetas(){
 		)
 	);
 
+	$categories	= get_categories( array(
+		'orderby' 		=> 'name',
+		'order'   		=> 'ASC',
+		'taxonomy'		=> 'books',
+		'hide_empty' 	=> false,
+	) );
+
 	foreach($books as $book){
 		$title		= $book->post_title;
 		$authors	= get_post_meta($book->ID, 'author');
@@ -160,6 +167,14 @@ function updateBookMetas(){
 			delete_post_meta($book->ID, 'subtitle');
 			if(!empty($data['subtitle'])){
 				update_post_meta($book->ID, 'subtitle', $data['subtitle']);
+			}
+		}
+
+		if(!empty($data['subjects'])){
+			foreach($categories as $category){
+				if(in_array($category->name, $data['subjects'])){
+					wp_set_object_terms($book->ID, $category->term_id, 'books', true);
+				}
 			}
 		}
 
