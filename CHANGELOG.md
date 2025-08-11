@@ -2,13 +2,18 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- categories
 
 ### Changed
 
 ### Fixed
 
 ### Updated
+
+## [1.1.3] - 2025-08-11
+
+
+### Added
+- categories
 
 ## [1.1.2] - 2025-08-10
 
