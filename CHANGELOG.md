@@ -7,6 +7,7 @@
 
 ### Fixed
 - label issue on mobile
+- bug in labels
 
 ### Updated
 
