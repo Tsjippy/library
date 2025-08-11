@@ -143,20 +143,19 @@ async function fileUploadSucces(result){
 	const event = new Event('uploadfinished');
 	fileUploadWrap.dispatchEvent(event);
 
-	fetchMetaDatas();
-
-	// Wait for the placeholders to be removed
-	while(document.querySelector('.placeholder') != null){
-		await new Promise(r => setTimeout(r, 1000));
-	}
+	await fetchMetaDatas();
 
 	setTableLabel();
 }
 
 async function fetchMetaDatas(){
+	let promiseArray = [];
+
 	fileUploadWrap.querySelectorAll('table tr').forEach(async (tr) => {
-		fetchMetaData(tr);
+		promiseArray.push(fetchMetaData(tr));
 	});
+
+	await Promise.all(promiseArray);
 }
 
 async function fetchMetaData(tr){
