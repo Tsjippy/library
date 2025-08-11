@@ -131,11 +131,9 @@ function readyStateChanged(e){
 	}
 }
 
-function fileUploadSucces(result){
+async function fileUploadSucces(result){
 	fileUploadWrap.innerHTML	= JSON.parse(result).data + fileUploadWrap.innerHTML;
 
-	setTableLabel();
-	
 	Main.displayMessage("The files have been processed succesfully.", 'success', true);
 
 	fileUploadWrap.querySelector('.image-selector-wrap').classList.remove('hidden');
@@ -146,6 +144,13 @@ function fileUploadSucces(result){
 	fileUploadWrap.dispatchEvent(event);
 
 	fetchMetaDatas();
+
+	// Wait for the placeholders to be removed
+	while(document.querySelector('.placeholder') != null){
+		await new Promise(r => setTimeout(r, 1000));
+	}
+
+	setTableLabel();
 }
 
 async function fetchMetaDatas(){
