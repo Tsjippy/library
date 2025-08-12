@@ -6,9 +6,15 @@
 ### Changed
 
 ### Fixed
-- label issue on mobile
 
 ### Updated
+
+## [1.1.4] - 2025-08-11
+
+
+### Fixed
+- label issue on mobile
+- bug in labels
 
 ## [1.1.3] - 2025-08-11
 

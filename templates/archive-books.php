@@ -74,7 +74,7 @@ function displayBookArchive(){
 		'post_type'			=> 'book',
 		'post_status'		=> 'publish',
 		'paged'           	=> $paged,
-		'posts_per_page'  	=> -1, // Show all books
+		'posts_per_page'  	=> 50, // Show all books
 	];
 
 	$booksQuery = new \WP_Query($args);
