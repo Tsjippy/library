@@ -145,6 +145,7 @@ async function fileUploadSucces(result){
 
 	await fetchMetaDatas();
 
+	// Run this only when all rows are processed
 	setTableLabel();
 }
 
