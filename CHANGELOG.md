@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- only add url if it exists
 
 ### Updated
 
