@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- setting book categories
 
 ### Updated
 
