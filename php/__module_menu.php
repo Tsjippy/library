@@ -176,7 +176,9 @@ function updateBookMetas(){
 			wp_set_object_terms($book->ID, array_uintersect($categories, $data['subjects'], 'strcasecmp'), 'books', true);
 		}
 
-		update_post_meta($book->ID, 'url', 'https://openlibrary.org/'.$data['key']);
+		if(!empty($data['key'])){
+			update_post_meta($book->ID, 'url', 'https://openlibrary.org/'.$data['key']);
+		}
 	}
 
 	SIM\printArray('Finished Updating Metas');
