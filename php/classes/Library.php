@@ -61,7 +61,7 @@ class Library{
             return new WP_Error('library', 'Invalid filepath given');
         }
 
-        $this->imagePath      = $path;
+        $this->imagePath      = apply_filters('file_upload_path', $path);
         $this->imageMimeType  = mime_content_type($this->imagePath);
         $this->imageData      = base64_encode(file_get_contents($this->imagePath));
 
@@ -234,6 +234,8 @@ class Library{
     public function getFileHtml(){
         ob_start();
         wp_enqueue_script('sim_library_script');
+
+        
 		?>
         <div class='file_upload_wrap'>
             <div class='loadergif_wrapper hidden'>
@@ -260,7 +262,7 @@ class Library{
                 <h4>Select picture</h4>
                 <label>
                     Select one or multiple picture(s) to check for a book or multiple books on bookshelf<br><br>
-                    <input type='file' name='image-selector' accept='image/png, image/jpeg, image/webp' class='formbuilder' multiple>
+                    <input type='file' name='image-selector' accept='<?php apply_filters('sim-library-accepted-files', 'image/png, image/jpeg, image/webp');?>' class='formbuilder' multiple>
                 </label>
             </div>
         </div>
@@ -453,12 +455,13 @@ class Library{
                                         <td>
                                             <textarea name='summary' class='summary' style='min-width: 300px;text-wrap: auto;' rows=2><?php echo $data->summary; ?></textarea>
                                         </td>
-                                        <td>
+                                        <td class='categories' style='text-align: left;'>
                                             <?php
                                                 foreach($categories as $category){
-                                                    echo "<input type='checkbox' name='category_id[]' value='$category->cat_ID'>";
-
-						                            echo "<label class='option-label category-select'>$category->name</label>";
+                                                    echo "<label class='option-label category-select'>";
+                                                        echo "<input type='checkbox' name='category_id[]' value='$category->cat_ID'>";
+						                                echo "$category->name";
+                                                    echo "</label><br>";
                                                 }
                                             ?>
                                         </td>
@@ -572,14 +575,11 @@ class Library{
 			'post_author'   => get_current_user_id()
 		);
 
-        if(!empty($data['categories'])){
-            $post['post_category'] = array_map('sanitize_text_field', $_POST['categories']);
-        }
-
         // Insert the post into the database.
         $postId 	    = wp_insert_post( $post, true, false);
         $post['ID']		= $postId;
 
+        // try again if needed
 		if(is_wp_error($postId)){
 			// check for errors
 			if(is_wp_error($postId)){
@@ -611,6 +611,7 @@ class Library{
 			return new WP_Error('Inserting post error', "Could not create the book!");
 		}
 
+        // Store metas
         foreach(METAS as $meta => $type){
             // Add post meta
             if(!empty($_POST[$meta])){
@@ -640,6 +641,13 @@ class Library{
                 }
 
                 add_post_meta($postId, $meta, $value);
+            }
+        }
+
+        if(!empty($data['category_id'])){
+            // Store categories
+            foreach($data['category_id'] as $categoryId){
+                wp_set_object_terms($postId, intval($categoryId), 'books', true);
             }
         }
 

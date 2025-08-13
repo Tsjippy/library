@@ -8,7 +8,12 @@ async function addBook(target){
 	let row				= target.closest('tr');
 	let formData		= new FormData();
 
-	row.querySelectorAll('input, textarea').forEach(input=>formData.append(input.name, input.value));
+	row.querySelectorAll('input, textarea').forEach(input => {
+		if(input.type != 'checkbox' || input.checked){
+			formData.append(input.name, input.value);
+		}
+	});
+
 	row.querySelectorAll('td > img').forEach(img=>formData.append('image', img.src));
 
 	target.classList.add('hidden');

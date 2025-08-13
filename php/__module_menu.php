@@ -120,7 +120,7 @@ function updateBookMetas(){
 			'orderby' 		=> 'post_title',
 			'order' 		=> 'asc',
 			'post_status' 	=> 'any',
-			'post_type'     => 	'book',
+			'post_type'     => 'book',
 			'posts_per_page'=> -1
 		)
 	);
@@ -130,6 +130,8 @@ function updateBookMetas(){
 		'order'   		=> 'ASC',
 		'taxonomy'		=> 'books',
 		'hide_empty' 	=> false,
+		'fields' 		=> 'names',
+		'posts_per_page'=> -1	
 	) );
 
 	foreach($books as $book){
@@ -171,11 +173,7 @@ function updateBookMetas(){
 		}
 
 		if(!empty($data['subjects'])){
-			foreach($categories as $category){
-				if(in_array($category->name, $data['subjects'])){
-					wp_set_object_terms($book->ID, $category->term_id, 'books', true);
-				}
-			}
+			wp_set_object_terms($book->ID, array_uintersect($categories, $data['subjects'], 'strcasecmp'), 'books', true);
 		}
 
 		update_post_meta($book->ID, 'url', 'https://openlibrary.org/'.$data['key']);
