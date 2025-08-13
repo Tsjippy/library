@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- setting book categories
 
 ### Updated
+
+## [1.1.5] - 2025-08-13
+
+
+### Fixed
+- setting book categories
 
 ## [1.1.4] - 2025-08-11
 
