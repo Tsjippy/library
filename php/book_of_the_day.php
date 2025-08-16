@@ -41,11 +41,10 @@ function afterBotPrayer($args){
     }
     $book = $books[0];
 
-    
     // create the text description
     $msg = $book->post_title."\n\n".$book->post_content;
     
-    $args['message'] .= "\n\nHave you read this book? ";
+    $args['message'] .= "\n\nHave you read this book?\n\n$msg";
     
     // add the book picture
     $url = get_post_meta($book->ID, 'picture', true);
