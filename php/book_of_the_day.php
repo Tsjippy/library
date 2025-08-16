@@ -10,6 +10,7 @@ function filterWhereContentNotEmpty( $where = '' ) {
 
 add_filter('sim_after_bot_payer', __NAMESPACE__.'\afterBotPrayer');
 function afterBotPrayer($args){
+    // get random book post with a picture and description
     add_filter( 'posts_where', __NAMESPACE__.'\filterWhereContentNotEmpty' );
     
     $book = get_posts(
@@ -33,10 +34,12 @@ function afterBotPrayer($args){
 
     remove_filter( 'posts_where', __NAMESPACE__.'\filterWhereContentNotEmpty' );
 
+    // create the text description
     $msg = $book->post_title."\n\n".$book->post_content;
     
     $args['message'] .= "\n\nHave you read this book? ";
     
+    // add the book picture
     $url = get_post_meta($book->ID, 'picture', true);
     
     $temp_file = tempnam(sys_get_temp_dir(), 'mime_check_');
@@ -56,4 +59,7 @@ function afterBotPrayer($args){
 
         $args['pictures'][] = $dataUri;
     }
+    
+    // add the url to the args
+    $args['urls'][] = get_permalink($book);
 }
