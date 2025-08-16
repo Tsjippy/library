@@ -13,10 +13,10 @@ function afterBotPrayer($args){
     // get random book post with a picture and description
     add_filter( 'posts_where', __NAMESPACE__.'\filterWhereContentNotEmpty' );
     
-    $book = get_posts(
+    $books = get_posts(
         array(
             'post_type'              => 'book',
-            'numberposts' => 1,
+            'numberposts' => -1,
             'orderby'     => 'rand',
             'post_status' => 'publish',
             'meta_query'     => array(
@@ -31,6 +31,12 @@ function afterBotPrayer($args){
             ),
         )
     );
+    
+    // do not continue if we have less then 100 books
+    if(count($books) < 100){
+        return;
+    }
+    $book = $books[0];
 
     remove_filter( 'posts_where', __NAMESPACE__.'\filterWhereContentNotEmpty' );
 
