@@ -32,14 +32,16 @@ function afterBotPrayer($args){
         )
     );
     
+    
+    remove_filter( 'posts_where', __NAMESPACE__.'\filterWhereContentNotEmpty' );
+
     // do not continue if we have less then 100 books
     if(count($books) < 100){
         return;
     }
     $book = $books[0];
 
-    remove_filter( 'posts_where', __NAMESPACE__.'\filterWhereContentNotEmpty' );
-
+    
     // create the text description
     $msg = $book->post_title."\n\n".$book->post_content;
     
