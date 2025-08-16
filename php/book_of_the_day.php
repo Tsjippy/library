@@ -7,25 +7,53 @@ function filterWhereContentNotEmpty( $where = '' ) {
         return $where;
     }
 
-add_filter( 'posts_where', __NAMESPACE__.'\filterWhereContentNotEmpty' );
 
-$selectedBook = get_posts(
-            array(
-                'post_type'              => 'book',
-                'numberposts' => 1,
-    'orderby'     => 'rand',
-    'post_status' => 'publish',
-    'meta_query'     => array(
+add_filter('sim_after_bot_payer', __NAMESPACE__.'\afterBotPrayer');
+function afterBotPrayer($args){
+    add_filter( 'posts_where', __NAMESPACE__.'\filterWhereContentNotEmpty' );
+    
+    $book = get_posts(
         array(
-            'key'     => 'picture',     // Replace with your custom field key
-            'compare' => 'EXISTS',                 
-        ),
-        array(
-            'key'     => 'url',     // Replace with your custom field key
-            'compare' => 'EXISTS',                 
-        ),
-    ),
-            )
-        );
+            'post_type'              => 'book',
+            'numberposts' => 1,
+            'orderby'     => 'rand',
+            'post_status' => 'publish',
+            'meta_query'     => array(
+                array(
+                    'key'     => 'picture',     // Replace with your custom field key
+                    'compare' => 'EXISTS',                 
+                ),
+                array(
+                    'key'     => 'url',     // Replace with your custom field key
+                    'compare' => 'EXISTS',                 
+                ),
+            ),
+        )
+    );
 
-remove_filter( 'posts_where', __NAMESPACE__.'\filterWhereContentNotEmpty' );
+    remove_filter( 'posts_where', __NAMESPACE__.'\filterWhereContentNotEmpty' );
+
+    $msg = $book->post_title."\n\n".$book->post_content;
+    
+    $args['message'] .= "\n\nHave you read this book? ";
+    
+    $url = get_post_meta($book->ID, 'picture', true);
+    
+    $temp_file = tempnam(sys_get_temp_dir(), 'mime_check_');
+
+    $mimeType='';
+    
+    $imageData = file_get_contents($url);
+    
+    if (file_put_contents($temp_file, $imageData)) {
+        $mimeType = mime_content_type($temp_file);
+    } 
+    unlink($temp_file);
+    
+    if ($imageData !== false && !empty($mimeType)) {
+        $base64Image = base64_encode($imageData);
+        $dataUri = 'data:' . $mimeType . ';base64,' . $base64Image;
+
+        $args['pictures'][] = $dataUri;
+    }
+}
