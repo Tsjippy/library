@@ -13,9 +13,9 @@ function scheduleTasks(){
 }
 
 function sendBookOfTheDay(){
-    $time = SIM\getModuleOption(MODULE_SLUG, 'book-time');
+    $time = strtotime(SIM\getModuleOption(MODULE_SLUG, 'book-time'));
     
-    if($time == time()){
+    if($time - time() < 500 ){
         $book = bookOfTheDay();
         
         do_action('sim-library-send-book-of-the-day', $book);
