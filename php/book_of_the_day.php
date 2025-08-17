@@ -7,9 +7,11 @@ function filterWhereContentNotEmpty( $where = '' ) {
         return $where;
     }
 
-
-add_filter('sim_after_bot_payer', __NAMESPACE__.'\afterBotPrayer');
-function afterBotPrayer($args){
+/**
+* Gets a random book which has a picture and a description
+* @return array|boolean   Array of text, base64 image and url, or false if there are not enough books
+**\
+function bookOfTheDay(){
     // get random book post with a picture and description
     add_filter( 'posts_where', __NAMESPACE__.'\filterWhereContentNotEmpty' );
     
@@ -37,14 +39,12 @@ function afterBotPrayer($args){
 
     // do not continue if we have less then 100 books
     if(count($books) < 100){
-        return;
+        return false;
     }
     $book = $books[0];
 
     // create the text description
-    $msg = $book->post_title."\n\n".$book->post_content;
-    
-    $args['message'] .= "\n\nHave you read this book?\n\n$msg";
+    $msg = "Book Of The Day<br><br>$book->post_title."<br><br>".$book->post_content;
     
     // add the book picture
     $url = get_post_meta($book->ID, 'picture', true);
@@ -62,11 +62,15 @@ function afterBotPrayer($args){
     
     if ($imageData !== false && !empty($mimeType)) {
         $base64Image = base64_encode($imageData);
-        $dataUri = 'data:' . $mimeType . ';base64,' . $base64Image;
-
-        $args['pictures'][] = $dataUri;
+        $picture = 'data:' . $mimeType . ';base64,' . $base64Image;
     }
     
     // add the url to the args
-    $args['urls'][] = get_permalink($book);
+    $url = get_permalink($book);
+    
+    return [
+        'message' => $msg,
+        'image' => $image,
+        'url' => $url
+    ];
 }
