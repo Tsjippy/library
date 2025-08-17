@@ -9,11 +9,15 @@ function initTasks(){
 }
 
 function scheduleTasks(){
-    
-    $freq   = SIM\getModuleOption(MODULE_SLUG, 'book_of_the_day_freq');
-    if($freq){
-        SIM\scheduleTask('send_book_of_the_day', $freq);
-    }
+    SIM\scheduleTask('send_book_of_the_day', 'quarterly');
 }
 
-$book = bookOfTheDay();
+function sendBookOfTheDay(){
+    $time = SIM\getModuleOption(MODULE_SLUG, 'book-time');
+    
+    if($time == time()){
+        $book = bookOfTheDay();
+        
+        do_action('sim-library-send-book-of-the-day', $book);
+    }
+}
