@@ -79,16 +79,11 @@ function moduleOptions($optionsHtml, $settings, $moduleName){
     ?>
 		<br>
 		<br>
-		<label for="reminder_freq">
-			How often should people be reminded of remaining form fields to fill?
-		</label>
-		<br>
-		<select name="reminder_freq">
-			<?php
-			SIM\ADMIN\recurrenceSelector($settings['reminder_freq']);
-			?>
-		</select>
-
+		<label>
+            What time should I send a book of the day message?
+    		<br>
+    		<input type='time' name="book-time" value='<?php echo $settings['book-time'];?>'>
+        </label>
 		<?php
 
 	return $optionsHtml.ob_get_clean();
