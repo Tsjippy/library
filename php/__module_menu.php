@@ -32,7 +32,7 @@ function moduleActivated($options){
 
 add_filter('sim_module_library_after_save', __NAMESPACE__.'\moduleUpdated', 10, 3);
 function moduleUpdated($newOptions, $moduleSlug, $oldOptions){
-	//scheduleTasks();
+	scheduleTasks();
 
 	return $newOptions;
 }
