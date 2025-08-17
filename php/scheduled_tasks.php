@@ -18,6 +18,6 @@ function sendBookOfTheDay(){
     if($time - time() < 500 ){
         $book = bookOfTheDay();
         
-        do_action('sim-library-send-book-of-the-day', $book);
+        do_action('sim-library-send-book-of-the-day', ...$book);
     }
 }
