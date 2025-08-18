@@ -8,6 +8,7 @@
 
 ### Fixed
 - only add url if it exists
+- scheduled task
 
 ### Updated
 
