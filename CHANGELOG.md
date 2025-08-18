@@ -2,15 +2,22 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- book of the day
 
 ### Changed
 
 ### Fixed
-- only add url if it exists
-- scheduled task
 
 ### Updated
+
+## [1.1.6] - 2025-08-18
+
+
+### Added
+- book of the day
+
+### Fixed
+- only add url if it exists
+- scheduled task
 
 ## [1.1.5] - 2025-08-13
 
