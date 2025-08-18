@@ -5,7 +5,7 @@ use SIM;
 add_action('init', __NAMESPACE__.'\initTasks');
 function initTasks(){
 	//add action for use in scheduled task
-	add_action( 'send_book_of_the_day', __NAMESPACE__.'\bookOfTheDay' );
+	add_action( 'send_book_of_the_day', __NAMESPACE__.'\sendBookOfTheDay' );
 }
 
 function scheduleTasks(){
@@ -13,11 +13,13 @@ function scheduleTasks(){
 }
 
 function sendBookOfTheDay(){
-    $time = strtotime(SIM\getModuleOption(MODULE_SLUG, 'book-time'));
+    $time = SIM\getModuleOption(MODULE_SLUG, 'book-time');
+
+    if(!$time){
+        return;
+    }
     
-    if($time - time() < 500 ){
-        $book = bookOfTheDay();
-        
-        do_action('sim-library-send-book-of-the-day', ...$book);
+    if(abs(strtotime($time) - current_time('U')) < 450 ){        
+        do_action('sim-library-send-book-of-the-day', ...bookOfTheDay());
     }
 }
