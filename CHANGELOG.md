@@ -2,6 +2,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- book location to book of the day args
 
 ### Changed
 - categories on eper line
