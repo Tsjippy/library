@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- categories on eper line
 
 ### Fixed
 
