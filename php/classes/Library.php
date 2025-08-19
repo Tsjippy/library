@@ -460,7 +460,7 @@ class Library{
                                             <?php
                                                 foreach($categories as $category){
                                                     echo "<label class='option-label category-select'>";
-                                                        echo "<input type='checkbox' name='category_id[]' value='$category->cat_ID'>";
+                                                        echo "<input type='checkbox' name='category_id[]' value='$category->cat_ID' data-name='$category->name'>";
 						                                echo "$category->name";
                                                     echo "</label><br>";
                                                 }

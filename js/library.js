@@ -271,7 +271,7 @@ async function fetchMetaData(tr){
 
 			if(	workJson['subjects'] != undefined ){
 				workJson['subjects'].forEach((subject) => {
-					tr.querySelectorAll(`.category[data-name="${subject}"]`).forEach((el) => el.checked = true);
+					tr.querySelectorAll(`.category-select [data-name="${subject}"]`).forEach((el) => el.checked = true);
 				});
 			}
         }
@@ -312,6 +312,8 @@ document.addEventListener("change", async event =>{
 		let location	= fileUploadWrap.querySelector(`.book-location`);
 		const isValid 	= location.reportValidity();
 		if (!isValid) {
+			target.value = '';
+			Main.displayMessage("Please select a location for the book.", 'error');
 			return;
 		}
 		location = location.value;
