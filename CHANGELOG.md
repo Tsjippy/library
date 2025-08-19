@@ -8,6 +8,7 @@
 - categories on eper line
 
 ### Fixed
+- preselect categories
 
 ### Updated
 
