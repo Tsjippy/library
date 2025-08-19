@@ -101,6 +101,7 @@ function bookOfTheDay(){
         'description'   => $description,
         'title'         => $book->post_title,
         'image'         => $picture,
-        'url'           => $url
+        'url'           => $url,
+        'locations'     => get_post_meta($book->ID, 'location'),
     ];
 }

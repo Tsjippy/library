@@ -43,6 +43,10 @@ function beforeMainContent(){
                 <h4><?php echo $title;?></h4>
             </a>
             <?php echo $description;?>
+            <br>
+            <br>
+            <strong>Find it in the library at:</strong>
+            <?php echo implode(' & ', $locations); ?>.
         </p>
     </div>
     <?php
