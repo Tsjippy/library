@@ -97,6 +97,7 @@ function createBookTaxonomies($single) {
 	// Clear the permalinks after the post type has been registered.
     flush_rewrite_rules();
 }
+
 add_action( 'init', function(){
 	createBookTaxonomies('author');
 	createBookTaxonomies('book-location');

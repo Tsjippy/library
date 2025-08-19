@@ -32,9 +32,9 @@ function restApiInit() {
 function addBook(){
 	global $Modules;
 
-	$library		= getLibrary($Modules[MODULE_SLUG]);
+	$library	= getLibrary($Modules[MODULE_SLUG]);
 
-	$result	= $library->createBook($_POST);
+	$result		= $library->createBook($_POST);
 	
 	return $result;
 }

@@ -395,9 +395,10 @@ class Library{
                                                     if(is_array($post->post_category) && in_array($category->cat_ID, $post->post_category)){
                                                         $checked 	= 'checked';
                                                     }
-                                                    echo "<label><input type='checkbox' name='category_id[]' class='option-label category' value='$category->cat_ID' $checked data-name='$category->name'>";
-
-						                            echo "$category->name</label>";
+                                                    echo "<label>";
+                                                        echo "<input type='checkbox' name='category_id[]' class='option-label category' value='$category->cat_ID' $checked data-name='$category->name'>";
+						                                echo $category->name;
+                                                    echo "</label><br>";
                                                 }
                                             ?>
                                         </td>
