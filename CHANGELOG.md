@@ -2,6 +2,17 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Updated
+
+## [1.1.7] - 2025-08-21
+
+
+### Added
 - book location to book of the day args
 - siganl gemini response
 
@@ -10,8 +21,6 @@
 
 ### Fixed
 - preselect categories
-
-### Updated
 
 ## [1.1.6] - 2025-08-18
 
