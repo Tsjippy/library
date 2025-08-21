@@ -3,6 +3,7 @@
 
 ### Added
 - book location to book of the day args
+- siganl gemini response
 
 ### Changed
 - categories on eper line
