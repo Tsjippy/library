@@ -6,7 +6,7 @@ use Gemini\Enums\Role;
 
 add_filter('sim-signal-daemon-response', __NAMESPACE__.'\addGeminiResponse', 10, 6);
 function addGeminiResponse($response, $message, $source, $users, $name, $signal){
-    if($response == 'I have no clue, do you know?'){
+    if($response['message'] == 'I have no clue, do you know?'){
         $library = getLibrary();
 
         // Get message history of last hour
@@ -36,7 +36,7 @@ function addGeminiResponse($response, $message, $source, $users, $name, $signal)
             $history[]  = Content::parse(part: $msg->message, role: $role);
         }
 
-        return $library->chatGemini($message, $history);
+        $response['message']    = 'I am not sure what to answer so I asked Gemini.\nHere is what it said:\n\n'.$library->chatGemini($message, $history);
     }
 
     return $response;
