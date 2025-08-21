@@ -10,7 +10,6 @@ use Gemini\Data\GenerationConfig;
 use Gemini\Data\Schema;
 use Gemini\Enums\DataType;
 use Gemini\Enums\ResponseMimeType;
-use WP_Embed;
 use WP_Error;
 
 class Library{
@@ -66,12 +65,25 @@ class Library{
         $this->imageData      = base64_encode(file_get_contents($this->imagePath));
 
         if($this->engine == "chatgpt"){
-            return $this->chatGPT();
+            $command = [
+                [
+                    "type" => "input_text",
+                    "text" => "Check this bookshelf picture, give JSON output with titles, optional authors, optional summary from internet"
+                ],
+                [
+                    "type" => "input_image",
+                    "image_url" => "data:" . $this->imageMimeType . ";base64," . $this->imageData
+                ]
+            ];
+            
+            $json   = $this->chatGPT($command);
         }
 
         if($this->engine == "gemini"){
-            return $this->gemini();
+            $json   = $this->gemini();
         }
+
+        return $this->getTable($json);
     }
 
     public function openLibrary($title = '', $author = ''){
@@ -122,7 +134,7 @@ class Library{
         return $data['docs'][0];
     }
 
-    private function chatGPT(){
+    public function chatGPT(array $command){
         $url            = 'https://api.openai.com/v1/chat/completions';
 
         $requestData = [
@@ -130,16 +142,7 @@ class Library{
             "input" => [
                 [
                     "role" => "user",
-                    "content" => [
-                        [
-                            "type" => "input_text",
-                            "text" => "Check this bookshelf picture, give JSON output with titles, optional authors, optional summary from internet"
-                        ],
-                        [
-                            "type" => "input_image",
-                            "image_url" => "data:" . $this->imageMimeType . ";base64," . $this->imageData
-                        ]
-                    ]
+                    "content" => $command
                 ]
             ],
             "temperature" => 0.2,
@@ -170,13 +173,13 @@ class Library{
             }
 
             // Toon alleen het gegenereerde antwoord (verwachte JSON-string)
-            echo $result['choices'][0]['message']['content'];
+            return $result['choices'][0]['message']['content'];
         }
 
         curl_close($ch);
     }
 
-    private function gemini(){
+    public function gemini(){
         $client = Gemini::client($this->apiKey);
 
         $result = $client
@@ -206,7 +209,27 @@ class Library{
                 )
             ]);
 
-        return $this->getTable($result->json());
+        return $result->json();
+    }
+
+    /**
+     * Gets a chat response
+     * 
+     * @param string    $message    Message to send
+     * @param array     $history    Array of previous and and received messsages, default empty
+     * 
+     * @return  string              The Response
+     */
+    public function chatGemini($message, $history=[]){
+        $client = Gemini::client($this->apiKey);
+
+        $chat = $client
+            ->generativeModel(model: 'gemini-2.0-flash')
+            ->startChat(history: $history);
+
+        $response = $chat->sendMessage($message);
+
+        return $response->text();
     }
 
     /**
@@ -558,6 +581,10 @@ class Library{
 
     /**
      * Creates a book post in the database
+     * 
+     * @param   array   $data   Array containg title, summar and optional meta values
+     * 
+     * @return string
      */
     public function createBook($data){
         $title          = ucfirst(strtolower(sanitize_text_field($data['title'])));

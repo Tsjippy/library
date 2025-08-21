@@ -1,7 +1,7 @@
 <?php
 namespace SIM\LIBRARY;
+
 use SIM;
-use thiagoalessio\TesseractOCR\TesseractOCR;
 
 const MODULE_VERSION		= '1.1.6';
 DEFINE(__NAMESPACE__.'\MODULE_SLUG', strtolower(basename(dirname(__DIR__))));
@@ -242,7 +242,12 @@ function moduleActions(){
 	}
 }
 
-function getLibrary($settings){
+function getLibrary($settings = []){
+	global $Modules;
+
+	if(empty($settings)){
+		$settings	= $Modules[MODULE_SLUG];
+	}
 
 	if(!empty($settings['chatgpt-api-key'])){
 		$engine	= 'chatgpt';
