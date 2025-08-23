@@ -3,6 +3,7 @@
 
 ### Added
 - clarification that response comes from gemini
+- only show books that need attention
 
 ### Changed
 
