@@ -36,7 +36,7 @@ function addGeminiResponse($response, $message, $source, $users, $name, $signal)
             $history[]  = Content::parse(part: $msg->message, role: $role);
         }
 
-        $response['message']    = 'I am not sure what to answer so I asked Gemini.\nHere is what it said:\n\n'.$library->chatGemini($message, $history);
+        $response['message']    = "I am not sure what to answer so I asked Gemini.\n\nHere is what it said:\n".$library->chatGemini($message, $history);
     }
 
     return $response;

@@ -25,6 +25,8 @@ async function addBook(target){
 		cell.innerHTML	= response;
 
 		Main.displayMessage(response.message);
+
+		row.classList.add('processed');
 	}else{
 		target.classList.remove('hidden');
 		cell.querySelector(`.loadergif_wrapper`).classList.add('hidden');
@@ -250,10 +252,10 @@ async function fetchMetaData(tr){
 			placeholder.outerHTML = html;
 		}
 
-        let summary      	= tr.querySelector('.summary').value
-		summary				= bookData['description'] != undefined ? bookData['description']['value'] != undefined ? bookData['description']['value'] : '' : '';
+        let description	= tr.querySelector('.description').value
+		description		= bookData['description'] != undefined ? bookData['description']['value'] != undefined ? bookData['description']['value'] : '' : '';
 
-		let key        = bookData['key'] ?? '';
+		let key        	= bookData['key'] ?? '';
         if(key != ''){
             url      = `https://openlibrary.org${key}`;
 			tr.querySelector('.url').innerHTML = `
@@ -265,9 +267,9 @@ async function fetchMetaData(tr){
 			const workResponse 	= await fetch(url+'.json');
 			const workJson 		= await workResponse.json();
 
-			summary = workJson['description'] ?? '';	
+			description = workJson['description'] ?? '';	
 			
-			summary = summary.value ?? summary;
+			description = description.value ?? description;
 
 			if(	workJson['subjects'] != undefined ){
 				workJson['subjects'].forEach((subject) => {
@@ -276,13 +278,26 @@ async function fetchMetaData(tr){
 			}
         }
 
-		if(summary != ''){
-			tr.querySelector('.summary').value = summary;
+		if(description != ''){
+			tr.querySelector('.description').value = description;
 		}
 
+		// add book automatically if there is a picture and description
+		if(description != '' && image != '' && key != ''){
+			tr.querySelector('.add-book').click();
+		}
 	} catch(e){
 		console.error('Error fetching book data:', e);
 	}
+}
+
+function hideCss(type){
+	let style = document.createElement('style');
+	style.innerHTML = `.${type} { display: none; }`;
+	document.getElementsByTagName('head')[0].appendChild(style);
+
+	const url 		= new URL(window.location);
+	url.searchParams.set('hide', type);
 }
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -299,6 +314,12 @@ document.addEventListener("click", event =>{
 		addBook(target);
 	}else if(target.matches(`.delete-book`)){
 		target.closest('tr').remove();
+	}else if(target.matches('.hide-existing-books')){
+		hideCss('existing-book');
+		target.remove();
+	}else if(target.matches('.hide-processed-books')){
+		hideCss('processed');
+		target.remove();
 	}
 });
 
@@ -307,6 +328,9 @@ document.addEventListener("change", async event =>{
 
 	if(target.name == 'image-selector' && target.files.length > 0){
 		fileUploadWrap	= target.closest('.file_upload_wrap');
+
+		// Remove the old table if any
+		fileUploadWrap.querySelectorAll('.image-preview, .book.table-wrapper').forEach(el => el.remove());
 		
 		// Make sure we have a location
 		let location	= fileUploadWrap.querySelector(`.book-location`);

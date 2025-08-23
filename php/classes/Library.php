@@ -29,32 +29,6 @@ class Library{
         $this->engine           = strtolower($engine);
     }
 
-    /**
-	 * Creates the tables for this module
-	 */
-	public function createDbTable(){
-		if ( !function_exists( 'maybe_create_table' ) ) {
-			require_once ABSPATH . '/wp-admin/install-helper.php';
-		}
-		
-		//only create db if it does not exist
-		global $wpdb;
-		$charsetCollate = $wpdb->get_charset_collate();
-
-		// Books table
-		$sql = "CREATE TABLE {$this->tableName} (
-			id mediumint(9) NOT NULL AUTO_INCREMENT,
-			title tinytext NOT NULL,
-			author text,
-			summary LONGTEXT,
-			picture text,
-			url text,
-			PRIMARY KEY  (id)
-		) $charsetCollate;";
-
-		maybe_create_table($this->tableName, $sql );
-	}
-
     public function processImage($path){
         if(!is_file($path)){
             return new WP_Error('library', 'Invalid filepath given');
@@ -68,7 +42,7 @@ class Library{
             $command = [
                 [
                     "type" => "input_text",
-                    "text" => "Check this bookshelf picture, give JSON output with titles, optional authors, optional summary from internet"
+                    "text" => "Check this bookshelf picture, give JSON output with titles, optional authors, optional description from internet"
                 ],
                 [
                     "type" => "input_image",
@@ -192,9 +166,9 @@ class Library{
                         items: new Schema(
                             type: DataType::OBJECT,
                             properties: [
-                                'title'     => new Schema(type: DataType::STRING),
-                                'authors'   => new Schema(type: DataType::STRING),
-                                'summary'   => new Schema(type: DataType::STRING),
+                                'title'         => new Schema(type: DataType::STRING),
+                                'authors'       => new Schema(type: DataType::STRING),
+                                'description'   => new Schema(type: DataType::STRING),
                             ],
                             required: ['title'],
                         )
@@ -202,7 +176,7 @@ class Library{
                 )
             )
             ->generateContent([
-                'Check this bookshelf picture, give JSON output with titles, optional authors, optional summary from internet',
+                'Check this bookshelf picture, give JSON output with titles, optional authors, optional description from internet',
                 new Blob(
                     mimeType: MimeType::from($this->imageMimeType),
                     data: $this->imageData
@@ -314,6 +288,94 @@ class Library{
         );
     }
 
+    private function existingBookRow($posts, $data, $categories, $location){
+        // Already in the database, so skip
+        if(count($posts) > 1){
+            foreach($posts as $post){
+                if(in_array($data->authors, get_post_meta($post->ID, 'author'))){
+                    // More than one book found, we show this one
+                    break;
+                }
+            }
+        }else{
+            $post           = $posts[0];
+        }
+
+        // More than one book found, we show the last one
+        $data->authors      = get_post_meta($post->ID, 'author');
+        $data->description  = $post->post_content;
+        $imageId            = get_post_meta($post->ID, 'image', true);
+
+        $image              = "<img src='https://covers.openlibrary.org/b/id/$imageId-S.jpg' class='book-image' loading='lazy'>";
+
+        ?>
+            <tr class='existing-book processed'>
+                <td class='image'>
+                    <?php echo $image; ?>
+                </td>
+                <td>
+                    <?php echo $data->title; ?>
+                </td>
+                <td>
+                    <?php echo implode("<br>", $data->authors); ?>
+                </td>
+                <td>
+                    <?php echo get_post_meta($post->ID, 'subtitle', true);?>
+                </td>
+                <td>
+                    <?php echo get_post_meta($post->ID, 'series', true);?>
+                </td>
+                <td>
+                    <?php echo get_post_meta($post->ID, 'year', true);?>
+                </td>
+                <td>
+                    <?php echo get_post_meta($post->ID, 'language', true);?>
+                </td>
+                <td>
+                    <?php echo get_post_meta($post->ID, 'pages', true);?>
+                </td>
+                <td style='min-width: 300px;text-wrap: auto;'>
+                    <?php echo $data->description;?>
+                </td>
+                <td>
+                    <?php
+                        $postCats   = wp_get_object_terms($post->ID, 'books', ['fields' => 'ids']);
+                        foreach($categories as $category){
+                            $checked	= '';
+                            if(in_array($category->term_id, $postCats)){
+                                $checked 	= 'checked';
+                            }
+                            echo "<label>";
+                                echo "<input type='checkbox' name='category_id[]' class='option-label category' value='$category->cat_ID' $checked data-name='$category->name'>";
+                                echo $category->name;
+                            echo "</label><br>";
+                        }
+                    ?>
+                </td>
+                <td class='url'>
+                    <a href='<?php echo get_post_meta($post->ID, 'url', true);?>' target='_blank'>View on OpenLibrary</a>
+                </td>
+                <td>
+                    This book is already in the library.<br>
+                    <?php
+                    $locations    = get_post_meta($post->ID, 'location');
+
+                    if(!in_array($location, $locations)){
+                        add_post_meta($post->ID, 'location', $location);
+
+                        ?>
+                        <br>
+                        I have added the location <strong><?php echo $location; ?></strong> to this book.<br>
+                        <?php
+                    }
+
+                    ?>
+                    <a href='<?php echo get_permalink($post->ID); ?>' target='_blank'>View it here.</a>
+                </td>
+            </tr>
+        <?php
+    }
+
     public function getTable($json){
         wp_enqueue_script('sim_library_script');
 
@@ -333,6 +395,8 @@ class Library{
             <p>
                 Please check the details below and change them where needed before adding them to the library.
             </p>
+            <button type='button' class='hide-existing-books sim button'>Hide books already in the library</button>
+            <button type='button' class='hide-processed-books sim button'>Hide processed books</button>
             <table class='sim-table'>
                 <thead>
                     <tr>
@@ -344,7 +408,7 @@ class Library{
                         <th>Year</th>
                         <th>Languague</th>
                         <th>Pages</th>
-                        <th>Summary</th>
+                        <th>Description</th>
                         <th>Categories</th>
                         <th>URL</th>
                         <th>Actions</th>
@@ -363,90 +427,7 @@ class Library{
                             $posts      = $this->checkForDuplicates($data->title);
 
                             if(count($posts) > 0){
-                                // Already in the database, so skip
-                                if(count($posts) > 1){
-                                    foreach($posts as $post){
-                                        if(in_array($data->authors, get_post_meta($post->ID, 'author'))){
-                                            // More than one book found, we show this one
-                                            break;
-                                        }
-                                    }
-                                }else{
-                                    $post           = $posts[0];
-                                }
-
-                                // More than one book found, we show the last one
-                                $data->authors  = get_post_meta($post->ID, 'author');
-                                $data->summary  = $post->post_content;
-                                $imageId        = get_post_meta($post->ID, 'image', true);
-
-                                $image          = "<img src='https://covers.openlibrary.org/b/id/$imageId-S.jpg' class='book-image' loading='lazy'>";
-
-                                ?>
-                                    <tr class='existing-book'>
-                                        <td class='image'>
-                                            <?php echo $image; ?>
-                                        </td>
-                                        <td>
-                                            <?php echo $data->title; ?>
-                                        </td>
-                                        <td>
-                                            <?php echo implode("<br>", $data->authors); ?>
-                                        </td>
-                                        <td>
-                                            <?php echo get_post_meta($post->ID, 'subtitle', true);?>
-                                        </td>
-                                        <td>
-                                            <?php echo get_post_meta($post->ID, 'series', true);?>
-                                        </td>
-                                        <td>
-                                            <?php echo get_post_meta($post->ID, 'year', true);?>
-                                        </td>
-                                        <td>
-                                            <?php echo get_post_meta($post->ID, 'language', true);?>
-                                        </td>
-                                        <td>
-                                            <?php echo get_post_meta($post->ID, 'pages', true);?>
-                                        </td>
-                                        <td style='min-width: 300px;text-wrap: auto;'>
-                                            <?php echo $data->summary;?>
-                                        </td>
-                                        <td>
-                                            <?php
-                                                foreach($categories as $category){
-                                                    $checked	= '';
-                                                    if(is_array($post->post_category) && in_array($category->cat_ID, $post->post_category)){
-                                                        $checked 	= 'checked';
-                                                    }
-                                                    echo "<label>";
-                                                        echo "<input type='checkbox' name='category_id[]' class='option-label category' value='$category->cat_ID' $checked data-name='$category->name'>";
-						                                echo $category->name;
-                                                    echo "</label><br>";
-                                                }
-                                            ?>
-                                        </td>
-                                        <td class='url'>
-                                            <a href='<?php echo get_post_meta($post->ID, 'url', true);?>' target='_blank'>View on OpenLibrary</a>
-                                        </td>
-                                        <td>
-                                            This book is already in the library.<br>
-                                            <?php
-                                            $locations    = get_post_meta($post->ID, 'location');
-
-                                            if(!in_array($location, $locations)){
-                                                add_post_meta($post->ID, 'location', $location);
-
-                                                ?>
-                                                <br>
-                                                I have added the location <strong><?php echo $location; ?></strong> to this book.<br>
-                                                <?php
-                                            }
-
-                                            ?>
-                                            <a href='<?php echo get_permalink($post->ID); ?>' target='_blank'>View it here.</a>
-                                        </td>
-                                    </tr>
-                                <?php
+                                $this->existingBookRow($posts, $data, $categories, $location);
                             }else{
                                 ?>
                                     <tr>
@@ -477,7 +458,7 @@ class Library{
                                             <img class='loadergif' src='<?php echo \SIM\LOADERIMAGEURL;?>' width=50 loading='lazy'>Fetching the book details...
                                         </td>
                                         <td>
-                                            <textarea name='summary' class='summary' style='min-width: 300px;text-wrap: auto;' rows=2><?php echo $data->summary; ?></textarea>
+                                            <textarea name='description' class='description' style='min-width: 300px;text-wrap: auto;' rows=2><?php echo $data->description; ?></textarea>
                                         </td>
                                         <td class='categories' style='text-align: left;'>
                                             <?php
@@ -588,7 +569,7 @@ class Library{
      */
     public function createBook($data){
         $title          = ucfirst(strtolower(sanitize_text_field($data['title'])));
-        $summary        = sanitize_textarea_field($data['summary']);
+        $description    = sanitize_textarea_field($data['description']);
 
         if(!empty($this->checkForDuplicates($title ))){
             return new WP_Error('duplicate', 'This book is already in the library!');
@@ -598,7 +579,7 @@ class Library{
 		$post = array(
 			'post_type'		=> 'book',
 			'post_title'    => $title ,
-			'post_content'  => $summary ,
+			'post_content'  => $description,
 			'post_status'   => 'publish',
 			'post_author'   => get_current_user_id()
 		);

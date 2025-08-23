@@ -18,7 +18,7 @@ function restApiInit() {
 				'title'		=> array(
 					'required'	=> true
 				),
-				'summary'	=> array(
+				'description'	=> array(
 					'required'	=> true
 				),
 				'author'	=> array(
