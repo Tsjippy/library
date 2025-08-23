@@ -2,14 +2,19 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- clarification that response comes from gemini
-- only show books that need attention
 
 ### Changed
 
 ### Fixed
 
 ### Updated
+
+## [1.1.8] - 2025-08-23
+
+
+### Added
+- clarification that response comes from gemini
+- only show books that need attention
 
 ## [1.1.7] - 2025-08-21
 
