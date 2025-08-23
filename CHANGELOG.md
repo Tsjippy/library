@@ -2,6 +2,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- clarification that response comes from gemini
 
 ### Changed
 
