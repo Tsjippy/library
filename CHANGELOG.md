@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- only show first book
 
 ### Fixed
 
