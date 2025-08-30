@@ -390,6 +390,11 @@ class Library{
 
         ob_start();
         ?>
+        <style>
+        .sim-table body tr:not(:first-child) {
+            display: none;
+        }
+        </style>
         <div class='book table-wrapper' style='max-width:100vw;'>
             <h4>Books Identified in the picture</h4>
             <p>
