@@ -23,15 +23,8 @@ const METAS = [
 
 require( MODULE_PATH  . 'lib/vendor/autoload.php');
 
-//run on module activation
-add_action('sim_module_activated', __NAMESPACE__.'\moduleActivated');
-function moduleActivated($options){
-	$library = new Library();
-	$library->createDbTable();
-}
-
-add_filter('sim_module_library_after_save', __NAMESPACE__.'\moduleUpdated', 10, 3);
-function moduleUpdated($newOptions, $moduleSlug, $oldOptions){
+add_filter('sim_module_library_after_save', __NAMESPACE__.'\moduleUpdated');
+function moduleUpdated($newOptions){
 	scheduleTasks();
 
 	return $newOptions;
