@@ -5,6 +5,7 @@
 
 ### Changed
 - only show first book
+- removed create db table
 
 ### Fixed
 
