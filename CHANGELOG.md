@@ -2,13 +2,18 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- possibility to hide columns
 
 ### Changed
 
 ### Fixed
 
 ### Updated
+
+## [1.2.0] - 2025-09-23
+
+
+### Added
+- possibility to hide columns
 
 ## [1.1.9] - 2025-09-22
 
