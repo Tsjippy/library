@@ -4,12 +4,17 @@
 ### Added
 
 ### Changed
-- only show first book
-- removed create db table
 
 ### Fixed
 
 ### Updated
+
+## [1.1.9] - 2025-09-22
+
+
+### Changed
+- only show first book
+- removed create db table
 
 ## [1.1.8] - 2025-08-23
 
