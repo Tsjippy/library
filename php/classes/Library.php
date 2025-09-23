@@ -386,7 +386,9 @@ class Library{
             'hide_empty' 	=> false,
         ) );
 
-        $location = $_REQUEST['location'];
+        $location   = $_REQUEST['location'];
+
+        $icon	    = "<img class='visibilityicon visible' src='".\SIM\PICTURESURL."/visible.png' width=20 height=20 loading='lazy' >";
 
         ob_start();
         ?>
@@ -405,17 +407,17 @@ class Library{
             <table class='sim-table'>
                 <thead>
                     <tr>
-                        <th>Picture</th>
+                        <th>Picture <?php echo $icon; ?></th>
                         <th>Title</th>
                         <th>Authors</th>
-                        <th>Subtitle</th>
-                        <th>Series</th>
-                        <th>Year</th>
-                        <th>Languague</th>
-                        <th>Pages</th>
-                        <th>Description</th>
+                        <th>Subtitle <?php echo $icon; ?></th>
+                        <th>Series <?php echo $icon; ?></th>
+                        <th>Year <?php echo $icon; ?></th>
+                        <th>Languague <?php echo $icon; ?></th>
+                        <th>Pages <?php echo $icon; ?></th>
+                        <th>Description <?php echo $icon; ?></th>
                         <th>Categories</th>
-                        <th>URL</th>
+                        <th>URL <?php echo $icon; ?></th>
                         <th>Actions</th>
                     </tr>
                 </thead>

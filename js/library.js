@@ -1,4 +1,4 @@
-import { cloneNode } from "../../forms/js/forms";
+import { cloneNode } from "../../forms/js/form_exports.js";
 import { setTableLabel } from "../../../plugins/sim-plugin/includes/js/table.js";
 
 console.log("library.js loaded");
@@ -139,7 +139,9 @@ function readyStateChanged(e){
 }
 
 async function fileUploadSucces(result){
-	fileUploadWrap.innerHTML	= JSON.parse(result).data + fileUploadWrap.innerHTML;
+	let div 		= document.createElement('div');
+	div.innerHTML	= JSON.parse(result).data;
+	fileUploadWrap.prepend(div);
 
 	Main.displayMessage("The files have been processed succesfully.", 'success', true);
 
@@ -283,7 +285,7 @@ async function fetchMetaData(tr){
 		}
 
 		// add book automatically if there is a picture and description
-		if(description != '' && image != '' && key != ''){
+		if(image != '' && key != '' && typeof(workJson) != 'undefined' && workJson['subjects'] != undefined){
 			tr.querySelector('.add-book').click();
 		}
 	} catch(e){
@@ -336,6 +338,7 @@ document.addEventListener("change", async event =>{
 		let location	= fileUploadWrap.querySelector(`.book-location`);
 		const isValid 	= location.reportValidity();
 		if (!isValid) {
+			console.log('test empty');
 			target.value = '';
 			Main.displayMessage("Please select a location for the book.", 'error');
 			return;
