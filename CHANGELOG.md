@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- always check books left to right
 
 ### Updated
 
