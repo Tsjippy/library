@@ -176,7 +176,7 @@ class Library{
                 )
             )
             ->generateContent([
-                'Check this bookshelf picture, give JSON output with titles, optional authors, optional description from internet',
+                'Check this bookshelf picture from left to right, give JSON output with titles, optional authors, optional description from internet',
                 new Blob(
                     mimeType: MimeType::from($this->imageMimeType),
                     data: $this->imageData
@@ -341,14 +341,9 @@ class Library{
                     <?php
                         $postCats   = wp_get_object_terms($post->ID, 'books', ['fields' => 'ids']);
                         foreach($categories as $category){
-                            $checked	= '';
                             if(in_array($category->term_id, $postCats)){
-                                $checked 	= 'checked';
+                                echo $category->name.'<br>';
                             }
-                            echo "<label>";
-                                echo "<input type='checkbox' name='category_id[]' class='option-label category' value='$category->cat_ID' $checked data-name='$category->name'>";
-                                echo $category->name;
-                            echo "</label><br>";
                         }
                     ?>
                 </td>
