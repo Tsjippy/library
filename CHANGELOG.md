@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- js generated loader
 
 ### Fixed
 - always check books left to right
