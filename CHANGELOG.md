@@ -4,13 +4,20 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [1.2.1] - 2025-09-25
+
+
+### Changed
 - js generated loader
 - loader when refetching book details
 
 ### Fixed
 - always check books left to right
-
-### Updated
 
 ## [1.2.0] - 2025-09-23
 
