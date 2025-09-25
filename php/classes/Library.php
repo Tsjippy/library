@@ -236,7 +236,7 @@ class Library{
 		?>
         <div class='file_upload_wrap'>
             <?php
-            echo \SIM\loaderImage(30);
+            echo \SIM\loaderImage(30, '', true);
             ?>
             <div id="progress-wrapper" class="hidden">
                 <progress id="upload_progress" value="0" max="100"></progress>

@@ -71,14 +71,14 @@ async function fileUpload(target, location){
 	//Show loading gif
 	fileUploadWrap.querySelectorAll(".loader_wrapper").forEach(loader =>{
 		loader.classList.remove('hidden');
-		loader.querySelectorAll(".uploadmessage").forEach(el =>{
+		loader.querySelectorAll(".loader_text").forEach(el =>{
 			el.textContent = "Preparing upload";
 			el.classList.add('upload-message');
 		});
 	});
 	
 	//Send AJAX request
-	fileUploadWrap.querySelector('.uploadmessage').textContent = "Uploading Picture(s)";
+	fileUploadWrap.querySelector('.loader_text').textContent = "Uploading Picture(s)";
 	document.getElementById('progress-wrapper').classList.remove('hidden');
 
 	request.send(formData);
@@ -90,7 +90,7 @@ function fileUploadProgress(e){
 		let current 	= e.loaded;
 
 		let percentage 	= (current * 100)/max;
-		percentage 		= Math.round(percentage*10)/10
+		percentage 		= Math.round(percentage * 10) / 10
 		
 		document.querySelectorAll("#upload_progress").forEach(el=>el.value = percentage);
 		document.querySelectorAll("#progress_percentage").forEach(el=>el.textContent	= `   ${percentage}%`);
@@ -100,7 +100,7 @@ function fileUploadProgress(e){
 			document.getElementById("progress-wrapper").classList.add('hidden');
 			
 			// process completed
-			fileUploadWrap.querySelectorAll(".uploadmessage").forEach(el =>{
+			fileUploadWrap.querySelectorAll(".loader_text").forEach(el =>{
 				//Change message text
 				if (totalFiles > 1){
 					el.textContent = "Processing images";
@@ -376,17 +376,7 @@ document.addEventListener("change", async event =>{
 
 		tr.style.position = 'relative';
 
-		//tr.querySelectorAll('td').forEach(td => td.classList.add('hidden'));
-
-		//let cell	= document.createElement('td');
-
-		//cell.colSpan = tr.querySelectorAll('td').length;
-
-		let loader = Main.showLoader(tr.firstChild, false, 50, 'Updating book data...');
-
-		//cell.appendChild(loader);
-
-		//tr.appendChild(cell);
+		let loader = Main.showLoader(tr.firstChild, false, tr.offsetHeight - 40, 'Updating book data...');
 
 		loader.style.position 			= 'absolute';
 		loader.style.top				= 0;
@@ -402,8 +392,6 @@ document.addEventListener("change", async event =>{
 		
 		// Update metadata for the book row
 		await fetchMetaData(tr);
-
-		//tr.querySelectorAll('td.hidden').forEach(td => td.classList.remove('hidden'));
 
 		loader.remove();
 	}
