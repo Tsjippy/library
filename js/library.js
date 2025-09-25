@@ -17,7 +17,7 @@ async function addBook(target){
 	row.querySelectorAll('td > img').forEach(img=>formData.append('image', img.src));
 
 	target.classList.add('hidden');
-	cell.querySelector(`.loadergif_wrapper`).classList.remove('hidden');
+	cell.querySelector(`.loader_wrapper`).classList.remove('hidden');
 
 	let response	= await FormSubmit.fetchRestApi('library/add_book', formData);
 	
@@ -29,7 +29,7 @@ async function addBook(target){
 		row.classList.add('processed');
 	}else{
 		target.classList.remove('hidden');
-		cell.querySelector(`.loadergif_wrapper`).classList.add('hidden');
+		cell.querySelector(`.loader_wrapper`).classList.add('hidden');
 
 		target.remove();
 	}
@@ -69,7 +69,7 @@ async function fileUpload(target, location){
 	request.open('POST', sim.ajaxUrl, true);
 	
 	//Show loading gif
-	fileUploadWrap.querySelectorAll(".loadergif_wrapper").forEach(loader =>{
+	fileUploadWrap.querySelectorAll(".loader_wrapper").forEach(loader =>{
 		loader.classList.remove('hidden');
 		loader.querySelectorAll(".uploadmessage").forEach(el =>{
 			el.textContent = "Preparing upload";
@@ -127,7 +127,7 @@ function readyStateChanged(e){
 		}
 		
 		//Hide loading gif
-		document.querySelectorAll(".loadergif_wrapper").forEach(
+		document.querySelectorAll(".loader_wrapper").forEach(
 			function(loader){
 				loader.classList.add('hidden');
 			}
@@ -337,8 +337,7 @@ document.addEventListener("change", async event =>{
 		// Make sure we have a location
 		let location	= fileUploadWrap.querySelector(`.book-location`);
 		const isValid 	= location.reportValidity();
-		if (!isValid) {
-			console.log('test empty');
+		if (!isValid) {			
 			target.value = '';
 			Main.displayMessage("Please select a location for the book.", 'error');
 			return;
@@ -374,8 +373,38 @@ document.addEventListener("change", async event =>{
 		}
 	}else if(target.matches('.title, .author')){
 		let tr = target.closest('tr');
+
+		tr.style.position = 'relative';
+
+		//tr.querySelectorAll('td').forEach(td => td.classList.add('hidden'));
+
+		//let cell	= document.createElement('td');
+
+		//cell.colSpan = tr.querySelectorAll('td').length;
+
+		let loader = Main.showLoader(tr.firstChild, false, 50, 'Updating book data...');
+
+		//cell.appendChild(loader);
+
+		//tr.appendChild(cell);
+
+		loader.style.position 			= 'absolute';
+		loader.style.top				= 0;
+		loader.style.left				= 0;
+		loader.style.width				= '100%';
+		loader.style.height				= '100%';
+		loader.style.backgroundColor	= 'rgba(0, 0, 0, 0.7)';
+		loader.style.color				= 'white';
+		loader.style.opacity			= 0.5;
+		loader.style.display			= 'flex';
+		loader.style.justifyContent		= 'center';
+		loader.style.alignItems			= 'center';
 		
 		// Update metadata for the book row
 		await fetchMetaData(tr);
+
+		//tr.querySelectorAll('td.hidden').forEach(td => td.classList.remove('hidden'));
+
+		loader.remove();
 	}
 });

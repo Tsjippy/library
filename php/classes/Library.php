@@ -235,11 +235,9 @@ class Library{
         
 		?>
         <div class='file_upload_wrap'>
-            <div class='loadergif_wrapper hidden'>
-                <span class='uploadmessage'></span>
-                <img class='loadergif' src='<?php echo \SIM\LOADERIMAGEURL;?>' loading='lazy' style='height: 30px;'>
-            </div>
-
+            <?php
+            echo \SIM\loaderImage(30);
+            ?>
             <div id="progress-wrapper" class="hidden">
                 <progress id="upload_progress" value="0" max="100"></progress>
                 <span id="progress_percentage">   0%</span>
@@ -457,7 +455,9 @@ class Library{
                                             </div>
                                         </td>
                                         <td class='placeholder' colspan='7' style='text-align: center;'>
-                                            <img class='loadergif' src='<?php echo \SIM\LOADERIMAGEURL;?>' width=50 loading='lazy'>Fetching the book details...
+                                            <?php 
+                                            echo \SIM\loaderImage(50, 'Fetching the book details...');
+                                            ?>
                                         </td>
                                         <td>
                                             <textarea name='description' class='description' style='min-width: 300px;text-wrap: auto;' rows=2><?php echo $data->description; ?></textarea>
@@ -475,7 +475,7 @@ class Library{
                                         <td class='url'></td>
                                         <td class='location hidden'><input type='text' name='location' value="<?php echo $location; ?>"></td>
                                         <td>
-                                            <div class='loadergif_wrapper hidden'><img class='loadergif' src='<?php echo \SIM\LOADERIMAGEURL;?>' width=50 loading='lazy'>Adding the book...</div>
+                                            <?php echo \SIM\loaderImage(50, 'Adding the book...', true);?>
                                             <button type='button' class='add-book sim button'>Add book to the library</button>
                                             <button type='button' class='delete-book sim button'>Delete</button>
                                         </td>
