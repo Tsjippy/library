@@ -5,6 +5,7 @@
 
 ### Changed
 - js generated loader
+- loader when refetching book details
 
 ### Fixed
 - always check books left to right
