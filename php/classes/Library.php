@@ -234,13 +234,13 @@ class Library{
 
         
 		?>
-        <div class='file_upload_wrap'>
+        <div class='file-upload-wrap'>
             <?php
             echo \SIM\loaderImage(30, '', true);
             ?>
             <div id="progress-wrapper" class="hidden">
-                <progress id="upload_progress" value="0" max="100"></progress>
-                <span id="progress_percentage">   0%</span>
+                <progress id="upload-progress" value="0" max="100"></progress>
+                <span id="progress-percentage">   0%</span>
             </div>
 
             <div class='image-selector-wrap'>
@@ -437,12 +437,12 @@ class Library{
                                             <input type='text' name='title' class='title' value="<?php echo $data->title; ?>">
                                         </td>
                                         <td>
-                                            <div class="authors clone_divs_wrapper">
+                                            <div class="authors clone-divs-wrapper">
                                                 <?php
                                                 $authors = array_map('trim', explode(',', $data->authors));
                                                 foreach($authors as $index => $author){
                                                     ?>
-                                                    <div id="<?php echo $author;?>_div_<?php echo $index;?>" class="clone_div" data-divid="<?php echo $index;?>">
+                                                    <div id="<?php echo $author;?>_div_<?php echo $index;?>" class="clone-div" data-divid="<?php echo $index;?>">
                                                         <div class='buttonwrapper'>
                                                             <input type='text' name='author[]' class='author' value="<?php echo $author; ?>">
                                                             <button type="button" class="add button" style="flex: 1;">+</button>

@@ -145,7 +145,7 @@ function afterPostContent($frontendcontend){
                                 }
 
                                 ?>
-                                <div class="clone_divs_wrapper">
+                                <div class="clone-divs-wrapper">
                                     <?php
                                     foreach($values as $index=>$value){
                                         if(is_array($value)){
@@ -153,7 +153,7 @@ function afterPostContent($frontendcontend){
                                         } 
 
                                         ?>
-                                        <div id="<?php echo $meta;?>_div_<?php echo $index;?>" class="clone_div" data-divid="<?php echo $index;?>">
+                                        <div id="<?php echo $meta;?>_div_<?php echo $index;?>" class="clone-div" data-divid="<?php echo $index;?>">
                                             <div class='buttonwrapper'>
                                                 <input type='<?php echo $type;?>' class='formbuilder' name='<?php echo $meta;?>[]' value='<?php echo $value; ?>' style='width: calc(100% - 70px);'>
                                                 <button type="button" class="add button" style="flex: 1;">+</button>

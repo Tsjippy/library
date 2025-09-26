@@ -17,7 +17,7 @@ async function addBook(target){
 	row.querySelectorAll('td > img').forEach(img=>formData.append('image', img.src));
 
 	target.classList.add('hidden');
-	cell.querySelector(`.loader_wrapper`).classList.remove('hidden');
+	cell.querySelector(`.loader-wrapper`).classList.remove('hidden');
 
 	let response	= await FormSubmit.fetchRestApi('library/add_book', formData);
 	
@@ -29,7 +29,7 @@ async function addBook(target){
 		row.classList.add('processed');
 	}else{
 		target.classList.remove('hidden');
-		cell.querySelector(`.loader_wrapper`).classList.add('hidden');
+		cell.querySelector(`.loader-wrapper`).classList.add('hidden');
 
 		target.remove();
 	}
@@ -69,16 +69,16 @@ async function fileUpload(target, location){
 	request.open('POST', sim.ajaxUrl, true);
 	
 	//Show loading gif
-	fileUploadWrap.querySelectorAll(".loader_wrapper").forEach(loader =>{
+	fileUploadWrap.querySelectorAll(".loader-wrapper").forEach(loader =>{
 		loader.classList.remove('hidden');
-		loader.querySelectorAll(".loader_text").forEach(el =>{
+		loader.querySelectorAll(".loader-text").forEach(el =>{
 			el.textContent = "Preparing upload";
 			el.classList.add('upload-message');
 		});
 	});
 	
 	//Send AJAX request
-	fileUploadWrap.querySelector('.loader_text').textContent = "Uploading Picture(s)";
+	fileUploadWrap.querySelector('.loader-text').textContent = "Uploading Picture(s)";
 	document.getElementById('progress-wrapper').classList.remove('hidden');
 
 	request.send(formData);
@@ -92,15 +92,15 @@ function fileUploadProgress(e){
 		let percentage 	= (current * 100)/max;
 		percentage 		= Math.round(percentage * 10) / 10
 		
-		document.querySelectorAll("#upload_progress").forEach(el=>el.value = percentage);
-		document.querySelectorAll("#progress_percentage").forEach(el=>el.textContent	= `   ${percentage}%`);
+		document.querySelectorAll("#upload-progress").forEach(el=>el.value = percentage);
+		document.querySelectorAll("#progress-percentage").forEach(el=>el.textContent	= `   ${percentage}%`);
 
 		if(percentage >= 99){
 			//Remove progress barr
 			document.getElementById("progress-wrapper").classList.add('hidden');
 			
 			// process completed
-			fileUploadWrap.querySelectorAll(".loader_text").forEach(el =>{
+			fileUploadWrap.querySelectorAll(".loader-text").forEach(el =>{
 				//Change message text
 				if (totalFiles > 1){
 					el.textContent = "Processing images";
@@ -127,7 +127,7 @@ function readyStateChanged(e){
 		}
 		
 		//Hide loading gif
-		document.querySelectorAll(".loader_wrapper").forEach(
+		document.querySelectorAll(".loader-wrapper").forEach(
 			function(loader){
 				loader.classList.add('hidden');
 			}
@@ -206,8 +206,8 @@ async function fetchMetaData(tr){
 			tr.querySelector('.authors').insertAdjacentHTML('afterEnd', list);
 		}else{
 			let authors 	= bookData['author_name'] ?? [author];
-			let wrapper 	= tr.querySelector(`.authors.clone_divs_wrapper`);
-			let baseElement = wrapper.querySelector(`.clone_div`);
+			let wrapper 	= tr.querySelector(`.authors.clone-divs-wrapper`);
+			let baseElement = wrapper.querySelector(`.clone-div`);
 
 			authors.forEach(author => {
 				let clone		= cloneNode(baseElement);
@@ -329,7 +329,7 @@ document.addEventListener("change", async event =>{
 	let target = event.target;
 
 	if(target.name == 'image-selector' && target.files.length > 0){
-		fileUploadWrap	= target.closest('.file_upload_wrap');
+		fileUploadWrap	= target.closest('.file-upload-wrap');
 
 		// Remove the old table if any
 		fileUploadWrap.querySelectorAll('.image-preview, .book.table-wrapper').forEach(el => el.remove());
@@ -376,16 +376,15 @@ document.addEventListener("change", async event =>{
 
 		tr.style.position = 'relative';
 
-		let loader = Main.showLoader(tr.firstChild, false, tr.offsetHeight - 40, 'Updating book data...');
+		let loader = Main.showLoader(tr.lastChild, false, tr.offsetHeight - 100, 'Updating book data...');
 
 		loader.style.position 			= 'absolute';
 		loader.style.top				= 0;
 		loader.style.left				= 0;
-		loader.style.width				= '100%';
+		loader.style.width				= '100vw';
 		loader.style.height				= '100%';
-		loader.style.backgroundColor	= 'rgba(0, 0, 0, 0.7)';
+		loader.style.backgroundColor	= 'rgba(0, 0, 0, 0.5)';
 		loader.style.color				= 'white';
-		loader.style.opacity			= 0.5;
 		loader.style.display			= 'flex';
 		loader.style.justifyContent		= 'center';
 		loader.style.alignItems			= 'center';
