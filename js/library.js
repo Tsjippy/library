@@ -1,5 +1,5 @@
 import { cloneNode } from "../../forms/js/form_exports.js";
-import { setTableLabel } from "../../../plugins/sim-plugin/includes/js/table.js";
+import { setTableLabel, hideColumn } from "../../../plugins/sim-plugin/includes/js/table.js";
 
 console.log("library.js loaded");
 
@@ -68,7 +68,7 @@ async function fileUpload(target, location){
 	
 	request.open('POST', sim.ajaxUrl, true);
 	
-	//Show loading gif
+	// Show loading gif
 	fileUploadWrap.querySelectorAll(".loader-wrapper").forEach(loader =>{
 		loader.classList.remove('hidden');
 		loader.querySelectorAll(".loader-text").forEach(el =>{
@@ -81,7 +81,12 @@ async function fileUpload(target, location){
 	fileUploadWrap.querySelector('.loader-text').textContent = "Uploading Picture(s)";
 	document.getElementById('progress-wrapper').classList.remove('hidden');
 
-	request.send(formData);
+	try{
+		request.send(formData);
+	} catch(e){
+		console.error('Error fetching book data:', e);
+		Main.displayMessage(e);
+	}
 }
 
 function fileUploadProgress(e){
@@ -139,8 +144,20 @@ function readyStateChanged(e){
 }
 
 async function fileUploadSucces(result){
+	let json		= JSON.parse(result);
+
+	if(!json.success){
+		Main.displayMessage(`The files failed to process:<br>${json.data[0].message}`, 'error');
+
+		document.querySelectorAll(`.image-selector-wrap.hidden`).forEach(el=>el.classList.remove('hidden'));
+
+		fileUploadWrap.querySelectorAll('.image-preview').forEach(el => el.remove());
+
+		return;
+	}
+
 	let div 		= document.createElement('div');
-	div.innerHTML	= JSON.parse(result).data;
+	div.innerHTML	= json.data;
 	fileUploadWrap.prepend(div);
 
 	Main.displayMessage("The files have been processed succesfully.", 'success', true);
@@ -156,6 +173,10 @@ async function fileUploadSucces(result){
 
 	// Run this only when all rows are processed
 	setTableLabel();
+
+	if(sim.hidden != undefined){
+		sim.hidden.forEach(col => hideColumn(div.querySelectorAll(`.sim-table th`)[col]));
+	}
 }
 
 async function fetchMetaDatas(){
@@ -258,6 +279,7 @@ async function fetchMetaData(tr){
 		description		= bookData['description'] != undefined ? bookData['description']['value'] != undefined ? bookData['description']['value'] : '' : '';
 
 		let key        	= bookData['key'] ?? '';
+		let workJson	= '';
         if(key != ''){
             url      = `https://openlibrary.org${key}`;
 			tr.querySelector('.url').innerHTML = `
@@ -267,11 +289,11 @@ async function fetchMetaData(tr){
 
 			// Fetch the summary from the Open Library API
 			const workResponse 	= await fetch(url+'.json');
-			const workJson 		= await workResponse.json();
+			workJson 			= await workResponse.json();
 
-			description = workJson['description'] ?? '';	
+			description 		= workJson['description'] ?? '';	
 			
-			description = description.value ?? description;
+			description 		= description.value ?? description;
 
 			if(	workJson['subjects'] != undefined ){
 				workJson['subjects'].forEach((subject) => {
@@ -356,6 +378,7 @@ document.addEventListener("change", async event =>{
 			reader.onload = function(e) {
 				let div 			= document.createElement('div');
 				div.classList.add('image-preview');
+				div.style.textAlign	= 'center';
 
 				let img 			= document.createElement('img');
 				img.src 			= e.target.result;

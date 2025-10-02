@@ -55,6 +55,10 @@ class Library{
 
         if($this->engine == "gemini"){
             $json   = $this->gemini();
+
+            if(is_wp_error($json)){
+                return $json;
+            }
         }
 
         return $this->getTable($json);
@@ -154,36 +158,47 @@ class Library{
     }
 
     public function gemini(){
-        $client = Gemini::client($this->apiKey);
+        try{
+            $client = Gemini::client($this->apiKey);
 
-        $result = $client
-            ->generativeModel(model: 'gemini-2.0-flash')
-            ->withGenerationConfig(
-                generationConfig: new GenerationConfig(
-                    responseMimeType: ResponseMimeType::APPLICATION_JSON,
-                    responseSchema: new Schema(
-                        type: DataType::ARRAY,
-                        items: new Schema(
-                            type: DataType::OBJECT,
-                            properties: [
-                                'title'         => new Schema(type: DataType::STRING),
-                                'authors'       => new Schema(type: DataType::STRING),
-                                'description'   => new Schema(type: DataType::STRING),
-                            ],
-                            required: ['title'],
+            $result = $client
+                ->generativeModel(model: 'gemini-2.0-flash')
+                ->withGenerationConfig(
+                    generationConfig: new GenerationConfig(
+                        responseMimeType: ResponseMimeType::APPLICATION_JSON,
+                        responseSchema: new Schema(
+                            type: DataType::ARRAY,
+                            items: new Schema(
+                                type: DataType::OBJECT,
+                                properties: [
+                                    'title'         => new Schema(type: DataType::STRING),
+                                    'authors'       => new Schema(type: DataType::STRING),
+                                    'description'   => new Schema(type: DataType::STRING),
+                                ],
+                                required: ['title'],
+                            )
                         )
                     )
                 )
-            )
-            ->generateContent([
-                'Check this bookshelf picture from left to right, give JSON output with titles, optional authors, optional description from internet',
-                new Blob(
-                    mimeType: MimeType::from($this->imageMimeType),
-                    data: $this->imageData
-                )
-            ]);
+                ->generateContent([
+                    'Check this bookshelf picture from left to right, give JSON output with titles, optional authors, optional description from internet',
+                    new Blob(
+                        mimeType: MimeType::from($this->imageMimeType),
+                        data: $this->imageData
+                    )
+                ]);
 
-        return $result->json();
+            return $result->json();
+        } catch (\ErrorException $e) {
+            // Handle the specific Gemini\Exceptions\ErrorException
+            error_log("Gemini Error: " . $e->getMessage());
+            // You might want to return an error response to the user or take other corrective actions
+            return new WP_Error('Gemini Error', $e->getMessage());
+        } catch (\Exception $e) {
+            // Catch any other general exceptions
+            error_log("General Error: " . $e->getMessage());
+            return new WP_Error('Gemini Error', $e->getMessage());
+        }
     }
 
     /**
@@ -381,7 +396,7 @@ class Library{
 
         $location   = $_REQUEST['location'];
 
-        $icon	    = "<img class='visibilityicon visible' src='".\SIM\PICTURESURL."/visible.png' width=20 height=20 loading='lazy' >";
+        $icon	    = "<img class='visibility-icon visible' src='".\SIM\PICTURESURL."/visible.png' width=20 height=20 loading='lazy' >";
 
         ob_start();
         ?>
@@ -472,7 +487,9 @@ class Library{
                                                 }
                                             ?>
                                         </td>
-                                        <td class='url'></td>
+                                        <td class='url'>
+                                            <a href='https://www.google.com/search?q=<?php echo urlencode("$data->title $data->authors book");?>' target='_blank'>Search on Google</a>
+                                        </td>
                                         <td class='location hidden'><input type='text' name='location' value="<?php echo $location; ?>"></td>
                                         <td>
                                             <?php echo \SIM\loaderImage(50, 'Adding the book...', true);?>

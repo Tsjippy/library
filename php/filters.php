@@ -19,7 +19,15 @@ function ajaxUploadFiles(){
 
         foreach($files['tmp_name'] as $key => $path){
             if(is_file($path)){
-                $result         .= $library->processImage($path);
+                $r	= $library->processImage($path);
+
+				if(is_wp_error($r)){
+					if(empty($result)){
+						wp_send_json_error($r);
+					}
+				}else{
+					$result	.= $r;
+				}
             }
         }
         
