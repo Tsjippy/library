@@ -2,6 +2,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- possibilty to hide columns
 
 ### Changed
 
