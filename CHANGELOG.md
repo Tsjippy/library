@@ -7,6 +7,7 @@
 ### Changed
 
 ### Fixed
+- process authors
 
 ### Updated
 
