@@ -458,7 +458,7 @@ class Library{
                                                 foreach($authors as $index => $author){
                                                     ?>
                                                     <div id="<?php echo $author;?>_div_<?php echo $index;?>" class="clone-div" data-divid="<?php echo $index;?>">
-                                                        <div class='buttonwrapper'>
+                                                        <div class='button-wrapper'>
                                                             <input type='text' name='author[]' class='author' value="<?php echo $author; ?>">
                                                             <button type="button" class="add button" style="flex: 1;">+</button>
                                                             <button type="button" class="remove button" style="flex: 1;">-</button>

@@ -71,7 +71,7 @@ function afterPostSave($post, $frontEndPost){
                 $added    = array_diff($newValues, $curValues);
                 foreach($added as $value){
                     if($meta == 'author'){
-                        $library->processAuthors($value, $post->ID);
+                        $library->processAuthor($value, $post->ID);
                     }else{
                         add_metadata( 'post', $post->ID, $meta, $value);
 
@@ -154,7 +154,7 @@ function afterPostContent($frontendcontend){
 
                                         ?>
                                         <div id="<?php echo $meta;?>_div_<?php echo $index;?>" class="clone-div" data-divid="<?php echo $index;?>">
-                                            <div class='buttonwrapper'>
+                                            <div class='button-wrapper'>
                                                 <input type='<?php echo $type;?>' class='formbuilder' name='<?php echo $meta;?>[]' value='<?php echo $value; ?>' style='width: calc(100% - 70px);'>
                                                 <button type="button" class="add button" style="flex: 1;">+</button>
                                                 <button type="button" class="remove button" style="flex: 1;">-</button>
