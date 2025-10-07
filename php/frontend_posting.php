@@ -28,7 +28,7 @@ function contentTitle($postType){
         $class .= ' hidden';
     }
 
-    echo "<h4 class='$class' name='book_content_label'>";
+    echo "<h4 class='$class' name='book-content-label'>";
         echo 'Please describe the book';
     echo "</h4>";
 }
@@ -112,9 +112,9 @@ function afterPostContent($frontendcontend){
         }
     </style>
     <div id="book-attributes" class="property book<?php if($postName != 'book'){echo ' hidden';} ?>">
-        <input type='hidden' name='static_content' value='static_content'>
+        <input type='hidden' name='static-content' value='static-content'>
             
-        <fieldset id="book" class="frontendform">
+        <fieldset id="book" class="frontend-form">
             <legend>
                 <h4>Book details</h4>
             </legend>
@@ -153,7 +153,7 @@ function afterPostContent($frontendcontend){
                                         } 
 
                                         ?>
-                                        <div id="<?php echo $meta;?>_div_<?php echo $index;?>" class="clone-div" data-divid="<?php echo $index;?>">
+                                        <div id="<?php echo $meta;?>-div-<?php echo $index;?>" class="clone-div" data-divid="<?php echo $index;?>">
                                             <div class='button-wrapper'>
                                                 <input type='<?php echo $type;?>' class='formbuilder' name='<?php echo $meta;?>[]' value='<?php echo $value; ?>' style='width: calc(100% - 70px);'>
                                                 <button type="button" class="add button" style="flex: 1;">+</button>

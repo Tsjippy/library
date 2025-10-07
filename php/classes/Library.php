@@ -457,7 +457,7 @@ class Library{
                                                 $authors = array_map('trim', explode(',', $data->authors));
                                                 foreach($authors as $index => $author){
                                                     ?>
-                                                    <div id="<?php echo $author;?>_div_<?php echo $index;?>" class="clone-div" data-divid="<?php echo $index;?>">
+                                                    <div id="<?php echo $author;?>-div-<?php echo $index;?>" class="clone-div" data-divid="<?php echo $index;?>">
                                                         <div class='button-wrapper'>
                                                             <input type='text' name='author[]' class='author' value="<?php echo $author; ?>">
                                                             <button type="button" class="add button" style="flex: 1;">+</button>
@@ -481,7 +481,7 @@ class Library{
                                             <?php
                                                 foreach($categories as $category){
                                                     echo "<label class='option-label category-select'>";
-                                                        echo "<input type='checkbox' name='category_id[]' value='$category->cat_ID' data-name='$category->name'>";
+                                                        echo "<input type='checkbox' name='category-id[]' value='$category->cat_ID' data-name='$category->name'>";
 						                                echo "$category->name";
                                                     echo "</label><br>";
                                                 }
@@ -672,9 +672,9 @@ class Library{
             }
         }
 
-        if(!empty($data['category_id'])){
+        if(!empty($data['category-id'])){
             // Store categories
-            foreach($data['category_id'] as $categoryId){
+            foreach($data['category-id'] as $categoryId){
                 wp_set_object_terms($postId, intval($categoryId), 'books', true);
             }
         }

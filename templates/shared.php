@@ -8,9 +8,9 @@ function addBooksModal(){
 	$library		= getLibrary($Modules[MODULE_SLUG]);
 
     ?>
-	<div id='add-books_modal' class='modal <?php if(empty($_GET['addbooks'])){echo 'hidden';}?>'>
+	<div id='add-books-modal' class='modal <?php if(empty($_GET['addbooks'])){echo 'hidden';}?>'>
 		<div class="modal-content" style='max-width:100vw;'>
-			<span id="modal_close" class="close">&times;</span>
+			<span id="modal-close" class="close">&times;</span>
 			<div class="content">
 				<?php echo $library->getFileHtml();?>
 				<br>

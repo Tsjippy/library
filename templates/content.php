@@ -27,7 +27,7 @@ if(is_tax() || is_archive()){
 		margin-right: 	10px;
 	}
 
-	.cat_card{
+	.cat-card{
 		padding: 		10px;
 	}
 
@@ -57,7 +57,7 @@ if(is_tax() || is_archive()){
 	}
 </style>
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-	<div class="cat_card<?php if($archive){echo ' inside-article';}?>">
+	<div class="cat-card<?php if($archive){echo ' inside-article';}?>">
 		
 		<?php
 		if($archive){
@@ -209,7 +209,7 @@ if(is_tax() || is_archive()){
 
 							echo "<div class='$meta book meta'>";
 								echo "<div class='flex meta-wrapper'>";
-									echo "<img src='$imageUrl' alt='$meta' loading='lazy' class='book_icon' title='$meta'><div>$value</div>";
+									echo "<img src='$imageUrl' alt='$meta' loading='lazy' class='book-icon' title='$meta'><div>$value</div>";
 								echo "</div>";
 							echo "</div>";
 						}
