@@ -5,6 +5,7 @@
 
 ### Changed
 - clasnames
+- data attribute names
 
 ### Fixed
 
