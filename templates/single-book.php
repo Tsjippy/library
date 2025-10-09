@@ -29,7 +29,7 @@ if(!isset($skipHeader) || !$skipHeader){
 				include(__DIR__.'/content.php');
 			endwhile;
 			
- 			/*?> <nav id='post_navigation'>
+ 			/*?> <nav id='post-navigation'>
 				<span id='prev'>
 					<?php previous_post_link(); ?>
 				</span>

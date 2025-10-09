@@ -457,7 +457,7 @@ class Library{
                                                 $authors = array_map('trim', explode(',', $data->authors));
                                                 foreach($authors as $index => $author){
                                                     ?>
-                                                    <div id="<?php echo $author;?>-div-<?php echo $index;?>" class="clone-div" data-divid="<?php echo $index;?>">
+                                                    <div id="<?php echo $author;?>-div-<?php echo $index;?>" class="clone-div" data-div-id="<?php echo $index;?>">
                                                         <div class='button-wrapper'>
                                                             <input type='text' name='author[]' class='author' value="<?php echo $author; ?>">
                                                             <button type="button" class="add button" style="flex: 1;">+</button>
