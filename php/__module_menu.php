@@ -3,7 +3,7 @@ namespace SIM\LIBRARY;
 
 use SIM;
 
-const MODULE_VERSION		= '1.2.3';
+const MODULE_VERSION		= '1.2.4';
 DEFINE(__NAMESPACE__.'\MODULE_SLUG', strtolower(basename(dirname(__DIR__))));
 
 DEFINE(__NAMESPACE__.'\MODULE_PATH', plugin_dir_path(__DIR__));

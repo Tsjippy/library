@@ -4,12 +4,17 @@
 ### Added
 
 ### Changed
-- clasnames
-- data attribute names
 
 ### Fixed
 
 ### Updated
+
+## [1.2.4] - 2025-10-13
+
+
+### Changed
+- clasnames
+- data attribute names
 
 ## [1.2.3] - 2025-10-06
 
