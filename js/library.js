@@ -245,7 +245,7 @@ async function fetchMetaData(tr){
            	let  smallUrl    = `https://covers.openlibrary.org/b/id/${image}-S.jpg`;
 		   	let  largeUrl    = `https://covers.openlibrary.org/b/id/${image}-L.jpg`;
 
-			tr.querySelector('.image').innerHTML = `<input type='hidden' name='image' value='${image}'><a href='${largeUrl}' target='_blank'><img src='${smallUrl}' class='book-image' loading='lazy'></a>`;
+			tr.querySelector('.image').innerHTML = `<input type='hidden' class='no-reset' name='image' value='${image}'><a href='${largeUrl}' target='_blank'><img src='${smallUrl}' class='book-image' loading='lazy'></a>`;
         }
 
 		let subtitle	= bookData['subtitle'] ?? '';
@@ -283,7 +283,7 @@ async function fetchMetaData(tr){
         if(key != ''){
             url      = `https://openlibrary.org${key}`;
 			tr.querySelector('.url').innerHTML = `
-			<input type='hidden' name='url' value='${url}'>
+			<input type='hidden' class='no-reset' name='url' value='${url}'>
 			<a href='${url}' target='_blank'>View on Open Library</a>
 			`;
 

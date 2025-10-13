@@ -112,7 +112,7 @@ function afterPostContent($frontendcontend){
         }
     </style>
     <div id="book-attributes" class="property book<?php if($postName != 'book'){echo ' hidden';} ?>">
-        <input type='hidden' name='static-content' value='static-content'>
+        <input type='hidden' class='no-reset' name='static-content' value='static-content'>
             
         <fieldset id="book" class="frontend-form">
             <legend>

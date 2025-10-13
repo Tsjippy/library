@@ -212,7 +212,7 @@ function moduleFunctions($functionHtml, $settings){
 		<br>
 		<h4>Sync Books with OpenLibrary.org</h4>
 		<form method='post'>
-			<input type='hidden' name='updatemeta' value='updatemeta'>
+			<input type='hidden' class='no-reset' name='updatemeta' value='updatemeta'>
 			<button class='button sim small'>Update Book Metas</button>
 		<?php
 	}
