@@ -10,14 +10,7 @@ function postingModals($types){
 
 add_action('sim_frontend_post_before_content', __NAMESPACE__.'\beforeContent');
 function beforeContent($frontEndContent){
-    $categories = get_categories( array(
-        'orderby' 	=> 'name',
-        'order'   	=> 'ASC',
-        'taxonomy'	=> 'books',
-        'hide_empty'=> false,
-    ) );
-
-    $frontEndContent->showCategories('book', $categories);
+    $frontEndContent->showCategories('book', 'books');
 }
 
 add_action('sim_frontend_post_content_title', __NAMESPACE__.'\contentTitle');
