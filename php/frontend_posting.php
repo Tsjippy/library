@@ -2,17 +2,6 @@
 namespace SIM\LIBRARY;
 use SIM;
 
-add_filter('sim_frontend_posting_modals', __NAMESPACE__.'\postingModals');
-function postingModals($types){
-    $types[]	= 'book';
-    return $types;
-}
-
-add_action('sim_frontend_post_before_content', __NAMESPACE__.'\beforeContent');
-function beforeContent($frontEndContent){
-    $frontEndContent->showCategories('book', 'books');
-}
-
 add_action('sim_frontend_post_content_title', __NAMESPACE__.'\contentTitle');
 function contentTitle($postType){
     // Book content title
@@ -35,9 +24,6 @@ function afterPostSave($post, $frontEndPost){
     global $Modules;
 
 	$library		= getLibrary($Modules[MODULE_SLUG]);
-
-    //store categories
-    $frontEndPost->storeCustomCategories($post, 'books');
 
     foreach(METAS as $meta=>$type){
         if(isset($_POST[$meta])){

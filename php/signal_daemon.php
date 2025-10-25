@@ -3,10 +3,15 @@ namespace SIM\LIBRARY;
 use SIM;
 use Gemini\Data\Content;
 use Gemini\Enums\Role;
+use Gemini\Exceptions\ErrorException;
 
-add_filter('sim-signal-daemon-response', __NAMESPACE__.'\addGeminiResponse', 10, 6);
+add_filter('sim-signal-daemon-response', __NAMESPACE__.'\addGeminiResponse', 99, 6);
 function addGeminiResponse($response, $message, $source, $users, $name, $signal){
-    if($response['message'] == 'I have no clue, do you know?'){
+    if($response['message'] != 'I have no clue, do you know?'){
+        return $response;
+    }
+
+    try {
         $library = getLibrary();
 
         // Get message history of last hour
@@ -37,6 +42,11 @@ function addGeminiResponse($response, $message, $source, $users, $name, $signal)
         }
 
         $response['message']    = "I am not sure what to answer so I asked Gemini.\n\nHere is what it said:\n".$library->chatGemini($message, $history);
+    } catch ( \Gemini\Exceptions\ErrorException $e){
+        SIM\printArray($e->getMessage());
+    } catch (\Exception $e) {
+        // Code to handle any other general Exception
+        SIM\printArray("Caught a general exception: " . $e->getMessage());
     }
 
     return $response;
