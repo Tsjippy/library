@@ -4,11 +4,16 @@
 ### Added
 
 ### Changed
-- code cleanup
 
 ### Fixed
 
 ### Updated
+
+## [1.2.5] - 2025-10-25
+
+
+### Changed
+- code cleanup
 
 ## [1.2.4] - 2025-10-13
 
