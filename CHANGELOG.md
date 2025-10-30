@@ -4,12 +4,19 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [1.2.6] - 2025-10-30
+
+
+### Changed
 - use upgrade.php not install-helper.php
 
 ### Fixed
 - signal reply priority
-
-### Updated
 
 ## [1.2.5] - 2025-10-25
 
