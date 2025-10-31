@@ -250,9 +250,7 @@ class Library{
         
 		?>
         <div class='file-upload-wrap'>
-            <?php
-            echo \SIM\loaderImage(30, '', true);
-            ?>
+            <div class="loader-image-trigger" data-size="30"></div>
             <div id="progress-wrapper" class="hidden">
                 <progress id="upload-progress" value="0" max="100"></progress>
                 <span id="progress-percentage">   0%</span>
@@ -470,9 +468,7 @@ class Library{
                                             </div>
                                         </td>
                                         <td class='placeholder' colspan='7' style='text-align: center;'>
-                                            <?php 
-                                            echo \SIM\loaderImage(50, 'Fetching the book details...');
-                                            ?>
+                                            <div class="loader-image-trigger" data-size="30" data-text="Fetching the book details..."></div>
                                         </td>
                                         <td>
                                             <textarea name='description' class='description' style='min-width: 300px;text-wrap: auto;' rows=2><?php echo $data->description; ?></textarea>
@@ -492,7 +488,7 @@ class Library{
                                         </td>
                                         <td class='location hidden'><input type='text' name='location' value="<?php echo $location; ?>"></td>
                                         <td>
-                                            <?php echo \SIM\loaderImage(50, 'Adding the book...', true);?>
+                                            <div class="loader-image-trigger" data-size="50" data-text="Adding the book..."></div>
                                             <button type='button' class='add-book sim button'>Add book to the library</button>
                                             <button type='button' class='delete-book sim button'>Delete</button>
                                         </td>
