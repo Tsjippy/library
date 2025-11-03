@@ -344,7 +344,11 @@ document.addEventListener("click", event =>{
 	}else if(target.matches('.hide-processed-books')){
 		hideCss('processed');
 		target.remove();
+	}else{
+		return;
 	}
+
+	event.stopImmediatePropagation();
 });
 
 document.addEventListener("change", async event =>{
@@ -416,5 +420,9 @@ document.addEventListener("change", async event =>{
 		await fetchMetaData(tr);
 
 		loader.remove();
+	}else{
+		return;
 	}
+
+	event.stopImmediatePropagation();
 });
