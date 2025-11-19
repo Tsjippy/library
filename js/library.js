@@ -1,5 +1,4 @@
 import { cloneNode } from "../../forms/js/form_exports.js";
-import { setTableLabel, hideColumn } from "../../../plugins/sim-plugin/includes/js/table.js";
 
 console.log("library.js loaded");
 
@@ -172,10 +171,10 @@ async function fileUploadSucces(result){
 	await fetchMetaDatas();
 
 	// Run this only when all rows are processed
-	setTableLabel();
+	SimTableFunctions.setTableLabel();
 
 	if(sim.hidden != undefined){
-		sim.hidden.forEach(col => hideColumn(div.querySelectorAll(`.sim-table th`)[col]));
+		sim.hidden.forEach(col => SimTableFunctions.hideColumn(div.querySelectorAll(`.sim-table th`)[col]));
 	}
 }
 
