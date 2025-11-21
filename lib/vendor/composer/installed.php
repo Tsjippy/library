@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'ca160ba9546c400275dd352f0bd3ee7a090a016a',
+        'reference' => 'a1228fc29672fd387beef1a770bbca3469094539',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,16 +13,16 @@
         '__root__' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'ca160ba9546c400275dd352f0bd3ee7a090a016a',
+            'reference' => 'a1228fc29672fd387beef1a770bbca3469094539',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
         'google-gemini-php/client' => array(
-            'pretty_version' => '2.6.0',
-            'version' => '2.6.0.0',
-            'reference' => 'c90c43a53d85715984752928628760df9c01b682',
+            'pretty_version' => '2.7.0',
+            'version' => '2.7.0.0',
+            'reference' => '2e76d0f8801a865b5c1fb5e8516c736fc41fb2d2',
             'type' => 'library',
             'install_path' => __DIR__ . '/../google-gemini-php/client',
             'aliases' => array(),
@@ -88,8 +88,8 @@
         'psr/http-client-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '*',
-                1 => '1.0',
+                0 => '1.0',
+                1 => '*',
             ),
         ),
         'psr/http-factory' => array(
@@ -104,8 +104,8 @@
         'psr/http-factory-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '*',
-                1 => '1.0',
+                0 => '1.0',
+                1 => '*',
             ),
         ),
         'psr/http-message' => array(
@@ -120,8 +120,8 @@
         'psr/http-message-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '*',
-                1 => '1.0',
+                0 => '1.0',
+                1 => '*',
             ),
         ),
         'ralouphie/getallheaders' => array(
