@@ -4,17 +4,12 @@
 ### Added
 
 ### Changed
+- composer updated
+- lib update
 
 ### Fixed
 
 ### Updated
-
-## [1.3.0] - 2025-11-26
-
-
-### Changed
-- composer updated
-- lib update
 
 ## [1.2.9] - 2025-11-21
 
