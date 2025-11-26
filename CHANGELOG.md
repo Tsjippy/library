@@ -5,6 +5,7 @@
 
 ### Changed
 - composer updated
+- lib update
 
 ### Fixed
 
