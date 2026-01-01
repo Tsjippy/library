@@ -6,6 +6,7 @@
 ### Changed
 - composer updated
 - lib update
+- model update
 
 ### Fixed
 
