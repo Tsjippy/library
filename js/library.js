@@ -67,17 +67,8 @@ async function fileUpload(target, location){
 	
 	request.open('POST', sim.ajaxUrl, true);
 	
-	// Show loading gif
-	fileUploadWrap.querySelectorAll(".loader-wrapper").forEach(loader =>{
-		loader.classList.remove('hidden');
-		loader.querySelectorAll(".loader-text").forEach(el =>{
-			el.textContent = "Preparing upload";
-			el.classList.add('upload-message');
-		});
-	});
-	
 	//Send AJAX request
-	fileUploadWrap.querySelector('.loader-text').textContent = "Uploading Picture(s)";
+	target.closest('.modal').querySelector('.loader-text').textContent = "Uploading Picture(s)";
 	document.getElementById('progress-wrapper').classList.remove('hidden');
 
 	try{
@@ -355,6 +346,9 @@ document.addEventListener("change", async event =>{
 
 	if(target.name == 'image-selector' && target.files.length > 0){
 		fileUploadWrap	= target.closest('.file-upload-wrap');
+
+		// Show loading gif
+		Main.showLoader(fileUploadWrap, false, 30, 'Preparing upload');
 
 		// Remove the old table if any
 		fileUploadWrap.querySelectorAll('.image-preview, .book.table-wrapper').forEach(el => el.remove());

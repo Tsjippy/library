@@ -161,8 +161,10 @@ class Library{
         try{
             $client = Gemini::client($this->apiKey);
 
+            //$client->models()->list();
+
             $result = $client
-                ->generativeModel(model: 'gemini-2.0-flash')
+                ->generativeModel(model: 'gemini-2.5-flash')
                 ->withGenerationConfig(
                     generationConfig: new GenerationConfig(
                         responseMimeType: ResponseMimeType::APPLICATION_JSON,
@@ -246,11 +248,9 @@ class Library{
     public function getFileHtml(){
         ob_start();
         wp_enqueue_script('sim_library_script');
-
         
 		?>
         <div class='file-upload-wrap'>
-            <div class="loader-image-trigger" data-size="30"></div>
             <div id="progress-wrapper" class="hidden">
                 <progress id="upload-progress" value="0" max="100"></progress>
                 <span id="progress-percentage">   0%</span>
