@@ -1,7 +1,7 @@
 <?php
-namespace SIM\LIBRARY;
-use SIM;
-use SIM\ADMIN;
+namespace TSJIPPY\LIBRARY;
+use TSJIPPY;
+use TSJIPPY\ADMIN;
 
 class Email extends ADMIN\MailSetting{
 

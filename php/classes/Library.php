@@ -1,7 +1,7 @@
 <?php
-namespace SIM\LIBRARY;
+namespace TSJIPPY\LIBRARY;
 
-require( MODULE_PATH  . 'lib/vendor/autoload.php');
+require( PLUGINPATH  . 'lib/vendor/autoload.php');
 
 use Gemini;
 use Gemini\Data\Blob;
@@ -23,7 +23,7 @@ class Library{
     public function __construct($apiKey='', $engine='') {
         global $wpdb;
 
-        $this->tableName        = $wpdb->prefix.'sim_books';
+        $this->tableName        = $wpdb->prefix.'tsjippy_books';
 
         $this->apiKey           = $apiKey;
         $this->engine           = strtolower($engine);
@@ -247,7 +247,7 @@ class Library{
      */
     public function getFileHtml(){
         ob_start();
-        wp_enqueue_script('sim_library_script');
+        wp_enqueue_script('tsjippy_library_script');
         
 		?>
         <div class='file-upload-wrap'>
@@ -270,7 +270,7 @@ class Library{
                 <h4>Select picture</h4>
                 <label>
                     Select one or multiple picture(s) to check for a book or multiple books on bookshelf<br><br>
-                    <input type='file' name='image-selector' accept='<?php apply_filters('sim-library-accepted-files', 'image/png, image/jpeg, image/webp');?>' class='formbuilder' multiple>
+                    <input type='file' name='image-selector' accept='<?php apply_filters('tsjippy-library-accepted-files', 'image/png, image/jpeg, image/webp');?>' class='formbuilder' multiple>
                 </label>
             </div>
         </div>
@@ -383,7 +383,7 @@ class Library{
     }
 
     public function getTable($json){
-        wp_enqueue_script('sim_library_script');
+        wp_enqueue_script('tsjippy_library_script');
 
         $categories	= get_categories( array(
             'orderby' 		=> 'name',
@@ -394,12 +394,12 @@ class Library{
 
         $location   = $_REQUEST['location'];
 
-        $icon	    = "<img class='visibility-icon visible' src='".\SIM\PICTURESURL."/visible.png' width=20 height=20 loading='lazy' >";
+        $icon	    = "<img class='visibility-icon visible' src='".\TSJIPPY\PICTURESURL."/visible.png' width=20 height=20 loading='lazy' >";
 
         ob_start();
         ?>
         <style>
-        .sim-table body tr:not(:first-child) {
+        .tsjippy.table body tr:not(:first-child) {
             display: none;
         }
         </style>
@@ -410,7 +410,7 @@ class Library{
             </p>
             <button type='button' class='hide-existing-books sim button'>Hide books already in the library</button>
             <button type='button' class='hide-processed-books sim button'>Hide processed books</button>
-            <table class='sim-table'>
+            <table class='tsjippy table'>
                 <thead>
                     <tr>
                         <th>Picture <?php echo $icon; ?></th>

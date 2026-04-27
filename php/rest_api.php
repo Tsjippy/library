@@ -1,6 +1,6 @@
 <?php
-namespace SIM\LIBRARY;
-use SIM;
+namespace TSJIPPY\LIBRARY;
+use TSJIPPY;
 use WP_Error;
 
 add_action( 'rest_api_init', __NAMESPACE__.'\restApiInit');

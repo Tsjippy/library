@@ -1,8 +1,8 @@
 <?php
-namespace SIM\LIBRARY;
-use SIM;
+namespace TSJIPPY\LIBRARY;
+use TSJIPPY;
 
-add_action('sim_frontend_post_content_title', __NAMESPACE__.'\contentTitle');
+add_action('tsjippy_frontend_post_content_title', __NAMESPACE__.'\contentTitle');
 function contentTitle($postType){
     // Book content title
     $class = 'property book';
@@ -15,7 +15,7 @@ function contentTitle($postType){
     echo "</h4>";
 }
 
-add_action('sim_after_post_save', __NAMESPACE__.'\afterPostSave', 10, 2);
+add_action('tsjippy_after_post_save', __NAMESPACE__.'\afterPostSave', 10, 2);
 function afterPostSave($post, $frontEndPost){
     if($post->post_type != 'book'){
         return;
@@ -68,7 +68,7 @@ function afterPostSave($post, $frontEndPost){
 }
 
 //add meta data fields
-add_action('sim_frontend_post_after_content', __NAMESPACE__.'\afterPostContent', 10, 2);
+add_action('tsjippy_frontend_post_after_content', __NAMESPACE__.'\afterPostContent', 10, 2);
 function afterPostContent($frontendcontend){
 
     if(!empty($frontendcontend->post) && $frontendcontend->post->post_type != 'book'){
@@ -76,7 +76,7 @@ function afterPostContent($frontendcontend){
     }
 
     //Load js
-    wp_enqueue_script('sim_book_script');
+    wp_enqueue_script('tsjippy_book_script');
 
     $postId     = $frontendcontend->postId;
     $postName   = $frontendcontend->postName;

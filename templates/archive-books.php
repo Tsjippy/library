@@ -1,9 +1,9 @@
 <?php
-namespace SIM\LIBRARY;
-use SIM;
+namespace TSJIPPY\LIBRARY;
+use TSJIPPY;
 
 /**
- * The layout specific for the page with the slug 'books' i.e. sim.org/books.
+ * The layout specific for the page with the slug 'books' i.e. org/books.
  * Displays all the post of the book type
  *
  */
@@ -32,7 +32,7 @@ if($wp_query->is_embed){
 	$skipWrapper	= true;
 }
 
-wp_enqueue_style('sim_taxonomy_style');
+wp_enqueue_style('tsjippy_taxonomy_style');
 
 if($skipWrapper){
 	displayBookArchive();
@@ -80,7 +80,7 @@ function displayBookArchive(){
 	$booksQuery = new \WP_Query($args);
 	
 	if ( $booksQuery->have_posts() ){
-		do_action('sim_before_archive', 'book');
+		do_action('tsjippy_before_archive', 'book');
 		
 		while ( $booksQuery->have_posts() ) :
 			$booksQuery->the_post();
@@ -105,11 +105,11 @@ function displayBookArchive(){
 	}else{
 		//No books to show yet
 		?>
-		<article id="post-<?php the_ID(); ?>" <?php post_class(); ?> <?php generate_do_microdata( 'article' ); ?>>
+		<article id="post-<?php the_ID(); ?>" <?php post_class(); ?> <?php if(function_exists('generate_do_microdata')){generate_do_microdata( 'article' );} ?>>
 		<div class="no-results not-found">
 			<div class="inside-article">
 				<div class="entry-content">
-					<?php echo apply_filters('sim-empty-taxonomy', 'There are no books submitted yet.', 'book'); ?>
+					<?php echo apply_filters('tsjippy-empty-taxonomy', 'There are no books submitted yet.', 'book'); ?>
 				</div>
 			</div>
 		</div>

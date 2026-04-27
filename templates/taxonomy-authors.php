@@ -1,6 +1,6 @@
 <?php
-namespace SIM\LIBRARY;
-use SIM;
+namespace TSJIPPY\LIBRARY;
+use TSJIPPY;
 /**
  * The template for displaying all items of a particular category.
  *

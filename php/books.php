@@ -1,10 +1,10 @@
 <?php
-namespace SIM\LIBRARY;
-use SIM;
+namespace TSJIPPY\LIBRARY;
+use TSJIPPY;
 
 // Create the book custom post type
 add_action('init', function(){
-	SIM\registerPostTypeAndTax('book', 'books');
+	TSJIPPY\registerPostTypeAndTax('book', 'books');
 }, 999);
 
 add_filter(	'widget_categories_args', __NAMESPACE__.'\widgetCats');

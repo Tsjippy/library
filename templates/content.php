@@ -1,6 +1,6 @@
 <?php
-namespace SIM\LIBRARY;
-use SIM;
+namespace TSJIPPY\LIBRARY;
+use TSJIPPY;
 
 /**
  * The content of a book shared between a single post, archive or the recipes page.
@@ -64,7 +64,7 @@ if(is_tax() || is_archive()){
 			$url = get_permalink(get_the_ID());
 			echo the_title( "<h3 class='archivetitle'><a href='$url'>", '</a></h3>' );
 		}else{
-			do_action( 'sim_before_content');
+			do_action( 'tsjippy_before_content');
 		}
 		?>
 		<div class='entry-content<?php if($archive){echo ' archive';}?>'>
@@ -89,7 +89,7 @@ if(is_tax() || is_archive()){
 				if(is_user_logged_in()){
 					?>
 					<div class='author'>
-						Shared by: <a href='<?php echo SIM\maybeGetUserPageUrl(get_the_author_meta('ID')) ?>'><?php echo get_the_author(); ?></a>
+						Shared by: <a href='<?php echo TSJIPPY\maybeGetUserPageUrl(get_the_author_meta('ID')) ?>'><?php echo get_the_author(); ?></a>
 					</div>
 					<?php
 				}
@@ -111,7 +111,7 @@ if(is_tax() || is_archive()){
 						?>
 						<div class='category book meta'>
 							<h4>Genres</h4><?php
-							$url	= SIM\pathToUrl(MODULE_PATH.'pictures/category.png');
+							$url	= TSJIPPY\pathToUrl(PLUGINPATH.'pictures/category.png');
 							echo "<img src='$url' alt='category' loading='lazy' class='book-icon'>";
 							
 							//First loop over the cat to see if any parent cat needs to be removed
@@ -205,7 +205,7 @@ if(is_tax() || is_archive()){
 								$value = implode('<br>', $value);
 							}	
 														
-							$imageUrl 	= SIM\pathToUrl(MODULE_PATH."pictures/{$meta}.png");
+							$imageUrl 	= TSJIPPY\pathToUrl(PLUGINPATH."pictures/{$meta}.png");
 
 							echo "<div class='$meta book meta'>";
 								echo "<div class='flex meta-wrapper'>";
@@ -215,7 +215,7 @@ if(is_tax() || is_archive()){
 						}
 					}
 
-					do_action('sim_inside_book_metas');
+					do_action('tsjippy_inside_book_metas');
 					?>
 				</div>
 
@@ -233,7 +233,7 @@ if(is_tax() || is_archive()){
 					//Show everything including category specific content
 					}else{
 						if(empty($post->post_content)){
-							echo apply_filters('sim_empty_description', 'No content found...', $post);
+							echo apply_filters('tsjippy_empty_description', 'No content found...', $post);
 						}
 
 						the_content();

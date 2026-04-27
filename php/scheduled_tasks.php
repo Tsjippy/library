@@ -1,6 +1,6 @@
 <?php
-namespace SIM\LIBRARY;
-use SIM;
+namespace TSJIPPY\LIBRARY;
+use TSJIPPY;
 
 add_action('init', __NAMESPACE__.'\initTasks');
 function initTasks(){
@@ -9,17 +9,17 @@ function initTasks(){
 }
 
 function scheduleTasks(){
-    SIM\scheduleTask('send_book_of_the_day', 'quarterly');
+    TSJIPPY\scheduleTask('send_book_of_the_day', 'quarterly');
 }
 
 function sendBookOfTheDay(){
-    $time = SIM\getModuleOption(MODULE_SLUG, 'book-time');
+    $time = SETTINGS['book-time'] ?? false;
 
     if(!$time){
         return;
     }
     
     if(abs(strtotime($time) - current_time('U')) < 450 ){        
-        do_action('sim-library-send-book-of-the-day', ...bookOfTheDay());
+        do_action('tsjippy-library-send-book-of-the-day', ...bookOfTheDay());
     }
 }

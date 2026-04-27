@@ -65,7 +65,7 @@ async function fileUpload(target, location){
 	//Listen to the upload status
 	request.upload.addEventListener('progress', fileUploadProgress, false);
 	
-	request.open('POST', sim.ajaxUrl, true);
+	request.open('POST', ajaxUrl, true);
 	
 	//Send AJAX request
 	target.closest('.modal').querySelector('.loader-text').textContent = "Uploading Picture(s)";
@@ -164,8 +164,8 @@ async function fileUploadSucces(result){
 	// Run this only when all rows are processed
 	SimTableFunctions.setTableLabel();
 
-	if(sim.hidden != undefined){
-		sim.hidden.forEach(col => SimTableFunctions.hideColumn(div.querySelectorAll(`.sim-table th`)[col]));
+	if(hidden != undefined){
+		hidden.forEach(col => SimTableFunctions.hideColumn(div.querySelectorAll(`.tsjippy.table th`)[col]));
 	}
 }
 

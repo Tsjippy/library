@@ -1,6 +1,6 @@
 <?php
-namespace SIM\LIBRARY;
-use SIM;
+namespace TSJIPPY\LIBRARY;
+use TSJIPPY;
 
 function addBooksModal(){
     global $Modules;
@@ -22,7 +22,7 @@ function addBooksModal(){
 }
 
 function displayLocationTax(){
-    wp_enqueue_style('sim_taxonomy_style');
+    wp_enqueue_style('tsjippy_taxonomy_style');
 
     global $post;
     global $wp_query;
@@ -59,12 +59,12 @@ function displayLocationTax(){
 function displayBooks(){
 	$name 				= get_queried_object()->slug;
 	if ( have_posts() ){
-		do_action('sim_before_archive', 'book');
+		do_action('tsjippy_before_archive', 'book');
 
 		//only show the map if logged in
 		if(is_user_logged_in() ){
 			$mapName			= $name."_map";
-			$mapId				= SIM\getModuleOption(MODULE_SLUG, $mapName);
+			$mapId				= SETTINGS[$mapName] ?? false;
 
 			if(is_numeric($mapId)){
 				//Show the map of this category
@@ -87,7 +87,7 @@ function displayBooks(){
 		<div class="no-results not-found">
 			<div class="inside-article">
 				<div class="entry-content">
-					<?php echo apply_filters('sim-empty-taxonomy', "There are no $name books yet", 'book'); ?>
+					<?php echo apply_filters('tsjippy-empty-taxonomy', "There are no $name books yet", 'book'); ?>
 				</div>
 			</div>
 		</div>

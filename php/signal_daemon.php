@@ -1,11 +1,11 @@
 <?php
-namespace SIM\LIBRARY;
-use SIM;
+namespace TSJIPPY\LIBRARY;
+use TSJIPPY;
 use Gemini\Data\Content;
 use Gemini\Enums\Role;
 use Gemini\Exceptions\ErrorException;
 
-add_filter('sim-signal-daemon-response', __NAMESPACE__.'\addGeminiResponse', 99, 6);
+add_filter('tsjippy-signal-daemon-response', __NAMESPACE__.'\addGeminiResponse', 99, 6);
 function addGeminiResponse($response, $message, $source, $users, $name, $signal){
     if($response['message'] != 'I have no clue, do you know?'){
         return $response;
@@ -43,10 +43,10 @@ function addGeminiResponse($response, $message, $source, $users, $name, $signal)
 
         $response['message']    = "I am not sure what to answer so I asked Gemini.\n\nHere is what it said:\n".$library->chatGemini($message, $history);
     } catch ( \Gemini\Exceptions\ErrorException $e){
-        SIM\printArray($e->getMessage());
+        TSJIPPY\printArray($e->getMessage());
     } catch (\Exception $e) {
         // Code to handle any other general Exception
-        SIM\printArray("Caught a general exception: " . $e->getMessage());
+        TSJIPPY\printArray("Caught a general exception: " . $e->getMessage());
     }
 
     return $response;

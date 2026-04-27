@@ -1,8 +1,8 @@
 <?php
-namespace SIM\LIBRARY;
-use SIM;
+namespace TSJIPPY\LIBRARY;
+use TSJIPPY;
 
-add_action('sim_frontpage_before_main_content', __NAMESPACE__.'\beforeMainContent', 30);
+add_action('tsjippy_frontpage_before_main_content', __NAMESPACE__.'\beforeMainContent', 30);
 function beforeMainContent(){
     if(!is_user_logged_in()){
         return;

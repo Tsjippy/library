@@ -1,6 +1,6 @@
 <?php
-namespace SIM\LIBRARY;
-use SIM;    
+namespace TSJIPPY\LIBRARY;
+use TSJIPPY;    
 
 /**
  * Filter to ensure that the post content is not empty

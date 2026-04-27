@@ -1,9 +1,9 @@
 <?php
-namespace SIM\LIBRARY;
-use SIM;
+namespace TSJIPPY\LIBRARY;
+use TSJIPPY;
 
 // Make sure the template path includes the library folder, not the books folder
-add_filter('sim-template-filter', __NAMESPACE__.'\changeModuleName');
+add_filter('tsjippy-template-filter', __NAMESPACE__.'\changeModuleName');
 function changeModuleName($templateFile){
     return str_replace(['/books/', '/book-locations/', '/authors/'], '/library/', $templateFile);
 }
@@ -124,12 +124,12 @@ add_action( 'init', function(){
 		}
 	);
 
-	add_action('sim-updatemetas', function(){
+	add_action('tsjippy-updatemetas', function(){
 		updateBookMetas();
 	});
 }, 0 );
 
-add_filter('sim-theme-archive-page-title', __NAMESPACE__.'\changeArchiveTitle', 10, 2);
+add_filter('tsjippy-theme-archive-page-title', __NAMESPACE__.'\changeArchiveTitle', 10, 2);
 function changeArchiveTitle($title, $category){
 	if($category->taxonomy == 'authors'){
 		$splittedName 	= explode(', ', $category->name);
@@ -146,4 +146,90 @@ function changeArchiveTitle($title, $category){
 	}
 	
 	return $title;
+}
+
+function updateBookMetas(){
+	TSJIPPY\printArray('Starting Updating Metas');
+	$library		= new Library();
+
+	$books = get_posts(
+		array(
+			'orderby' 		=> 'post_title',
+			'order' 		=> 'asc',
+			'post_status' 	=> 'any',
+			'post_type'     => 'book',
+			'posts_per_page'=> -1
+		)
+	);
+
+	$categories	= get_categories( array(
+		'orderby' 		=> 'name',
+		'order'   		=> 'ASC',
+		'taxonomy'		=> 'books',
+		'hide_empty' 	=> false,
+		'fields' 		=> 'names',
+		'posts_per_page'=> -1	
+	) );
+
+	foreach($books as $book){
+		$title		= $book->post_title;
+		$authors	= get_post_meta($book->ID, 'author');
+		$data		= $library->openLibrary($title, $authors[0] ?? '');
+
+		if(empty($data) || empty($data['author_name'])){
+			$data		= $library->openLibrary($title);
+
+			if(empty($data) || empty($data['author_name'])){
+				continue;
+			}
+		}
+
+		if($data['author_name'] != $authors){
+			delete_post_meta($book->ID, 'author');
+			wp_delete_object_term_relationships($book->ID, 'authors');
+
+			foreach($data['author_name'] as $author){
+				$library->processAuthor($author, $book->ID);
+			}
+
+			update_post_meta($book->ID, 'image', $data['cover_i']);
+
+			if($title != $data['title']){
+				wp_update_post(
+					array(
+						'ID'			=> $book->ID,
+						'post_title'	=> $data['title']
+					)
+				);
+			}
+
+			delete_post_meta($book->ID, 'subtitle');
+			if(!empty($data['subtitle'])){
+				update_post_meta($book->ID, 'subtitle', $data['subtitle']);
+			}
+		}
+
+		if(!empty($data['subjects'])){
+			wp_set_object_terms($book->ID, array_uintersect($categories, $data['subjects'], 'strcasecmp'), 'books', true);
+		}
+
+		if(!empty($data['key'])){
+			update_post_meta($book->ID, 'url', 'https://openlibrary.org/'.$data['key']);
+		}
+	}
+
+	TSJIPPY\printArray('Finished Updating Metas');
+}
+
+
+function getLibrary(){
+	if(!empty(SETTINGS['chatgpt-api-key'])){
+		$engine	= 'chatgpt';
+	}
+
+	if(!empty(SETTINGS['gemini-api-key'])){
+		$engine	= 'gemini';
+	}
+	
+	return new Library(apiKey: SETTINGS["$engine-api-key"], engine: $engine);
 }
