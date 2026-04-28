@@ -5,7 +5,7 @@ use TSJIPPY;
 function addBooksModal(){
     global $Modules;
 
-	$library		= getLibrary($Modules[MODULE_SLUG]);
+	$library		= getLibrary($Modules[PLUGINSLUG]);
 
     ?>
 	<div id='add-books-modal' class='modal <?php if(empty($_GET['addbooks'])){echo 'hidden';}?>'>

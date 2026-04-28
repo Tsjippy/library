@@ -1,4 +1,4 @@
-import { cloneNode } from "../../forms/js/form_exports.js";
+import { cloneNode } from "../../tsjippy-forms/js/form_exports.js";
 
 console.log("library.js loaded");
 

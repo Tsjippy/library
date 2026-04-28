@@ -3,6 +3,10 @@ namespace TSJIPPY\LIBRARY;
 use TSJIPPY;
 use WP_Error;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 add_action( 'rest_api_init', __NAMESPACE__.'\restApiInit');
 function restApiInit() {
 
@@ -32,7 +36,7 @@ function restApiInit() {
 function addBook(){
 	global $Modules;
 
-	$library	= getLibrary($Modules[MODULE_SLUG]);
+	$library	= getLibrary($Modules[PLUGINSLUG]);
 
 	$result		= $library->createBook($_POST);
 	

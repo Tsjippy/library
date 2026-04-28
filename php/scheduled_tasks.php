@@ -2,6 +2,10 @@
 namespace TSJIPPY\LIBRARY;
 use TSJIPPY;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 add_action('init', __NAMESPACE__.'\initTasks');
 function initTasks(){
 	//add action for use in scheduled task

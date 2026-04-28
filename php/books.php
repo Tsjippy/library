@@ -2,6 +2,10 @@
 namespace TSJIPPY\LIBRARY;
 use TSJIPPY;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 // Create the book custom post type
 add_action('init', function(){
 	TSJIPPY\registerPostTypeAndTax('book', 'books');

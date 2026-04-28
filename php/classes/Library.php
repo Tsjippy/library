@@ -12,6 +12,10 @@ use Gemini\Enums\DataType;
 use Gemini\Enums\ResponseMimeType;
 use WP_Error;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 class Library{
     private $apiKey;
     private $engine;

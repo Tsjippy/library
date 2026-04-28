@@ -2,6 +2,10 @@
 namespace TSJIPPY\LIBRARY;
 use TSJIPPY;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 add_action('tsjippy_frontend_post_content_title', __NAMESPACE__.'\contentTitle');
 function contentTitle($postType){
     // Book content title
@@ -23,7 +27,7 @@ function afterPostSave($post, $frontEndPost){
 
     global $Modules;
 
-	$library		= getLibrary($Modules[MODULE_SLUG]);
+	$library		= getLibrary($Modules[PLUGINSLUG]);
 
     foreach(METAS as $meta=>$type){
         if(isset($_POST[$meta])){

@@ -1,6 +1,10 @@
 <?php
 namespace TSJIPPY\LIBRARY;
-use TSJIPPY;    
+use TSJIPPY;   
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Filter to ensure that the post content is not empty

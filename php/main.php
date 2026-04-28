@@ -2,6 +2,10 @@
 namespace TSJIPPY\LIBRARY;
 use TSJIPPY;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 // Make sure the template path includes the library folder, not the books folder
 add_filter('tsjippy-template-filter', __NAMESPACE__.'\changeModuleName');
 function changeModuleName($templateFile){
@@ -13,7 +17,7 @@ function ajaxUploadFiles(){
     global $Modules;
 
     if(!empty($_FILES['files'])){
-        $library		= getLibrary($Modules[MODULE_SLUG]);
+        $library		= getLibrary($Modules[PLUGINSLUG]);
         $files	        = $_FILES['files'];
         $result         = '';
 

@@ -3,13 +3,17 @@ namespace TSJIPPY\LIBRARY;
 use TSJIPPY;
 use TSJIPPY\ADMIN;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 class Email extends ADMIN\MailSetting{
 
     public $user;
 
     public function __construct(object $user) {
         // call parent constructor
-		parent::__construct('adult_reminder', MODULE_SLUG);
+		parent::__construct('adult_reminder', PLUGINSLUG);
 
         $this->addUser($user);
 

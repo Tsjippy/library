@@ -5,6 +5,10 @@ use Gemini\Data\Content;
 use Gemini\Enums\Role;
 use Gemini\Exceptions\ErrorException;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 add_filter('tsjippy-signal-daemon-response', __NAMESPACE__.'\addGeminiResponse', 99, 6);
 function addGeminiResponse($response, $message, $source, $users, $name, $signal){
     if($response['message'] != 'I have no clue, do you know?'){
