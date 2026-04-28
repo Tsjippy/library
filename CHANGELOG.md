@@ -9,6 +9,7 @@
 - model update
 - main plugin name from sim-base to tsjippy-shared-functionality
 - module to plugin
+- PLUGINCONSTANT value
 
 ### Fixed
 
