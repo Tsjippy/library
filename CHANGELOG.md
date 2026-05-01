@@ -11,6 +11,7 @@
 - main plugin name from sim-base to tsjippy-shared-functionality
 - module to plugin
 - PLUGINCONSTANT value
+- exclude .vscode from releases
 
 ### Fixed
 
