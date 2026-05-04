@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- plugin settings
 
 ### Updated
+
+## [10.0.2] - 2026-05-04
+
+
+### Fixed
+- plugin settings
 
 ## [10.0.1] - 2026-05-03
 
