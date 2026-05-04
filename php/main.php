@@ -14,10 +14,8 @@ function changeModuleName($templateFile){
 
 add_action ( 'wp_ajax_process_library_upload', __NAMESPACE__.'\ajaxUploadFiles');
 function ajaxUploadFiles(){
-    global $Modules;
-
     if(!empty($_FILES['files'])){
-        $library		= getLibrary($Modules[PLUGINSLUG]);
+        $library		= getLibrary();
         $files	        = $_FILES['files'];
         $result         = '';
 

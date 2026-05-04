@@ -34,9 +34,8 @@ function restApiInit() {
 }
 
 function addBook(){
-	global $Modules;
 
-	$library	= getLibrary($Modules[PLUGINSLUG]);
+	$library	= getLibrary();
 
 	$result		= $library->createBook($_POST);
 	

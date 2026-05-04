@@ -3,9 +3,8 @@ namespace TSJIPPY\LIBRARY;
 use TSJIPPY;
 
 function addBooksModal(){
-    global $Modules;
 
-	$library		= getLibrary($Modules[PLUGINSLUG]);
+	$library		= getLibrary();
 
     ?>
 	<div id='add-books-modal' class='modal <?php if(empty($_GET['addbooks'])){echo 'hidden';}?>'>

@@ -43,28 +43,8 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
     }
 
     public function emails($parent){
-        ob_start();
 
-        ?>
-        <label>
-            Define the e-mail people get when they need to fill in some mandatory form information.<br>
-            There is one e-mail to adults, and one to parents of children with missing info.<br>
-        </label>
-        <br>
-
-        <?php
-        $emails    = new Email(wp_get_current_user());
-        $emails->printPlaceholders();
-        ?>
-
-        <h4>E-mail to adults</h4>
-        <?php
-
-        $emails->printInputs($this->settings);
-
-        TSJIPPY\addRawHtml(ob_get_clean(), $parent);
-
-        return true;
+        return false;
     }
 
     public function data($parent=''){

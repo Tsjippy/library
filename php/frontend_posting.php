@@ -25,9 +25,7 @@ function afterPostSave($post, $frontEndPost){
         return;
     }
 
-    global $Modules;
-
-	$library		= getLibrary($Modules[PLUGINSLUG]);
+	$library		= getLibrary();
 
     foreach(METAS as $meta=>$type){
         if(isset($_POST[$meta])){
