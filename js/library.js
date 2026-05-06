@@ -65,7 +65,7 @@ async function fileUpload(target, location){
 	//Listen to the upload status
 	request.upload.addEventListener('progress', fileUploadProgress, false);
 	
-	request.open('POST', ajaxUrl, true);
+	request.open('POST', tsjippy.ajaxUrl, true);
 	
 	//Send AJAX request
 	target.closest('.modal').querySelector('.loader-text').textContent = "Uploading Picture(s)";
