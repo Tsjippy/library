@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- url in js
 
 ### Updated
+
+## [10.0.3] - 2026-05-06
+
+
+### Fixed
+- url in js
 
 ## [10.0.2] - 2026-05-04
 
