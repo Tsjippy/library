@@ -150,7 +150,7 @@ async function fileUploadSucces(result){
 	div.innerHTML	= json.data;
 	fileUploadWrap.prepend(div);
 
-	Main.displayMessage("The files have been processed succesfully.", 'success', true);
+	Main.displayMessage("The files have been processed succesfully.", 'success', 1500);
 
 	fileUploadWrap.querySelector('.image-selector-wrap').classList.remove('hidden');
 
