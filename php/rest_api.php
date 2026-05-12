@@ -16,8 +16,9 @@ function restApiInit() {
 		'/add_book',
 		array(
 			'methods' 				=> 'POST',
-			'callback' 				=> __NAMESPACE__.'\addBook',
-			'permission_callback' 	=> '__return_true',
+			'callback' 				=> function(){
+				return current_user_can('read');		// Allow access to logged in users
+			},
 			'args'					=> array(
 				'title'		=> array(
 					'required'	=> true
