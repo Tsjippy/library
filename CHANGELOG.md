@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- library rest api fixed
 
 ### Updated
 
