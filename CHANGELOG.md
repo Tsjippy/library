@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- library rest api fixed
 
 ### Updated
+
+## [10.0.7] - 2026-05-13
+
+
+### Fixed
+- library rest api fixed
 
 ## [10.0.5] - 2026-05-12
 
