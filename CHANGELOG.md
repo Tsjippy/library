@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- load library templates
 
 ### Updated
+
+## [10.0.8] - 2026-05-17
+
+
+### Fixed
+- load library templates
 
 ## [10.0.7] - 2026-05-13
 

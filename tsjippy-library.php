@@ -4,7 +4,7 @@ namespace TSJIPPY\LIBRARY;
 /**
  * Plugin Name:  		Tsjippy Library
  * Description:  		This plugin adds the possibility to scan book from pictures and add them to the library
- * Version:      		10.0.7
+ * Version:      		10.0.8
  * Author:       		Ewald Harmsen
  * AuthorURI:			harmseninnigeria.nl
  * Requires at least:	6.3
