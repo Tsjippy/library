@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- load library templates
 
 ### Updated
 
