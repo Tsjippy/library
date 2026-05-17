@@ -7,9 +7,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Make sure the template path includes the library folder, not the books folder
-add_filter('tsjippy-template-filter', __NAMESPACE__.'\changeModuleName');
-function changeModuleName($templateFile){
-    return str_replace(['/books/', '/book-locations/', '/authors/'], '/library/', $templateFile);
+add_filter('tsjippy-template-filter', __NAMESPACE__.'\changeTamplatePath');
+/**
+ * Replace the books in the path with library
+ * 
+ * @param	string	$templateFile	The path to the template
+ * 
+ * @return	string					The updated path
+ */
+function changeTamplatePath($templateFile){
+    return str_replace(['/tsjippy-books/', '/tsjippy-book-locations/', '/tsjippy-authors/'], '/tsjippy-library/', $templateFile);
 }
 
 add_action ( 'wp_ajax_process_library_upload', __NAMESPACE__.'\ajaxUploadFiles');
