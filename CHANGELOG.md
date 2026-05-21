@@ -4,11 +4,16 @@
 ### Added
 
 ### Changed
-- use the wp connectors
 
 ### Fixed
 
 ### Updated
+
+## [10.0.9] - 2026-05-21
+
+
+### Changed
+- use the wp connectors
 
 ## [10.0.8] - 2026-05-17
 
