@@ -19,20 +19,24 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
     }
 
     public function settings($parent){
+        $connectors = [];
+
+        foreach(wp_get_connectors() as $name => $connector){
+            if($connector['plugin']['is_active']()){
+                $connectors[$name] = $connector;
+            }
+        }
+        
         ob_start();
-	
-        ?>
-            <label>
-                <h4>ChatGPT Api Key</h4>
-                <input type='text' name='chatgpt-api-key' value='<?php echo $this->settings['chatgpt-api-key'] ?? '';?>' style='width: -webkit-fill-available;'>
-            </label>
-            <br>
-            <label>
-                <h4>Gemini Api Key</h4>
-                <input type='text' name='gemini-api-key' value='<?php echo $this->settings['gemini-api-key'] ?? '';?>' style='width: -webkit-fill-available;'>
-            </label>
-            <br>		
-        <?php
+
+        if(empty($connectors)){
+            ?>
+            <div class='warning'>
+                You have no active AI connectors add one <a href='<?php echo esc_url(admin_url('options-connectors.php'));?>' target='_blank'>here</a>.
+            </div>
+            <?php
+        }
+        
         ?>
             <br>
             <br>
@@ -59,7 +63,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
     }
 
     public function functions($parent){
-        $library		= getLibrary();
+        $library		= new Library();
 
         ob_start();
 
@@ -98,7 +102,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
      * Function to do extra actions from $_POST data. Overwrite if needed
      */
     public function postActions(){
-        $library		= getLibrary();
+        $library		= new Library();
 
         foreach($_POST['books'] as $book){
             $library->createBook($book);

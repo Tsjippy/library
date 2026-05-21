@@ -22,7 +22,7 @@ function changeTamplatePath($templateFile){
 add_action ( 'wp_ajax_process_library_upload', __NAMESPACE__.'\ajaxUploadFiles');
 function ajaxUploadFiles(){
     if(!empty($_FILES['files'])){
-        $library		= getLibrary();
+        $library		= new Library();
         $files	        = $_FILES['files'];
         $result         = '';
 
@@ -228,17 +228,4 @@ function updateBookMetas(){
 	}
 
 	TSJIPPY\printArray('Finished Updating Metas');
-}
-
-
-function getLibrary(){
-	if(!empty(SETTINGS['chatgpt-api-key'])){
-		$engine	= 'chatgpt';
-	}
-
-	if(!empty(SETTINGS['gemini-api-key'])){
-		$engine	= 'gemini';
-	}
-	
-	return new Library(apiKey: SETTINGS["$engine-api-key"], engine: $engine);
 }

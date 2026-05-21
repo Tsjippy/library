@@ -7,11 +7,11 @@ namespace TSJIPPY\LIBRARY;
  * Version:      		10.0.8
  * Author:       		Ewald Harmsen
  * AuthorURI:			harmseninnigeria.nl
- * Requires at least:	6.3
+ * Requires at least:	7.0
  * Requires PHP: 		8.3
- * Tested up to: 		6.9
+ * Tested up to: 		7.0
  * Plugin URI:			https://github.com/Tsjippy/library
- * Tested:				6.9
+ * Tested:				7.0
  * TextDomain:			tsjippy
  * Requires Plugins:	tsjippy-shared-functionality
  * License: GPLv2 or later

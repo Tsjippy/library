@@ -1,15 +1,6 @@
 <?php
 namespace TSJIPPY\LIBRARY;
 
-require( PLUGINPATH  . 'lib/vendor/autoload.php');
-
-use Gemini;
-use Gemini\Data\Blob;
-use Gemini\Enums\MimeType;
-use Gemini\Data\GenerationConfig;
-use Gemini\Data\Schema;
-use Gemini\Enums\DataType;
-use Gemini\Enums\ResponseMimeType;
 use WP_Error;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -17,22 +8,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class Library{
-    private $apiKey;
-    private $engine;
-    public  $imagePath;
-    private $imageMimeType;
-    private $imageData;
-    public  $tableName;
+    public  string          $imagePath;
+    private string|false    $imageMimeType;
+    public  string          $tableName;
 
-    public function __construct($apiKey='', $engine='') {
+    public function __construct() {
         global $wpdb;
 
+        $this->imagePath        = '';
+        $this->imageMimeType    = '';
         $this->tableName        = $wpdb->prefix.'tsjippy_books';
-
-        $this->apiKey           = $apiKey;
-        $this->engine           = strtolower($engine);
     }
 
+    /**
+     * Feeds an image to an AI model to extract book data
+     * 
+     * @param   string  $path   the path to the file
+     * 
+     * @return  string|WP_Error The HTML
+     */
     public function processImage($path){
         if(!is_file($path)){
             return new WP_Error('library', 'Invalid filepath given');
@@ -40,32 +34,14 @@ class Library{
 
         $this->imagePath      = apply_filters('file_upload_path', $path);
         $this->imageMimeType  = mime_content_type($this->imagePath);
-        $this->imageData      = base64_encode(file_get_contents($this->imagePath));
 
-        if($this->engine == "chatgpt"){
-            $command = [
-                [
-                    "type" => "input_text",
-                    "text" => "Check this bookshelf picture, give JSON output with titles, optional authors, optional description from internet"
-                ],
-                [
-                    "type" => "input_image",
-                    "image_url" => "data:" . $this->imageMimeType . ";base64," . $this->imageData
-                ]
-            ];
-            
-            $json   = $this->chatGPT($command);
+        $result = $this->wpAiClient();
+
+        if(is_wp_error($result)){
+            return $result;
         }
 
-        if($this->engine == "gemini"){
-            $json   = $this->gemini();
-
-            if(is_wp_error($json)){
-                return $json;
-            }
-        }
-
-        return $this->getTable($json);
+        return $this->getTable($result);
     }
 
     public function openLibrary($title = '', $author = ''){
@@ -116,115 +92,30 @@ class Library{
         return $data['docs'][0];
     }
 
-    public function chatGPT(array $command){
-        $url            = 'https://api.openai.com/v1/chat/completions';
-
-        $requestData = [
-            "model" => "GPT-4o mini",
-            "input" => [
-                [
-                    "role" => "user",
-                    "content" => $command
-                ]
-            ],
-            "temperature" => 0.2,
-            "max_output_tokens" => 10000
-        ];
-
-        $headers = [
-            "Content-Type: application/json",
-            "Authorization: Bearer $this->apiKey"
-        ];
-
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($requestData));
-
-        $response = curl_exec($ch);
-
-        if (curl_errno($ch)) {
-            echo "Fout: " . curl_error($ch);
-        } else {
-            $result = json_decode($response, true);
-
-            if(!empty($result['error'])){
-                echo "<div class='error'>{$result['error']['message']}</div>";
-                //return new WP_Error('chatGPT Error', $result['error']['message']);
-            }
-
-            // Toon alleen het gegenereerde antwoord (verwachte JSON-string)
-            return $result['choices'][0]['message']['content'];
-        }
-
-        curl_close($ch);
-    }
-
-    public function gemini(){
-        try{
-            $client = Gemini::client($this->apiKey);
-
-            //$client->models()->list();
-
-            $result = $client
-                ->generativeModel(model: 'gemini-2.5-flash')
-                ->withGenerationConfig(
-                    generationConfig: new GenerationConfig(
-                        responseMimeType: ResponseMimeType::APPLICATION_JSON,
-                        responseSchema: new Schema(
-                            type: DataType::ARRAY,
-                            items: new Schema(
-                                type: DataType::OBJECT,
-                                properties: [
-                                    'title'         => new Schema(type: DataType::STRING),
-                                    'authors'       => new Schema(type: DataType::STRING),
-                                    'description'   => new Schema(type: DataType::STRING),
-                                ],
-                                required: ['title'],
-                            )
-                        )
-                    )
+    public function wpAiClient(){
+        $schema = array(
+            'type'  => 'array',
+            'items' => array(
+                'type'       => 'object',
+                'properties' => array(
+                    'title' => array( 'type' => 'string' ),
+                    'authors'    => array( 'type' => 'string' ),
+                    'description' => array( 'type' => 'string' ),
                 )
-                ->generateContent([
-                    'Check this bookshelf picture from left to right, give JSON output with titles, optional authors, optional description from internet',
-                    new Blob(
-                        mimeType: MimeType::from($this->imageMimeType),
-                        data: $this->imageData
-                    )
-                ]);
+            ),
+        );
 
-            return $result->json();
-        } catch (\ErrorException $e) {
-            // Handle the specific Gemini\Exceptions\ErrorException
-            error_log("Gemini Error: " . $e->getMessage());
-            // You might want to return an error response to the user or take other corrective actions
-            return new WP_Error('Gemini Error', $e->getMessage());
-        } catch (\Exception $e) {
-            // Catch any other general exceptions
-            error_log("General Error: " . $e->getMessage());
-            return new WP_Error('Gemini Error', $e->getMessage());
+        $result = wp_ai_client_prompt('Check this bookshelf picture from left to right, give JSON output with titles, optional authors, optional description from internet')
+            ->as_json_response( $schema )
+            ->with_file($this->imagePath, $this->imageMimeType)
+            ->generate_text();
+
+        if ( is_wp_error( $result ) ) {
+            // Handle error.
+              return $result;
         }
-    }
 
-    /**
-     * Gets a chat response
-     * 
-     * @param string    $message    Message to send
-     * @param array     $history    Array of previous and and received messsages, default empty
-     * 
-     * @return  string              The Response
-     */
-    public function chatGemini($message, $history=[]){
-        $client = Gemini::client($this->apiKey);
-
-        $chat = $client
-            ->generativeModel(model: 'gemini-2.0-flash')
-            ->startChat(history: $history);
-
-        $response = $chat->sendMessage($message);
-
-        return $response->text();
+        return $result;
     }
 
     /**
@@ -434,7 +325,7 @@ class Library{
 
                 <tbody>
                     <?php
-                        foreach($json as $index=>$data){
+                        foreach($json as $index => $data){
                             if(empty($data->authors)){
                                 $data->authors	= '';
                             }else{

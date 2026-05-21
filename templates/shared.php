@@ -4,7 +4,7 @@ use TSJIPPY;
 
 function addBooksModal(){
 
-	$library		= getLibrary();
+	$library		= new Library();
 
     ?>
 	<div id='add-books-modal' class='modal <?php if(empty($_GET['addbooks'])){echo 'hidden';}?>'>
@@ -23,8 +23,9 @@ function addBooksModal(){
 function displayLocationTax(){
     wp_enqueue_style('tsjippy_taxonomy_style');
 
-    global $post;
     global $wp_query;
+
+	$skipWrapper	= false;
 
     if($wp_query->is_embed){
         $skipWrapper	= true;

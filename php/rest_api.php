@@ -37,7 +37,7 @@ function restApiInit() {
 
 function addBook(){
 
-	$library	= getLibrary();
+	$library	= new Library();
 
 	$result		= $library->createBook($_POST);
 	

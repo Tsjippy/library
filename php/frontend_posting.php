@@ -25,7 +25,7 @@ function afterPostSave($post, $frontEndPost){
         return;
     }
 
-	$library		= getLibrary();
+	$library		= new Library();
 
     foreach(METAS as $meta=>$type){
         if(isset($_POST[$meta])){
