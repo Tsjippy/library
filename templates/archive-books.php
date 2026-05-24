@@ -28,6 +28,7 @@ if(!empty($exploded[1])){
 
 global $wp_query;
 
+$skipWrapper	= false;
 if($wp_query->is_embed){
 	$skipWrapper	= true;
 }
