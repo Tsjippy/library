@@ -122,7 +122,7 @@ function afterPostContent($frontendcontend){
 
                                 $values = get_post_meta($postId, $meta);
                                 if(empty($values)){
-                                    $values[] = '';
+                                    $values = [];
                                 }
 
                                 ?>
