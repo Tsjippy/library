@@ -433,7 +433,7 @@ class Library{
             return [];
         }
 
-        $author = sanitize_text_field($author);
+        $author = sanitize_text_field( wp_unslash( $author));
 
         // Lastname first
         preg_match('/([a-zA-Z]+),\s*([a-zA-Z\s]+)/', $author, $matches);
@@ -478,8 +478,8 @@ class Library{
      * @return string
      */
     public function createBook($data){
-        $title          = ucfirst(strtolower(sanitize_text_field($data['title'])));
-        $description    = sanitize_textarea_field($data['description']);
+        $title          = ucfirst(strtolower(sanitize_text_field( wp_unslash( $data['title']))));
+        $description    = sanitize_textarea_field( wp_unslash( $data['description']));
 
         if(!empty($this->checkForDuplicates($title ))){
             return new WP_Error('duplicate', 'This book is already in the library!');
@@ -537,7 +537,7 @@ class Library{
                 if(is_array($_POST[$meta])){
                     $value = array_map('sanitize_text_field', $_POST[$meta]);
                 }else{
-                    $value = sanitize_text_field($_POST[$meta]);
+                    $value = sanitize_text_field( wp_unslash( $_POST[$meta]));
                 }
 
                 if($meta == 'location'){

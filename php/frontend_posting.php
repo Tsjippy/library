@@ -63,7 +63,7 @@ function afterPostSave($post, $frontEndPost){
                 }
             }else{
                 //Store value
-                update_metadata( 'post', $post->ID, $meta, sanitize_text_field($_POST[$meta]));
+                update_metadata( 'post', $post->ID, $meta, sanitize_text_field( wp_unslash( $_POST[$meta])));
             }
         }
     }
