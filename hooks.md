@@ -1,5 +1,0 @@
-# FILTERS
-- 
-
-# Actions
-- 
