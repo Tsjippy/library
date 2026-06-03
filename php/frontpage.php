@@ -39,12 +39,12 @@ function beforeMainContent(){
             Book of the day
         </h3>
         <p>
-            <a href='<?php echo $url;?>' target='_blank'>
+            <a href='<?php echo esc_url($url);?>' target='_blank'>
                 <div style='text-align:center;'>
-                    <img width='200' height='200' src='<?php echo $image;?>' loading='lazy' class='book-cover' alt='book cover' decoding='async'/>
+                    <img width='200' height='200' src='<?php echo esc_url($image);?>' loading='lazy' class='book-cover' alt='book cover' decoding='async'/>
                 </div>
 
-                <h4><?php echo $title;?></h4>
+                <h4><?php echo esc_html($title);?></h4>
             </a>
             <?php echo $description;?>
             <br>

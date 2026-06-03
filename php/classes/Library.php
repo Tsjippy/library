@@ -220,7 +220,7 @@ class Library{
                     <?php echo $image; ?>
                 </td>
                 <td>
-                    <?php echo $data->title; ?>
+                    <?php echo esc_attr($data->title); ?>
                 </td>
                 <td>
                     <?php echo implode("<br>", $data->authors); ?>
@@ -266,7 +266,7 @@ class Library{
 
                         ?>
                         <br>
-                        I have added the location <strong><?php echo $location; ?></strong> to this book.<br>
+                        I have added the location <strong><?php echo esc_attr($location); ?></strong> to this book.<br>
                         <?php
                     }
 
@@ -342,7 +342,7 @@ class Library{
                                         <td class='image'>
                                         </td>
                                         <td>
-                                            <input type='text' name='title' class='title' value="<?php echo $data->title; ?>">
+                                            <input type='text' name='title' class='title' value="<?php echo esc_attr($data->title); ?>">
                                         </td>
                                         <td>
                                             <div class="authors clone-divs-wrapper">
@@ -350,9 +350,9 @@ class Library{
                                                 $authors = array_map('trim', explode(',', $data->authors));
                                                 foreach($authors as $index => $author){
                                                     ?>
-                                                    <div id="<?php echo $author;?>-div-<?php echo $index;?>" class="clone-div" data-div-id="<?php echo $index;?>">
+                                                    <div id="<?php echo esc_attr($author);?>-div-<?php echo esc_attr($index);?>" class="clone-div" data-div-id="<?php echo esc_attr($index);?>">
                                                         <div class='button-wrapper'>
-                                                            <input type='text' name='author[]' class='author' value="<?php echo $author; ?>">
+                                                            <input type='text' name='author[]' class='author' value="<?php echo esc_attr($author); ?>">
                                                             <button type="button" class="add button" style="flex: 1;">+</button>
                                                             <button type="button" class="remove button" style="flex: 1;">-</button>
                                                         </div>

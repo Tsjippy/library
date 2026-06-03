@@ -114,7 +114,7 @@ function afterPostContent($frontendcontend){
 
                     ?>
                     <tr>
-                        <th><label for="<?php echo $meta;?>"><?php echo ucfirst($text);?></label></th>
+                        <th><label for="<?php echo esc_attr($meta);?>"><?php echo ucfirst($text);?></label></th>
                         <td>
                             <?php
                             if($type == 'array'){
@@ -134,9 +134,9 @@ function afterPostContent($frontendcontend){
                                         } 
 
                                         ?>
-                                        <div id="<?php echo $meta;?>-div-<?php echo $index;?>" class="clone-div" data-div-id="<?php echo $index;?>">
+                                        <div id="<?php echo esc_attr($meta);?>-div-<?php echo esc_attr($index);?>" class="clone-div" data-div-id="<?php echo esc_attr($index);?>">
                                             <div class='button-wrapper'>
-                                                <input type='<?php echo $type;?>' class='formbuilder' name='<?php echo $meta;?>[]' value='<?php echo $value; ?>' style='width: calc(100% - 70px);'>
+                                                <input type='<?php echo esc_attr($type);?>' class='formbuilder' name='<?php echo esc_attr($meta);?>[]' value='<?php echo esc_attr($value); ?>' style='width: calc(100% - 70px);'>
                                                 <button type="button" class="add button" style="flex: 1;">+</button>
                                                 <button type="button" class="remove button" style="flex: 1;">-</button>
                                             </div>
@@ -149,7 +149,7 @@ function afterPostContent($frontendcontend){
                             }else{
                                 $value = get_post_meta($postId, $meta, true);
                                 ?>
-                                <input type='<?php echo $type;?>' class='formbuilder' name='<?php echo $meta;?>' value='<?php echo $value; ?>'>
+                                <input type='<?php echo esc_attr($type);?>' class='formbuilder' name='<?php echo esc_attr($meta);?>' value='<?php echo esc_attr($value); ?>'>
                                 <?php
                             }
                             ?>
