@@ -2,15 +2,15 @@
 namespace TSJIPPY\LIBRARY;
 use TSJIPPY;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+if ( ! defined('ABSPATH')) {
+    exit;
 }
 
-add_action('tsjippy_frontend_post_content_title', __NAMESPACE__.'\contentTitle');
-function contentTitle($postType){
+add_action('tsjippy_frontend_post_content_title', __NAMESPACE__ . '\contentTitle');
+function contentTitle($postType) {
     // Book content title
     $class = 'property book';
-    if($postType != 'book'){
+    if ($postType != 'book') {
         $class .= ' hidden';
     }
 
@@ -19,29 +19,29 @@ function contentTitle($postType){
     echo "</h4>";
 }
 
-add_action('tsjippy_after_post_save', __NAMESPACE__.'\afterPostSave', 10, 2);
-function afterPostSave($post, $frontEndPost){
-    if($post->post_type != 'book'){
+add_action('tsjippy_after_post_save', __NAMESPACE__ . '\afterPostSave', 10, 2);
+function afterPostSave($post, $frontEndPost) {
+    if ($post->post_type != 'book') {
         return;
     }
 
-	$library		= new Library();
+    $library        = new Library();
 
-    foreach(METAS as $meta=>$type){
-        if(isset($_POST[$meta])){
-            if(empty($_POST[$meta])){
+    foreach (METAS as $meta=>$type) {
+        if (isset($_POST[$meta])) {
+            if (empty($_POST[$meta])) {
                 delete_post_meta($post->ID, $meta);
-            }elseif($type == 'array'){
+            }elseif ($type == 'array') {
                 $curValues = get_post_meta($post->ID, $meta);
                 $newValues = array_map('sanitize_text_field', $_POST[$meta]);
 
                 $deleted  = array_diff($curValues, $newValues);
-                foreach($deleted as $value){
-                    delete_metadata( 'post', $post->ID, $meta, $value);
+                foreach ($deleted as $value) {
+                    delete_metadata('post', $post->ID, $meta, $value);
 
-                    if($meta == 'author' || $meta == 'location'){
+                    if ($meta == 'author' || $meta == 'location') {
                         $taxonomy = $meta == 'author' ? 'authors' : 'book-locations';
-                        
+
                         //Remove author or location from the post
                         $term = get_term_by('name', $value, $taxonomy);
 
@@ -50,30 +50,30 @@ function afterPostSave($post, $frontEndPost){
                 }
 
                 $added    = array_diff($newValues, $curValues);
-                foreach($added as $value){
-                    if($meta == 'author'){
+                foreach ($added as $value) {
+                    if ($meta == 'author') {
                         $library->processAuthor($value, $post->ID);
                     }else{
-                        add_metadata( 'post', $post->ID, $meta, $value);
+                        add_metadata('post', $post->ID, $meta, $value);
 
-                        if($meta == 'location'){
+                        if ($meta == 'location') {
                             wp_set_post_terms($post->ID, [$value], 'book-locations', true);
                         }
                     }
                 }
             }else{
                 //Store value
-                update_metadata( 'post', $post->ID, $meta, sanitize_text_field( wp_unslash( $_POST[$meta])));
+                update_metadata('post', $post->ID, $meta, sanitize_text_field(wp_unslash($_POST[$meta])));
             }
         }
     }
 }
 
 //add meta data fields
-add_action('tsjippy_frontend_post_after_content', __NAMESPACE__.'\afterPostContent', 10, 2);
-function afterPostContent($frontendcontend){
+add_action('tsjippy_frontend_post_after_content', __NAMESPACE__ . '\afterPostContent', 10, 2);
+function afterPostContent($frontendcontend) {
 
-    if(!empty($frontendcontend->post) && $frontendcontend->post->post_type != 'book'){
+    if (!empty($frontendcontend->post) && $frontendcontend->post->post_type != 'book') {
         return;
     }
 
@@ -82,7 +82,7 @@ function afterPostContent($frontendcontend){
 
     $postId     = $frontendcontend->postId;
     $postName   = $frontendcontend->postName;
-    
+
     ?>
     <style>
         .form-table, .form-table th, .form-table, td{
@@ -92,9 +92,9 @@ function afterPostContent($frontendcontend){
             text-align: left;
         }
     </style>
-    <div id="book-attributes" class="property book<?php if($postName != 'book'){echo ' hidden';} ?>">
+    <div id="book-attributes" class="property book<?php if ($postName != 'book') {echo ' hidden';} ?>">
         <input type='hidden' class='no-reset' name='static-content' value='static-content'>
-            
+
         <fieldset id="book" class="frontend-form">
             <legend>
                 <h4>Book details</h4>
@@ -102,12 +102,12 @@ function afterPostContent($frontendcontend){
 
             <table class="form-table">
                 <?php
-                foreach(METAS as $meta=>$type){
-                    if($type=='url'){
+                foreach (METAS as $meta=>$type) {
+                    if ($type=='url') {
                         $type   = 'text';
                     }
 
-                    switch ($meta){
+                    switch ($meta) {
                         default:
                             $text   = $meta;
                     }
@@ -117,21 +117,21 @@ function afterPostContent($frontendcontend){
                         <th><label for="<?php echo esc_attr($meta);?>"><?php echo ucfirst($text);?></label></th>
                         <td>
                             <?php
-                            if($type == 'array'){
+                            if ($type == 'array') {
                                 $type   = 'text';
 
                                 $values = get_post_meta($postId, $meta);
-                                if(empty($values)){
+                                if (empty($values)) {
                                     $values = [];
                                 }
 
                                 ?>
                                 <div class="clone-divs-wrapper">
                                     <?php
-                                    foreach($values as $index=>$value){
-                                        if(is_array($value)){
+                                    foreach ($values as $index=>$value) {
+                                        if (is_array($value)) {
                                             $value = implode(',', $value);
-                                        } 
+                                        }
 
                                         ?>
                                         <div id="<?php echo esc_attr($meta);?>-div-<?php echo esc_attr($index);?>" class="clone-div" data-div-id="<?php echo esc_attr($index);?>">

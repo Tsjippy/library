@@ -7,10 +7,10 @@ use TSJIPPY;
  * @package GeneratePress
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
+if ( ! defined('ABSPATH')) {
+    exit; // Exit if accessed directly.
 }
 
-require_once( __DIR__.'/shared.php');
+require_once(__DIR__ . '/shared.php');
 
 displayLocationTax();

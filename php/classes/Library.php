@@ -3,8 +3,8 @@ namespace TSJIPPY\LIBRARY;
 
 use WP_Error;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+if ( ! defined('ABSPATH')) {
+    exit;
 }
 
 class Library{
@@ -17,18 +17,18 @@ class Library{
 
         $this->imagePath        = '';
         $this->imageMimeType    = '';
-        $this->tableName        = $wpdb->prefix.'tsjippy_books';
+        $this->tableName        = $wpdb->prefix. 'tsjippy_books';
     }
 
     /**
      * Feeds an image to an AI model to extract book data
-     * 
+     *
      * @param   string  $path   the path to the file
-     * 
+     *
      * @return  string|WP_Error The HTML
      */
-    public function processImage($path){
-        if(!is_file($path)){
+    public function processImage($path) {
+        if (!is_file($path)) {
             return new WP_Error('library', 'Invalid filepath given');
         }
 
@@ -37,51 +37,51 @@ class Library{
 
         $result = $this->wpAiClient();
 
-        if(is_wp_error($result)){
+        if (is_wp_error($result)) {
             return $result;
         }
 
         return $this->getTable($result);
     }
 
-    public function openLibrary($title = '', $author = ''){
+    public function openLibrary($title = '', $author = '') {
         $url = "https://openlibrary.org/search.json?q=";
 
-        if(!empty($title)){
+        if (!empty($title)) {
             $url .= urlencode("title: $title");
-        }   
+        }
 
-        if(!empty($author)){
+        if (!empty($author)) {
             $url .= urlencode(" author: $author");
         }
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, "$url&fields=key,title,author_name,subtitle,alternative_subtitle,cover_i,language,number_of_pages_median,first_publish_year,description,subjects");
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $response = curl_exec($ch);
         curl_close($ch);
 
         $data = json_decode($response, true);
 
-        if(empty($data) || empty($data['docs'])){
+        if (empty($data) || empty($data['docs'])) {
             return [];
         }
 
-        foreach($data['docs'] as $index => $doc){
-            if(strtolower($doc['title']) != strtolower($title)){
+        foreach ($data['docs'] as $index => $doc) {
+            if (strtolower($doc['title']) != strtolower($title)) {
                 continue;
             }
 
-            if(!empty($doc['key'])){
+            if (!empty($doc['key'])) {
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, "https://openlibrary.org{$doc['key']}.json");
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                 $response = curl_exec($ch);
                 curl_close($ch);
 
                 $workData   = json_decode($response, true);
 
-                if(!empty($workData)){
+                if (!empty($workData)) {
                     $doc        = array_merge($doc, $workData);
                 }
             }
@@ -92,25 +92,25 @@ class Library{
         return $data['docs'][0];
     }
 
-    public function wpAiClient(){
+    public function wpAiClient() {
         $schema = array(
             'type'  => 'array',
             'items' => array(
                 'type'       => 'object',
                 'properties' => array(
-                    'title' => array( 'type' => 'string' ),
-                    'authors'    => array( 'type' => 'string' ),
-                    'description' => array( 'type' => 'string' ),
-                )
-            ),
-        );
+                    'title' => array('type' => 'string'),
+                    'authors'    => array('type' => 'string'),
+                    'description' => array('type' => 'string'),
+               )
+           ),
+       );
 
         $result = wp_ai_client_prompt('Check this bookshelf picture from left to right, give JSON output with titles, optional authors, optional description from internet')
-            ->as_json_response( $schema )
+            ->as_json_response($schema)
             ->with_file($this->imagePath, $this->imageMimeType)
             ->generate_text();
 
-        if ( is_wp_error( $result ) ) {
+        if ( is_wp_error($result)) {
             // Handle error.
               return $result;
         }
@@ -121,7 +121,7 @@ class Library{
     /**
      * Get book locations from the database
      */
-    public function getLocations(){
+    public function getLocations() {
         global $wpdb;
 
         $sql = $wpdb->prepare(
@@ -132,19 +132,19 @@ class Library{
             AND p.post_type = %s",
             'location',
             'book'
-        );
+       );
 
-        return $wpdb->get_col( $sql );
+        return $wpdb->get_col($sql);
     }
 
     /**
      * Prints the html to select a file
      */
-    public function getFileHtml(){
+    public function getFileHtml() {
         ob_start();
         wp_enqueue_script('tsjippy_library_script');
-        
-		?>
+
+        ?>
         <div class='file-upload-wrap'>
             <div id="progress-wrapper" class="hidden">
                 <progress id="upload-progress" value="0" max="100"></progress>
@@ -156,7 +156,7 @@ class Library{
                 <input type='text' class='book-location' placeholder='Enter the location of the books' required style='width: -webkit-fill-available;' list='book-locations'>
                 <datalist id='book-locations'>
                     <?php
-                        foreach($this->getLocations() as $location){
+                        foreach ($this->getLocations() as $location) {
                             echo "<option value='$location'>";
                         }
                     ?>
@@ -171,14 +171,14 @@ class Library{
         </div>
 
 
-		<?php
+        <?php
         return ob_get_clean();
     }
 
     /**
      * Checks if a book is already in the database
      */
-    private function checkForDuplicates($title){
+    private function checkForDuplicates($title) {
         // Check if already there
         return get_posts(
             array(
@@ -187,18 +187,18 @@ class Library{
                 'post_status'            => 'all',
                 'numberposts'            => -1,
                 'update_post_term_cache' => false,
-                'update_post_meta_cache' => false,           
+                'update_post_meta_cache' => false,
                 'orderby'                => 'post_date ID',
                 'order'                  => 'ASC',
-            )
-        );
+           )
+       );
     }
 
-    private function existingBookRow($posts, $data, $categories, $location){
+    private function existingBookRow($posts, $data, $categories, $location) {
         // Already in the database, so skip
-        if(count($posts) > 1){
-            foreach($posts as $post){
-                if(in_array($data->authors, get_post_meta($post->ID, 'author'))){
+        if (count($posts) > 1) {
+            foreach ($posts as $post) {
+                if (in_array($data->authors, get_post_meta($post->ID, 'author'))) {
                     // More than one book found, we show this one
                     break;
                 }
@@ -246,9 +246,9 @@ class Library{
                 <td>
                     <?php
                         $postCats   = wp_get_object_terms($post->ID, 'books', ['fields' => 'ids']);
-                        foreach($categories as $category){
-                            if(in_array($category->term_id, $postCats)){
-                                echo $category->name.'<br>';
+                        foreach ($categories as $category) {
+                            if (in_array($category->term_id, $postCats)) {
+                                echo $category->name. '<br>';
                             }
                         }
                     ?>
@@ -261,7 +261,7 @@ class Library{
                     <?php
                     $locations    = get_post_meta($post->ID, 'location');
 
-                    if(!in_array($location, $locations)){
+                    if (!in_array($location, $locations)) {
                         add_post_meta($post->ID, 'location', $location);
 
                         ?>
@@ -277,19 +277,19 @@ class Library{
         <?php
     }
 
-    public function getTable($json){
+    public function getTable($json) {
         wp_enqueue_script('tsjippy_library_script');
 
-        $categories	= get_categories( array(
-            'orderby' 		=> 'name',
-            'order'   		=> 'ASC',
-            'taxonomy'		=> 'books',
-            'hide_empty' 	=> false,
-        ) );
+        $categories    = get_categories(array(
+            'orderby'         => 'name',
+            'order'           => 'ASC',
+            'taxonomy'        => 'books',
+            'hide_empty'     => false,
+       ));
 
         $location   = $_REQUEST['location'];
 
-        $icon	    = "<img class='visibility-icon visible' src='".\TSJIPPY\PICTURESURL."/visible.png' width=20 height=20 loading='lazy' >";
+        $icon        = "<img class='visibility-icon visible' src='" .\TSJIPPY\PICTURESURL. "/visible.png' width=20 height=20 loading='lazy' >";
 
         ob_start();
         ?>
@@ -325,16 +325,16 @@ class Library{
 
                 <tbody>
                     <?php
-                        foreach($json as $index => $data){
-                            if(empty($data->authors)){
-                                $data->authors	= '';
+                        foreach ($json as $index => $data) {
+                            if (empty($data->authors)) {
+                                $data->authors    = '';
                             }else{
-                                $data->authors	= trim(preg_split("/([\/&,+]|\bwith\b|\band\b)/", $data->authors)[0]);
+                                $data->authors    = trim(preg_split("/([\/&,+]|\bwith\b|\band\b)/", $data->authors)[0]);
                             }
 
                             $posts      = $this->checkForDuplicates($data->title);
 
-                            if(count($posts) > 0){
+                            if (count($posts) > 0) {
                                 $this->existingBookRow($posts, $data, $categories, $location);
                             }else{
                                 ?>
@@ -348,7 +348,7 @@ class Library{
                                             <div class="authors clone-divs-wrapper">
                                                 <?php
                                                 $authors = array_map('trim', explode(',', $data->authors));
-                                                foreach($authors as $index => $author){
+                                                foreach ($authors as $index => $author) {
                                                     ?>
                                                     <div id="<?php echo esc_attr($author);?>-div-<?php echo esc_attr($index);?>" class="clone-div" data-div-id="<?php echo esc_attr($index);?>">
                                                         <div class='button-wrapper'>
@@ -363,17 +363,17 @@ class Library{
                                             </div>
                                         </td>
                                         <td class='placeholder' colspan='7' style='text-align: center;'>
-                                            <div class="loader-image-trigger" data-size="30" data-text="Fetching the book details..."></div>
+                                            <div class="loader-image-trigger" data-size="30" data-text="Fetching the book details... "></div>
                                         </td>
                                         <td>
                                             <textarea name='description' class='description' style='min-width: 300px;text-wrap: auto;' rows=2><?php echo $data->description; ?></textarea>
                                         </td>
                                         <td class='categories' style='text-align: left;'>
                                             <?php
-                                                foreach($categories as $category){
+                                                foreach ($categories as $category) {
                                                     echo "<label class='option-label category-select'>";
                                                         echo "<input type='checkbox' name='category-id[]' value='$category->cat_ID' data-name='$category->name'>";
-						                                echo "$category->name";
+                                                        echo "$category->name";
                                                     echo "</label><br>";
                                                 }
                                             ?>
@@ -383,7 +383,7 @@ class Library{
                                         </td>
                                         <td class='location hidden'><input type='text' name='location' value="<?php echo $location; ?>"></td>
                                         <td>
-                                            <div class="loader-image-trigger" data-size="50" data-text="Adding the book..."></div>
+                                            <div class="loader-image-trigger" data-size="50" data-text="Adding the book... "></div>
                                             <button type='button' class='add-book sim button'>Add book to the library</button>
                                             <button type='button' class='delete-book sim button'>Delete</button>
                                         </td>
@@ -403,50 +403,50 @@ class Library{
     /**
      * Creates a post with type book
      */
-    public function storeInDb( array $data){
+    public function storeInDb(array $data) {
         global $wpdb;
 
         // Check if already in the database
 
         $wpdb->insert(
-			$this->tableName,
-			$data
-		);
-		
-		if(!empty($wpdb->last_error)){
-			return new \WP_Error('error', $wpdb->print_error());
-		}
+            $this->tableName,
+            $data
+       );
 
-		return $wpdb->insert_id;
+        if (!empty($wpdb->last_error)) {
+            return new \WP_Error('error', $wpdb->print_error());
+        }
+
+        return $wpdb->insert_id;
     }
 
     /**
      * Processes the author
-     * 
+     *
      * @param string $author
      * @param int $postId
-     * 
+     *
      * @return array
      */
-    public function processAuthor($author, $postId){
-        if(empty($author)){
+    public function processAuthor($author, $postId) {
+        if (empty($author)) {
             return [];
         }
 
-        $author = sanitize_text_field( wp_unslash( $author));
+        $author = sanitize_text_field(wp_unslash($author));
 
         // Lastname first
         preg_match('/([a-zA-Z]+),\s*([a-zA-Z\s]+)/', $author, $matches);
 
         // If the author is not already in the format "Last, First"
-        if(empty($matches)){
+        if (empty($matches)) {
             $author         = strtolower($author);
             $authorNames    = explode(' ', $author);
             $author         = ucfirst(trim(end($authorNames)));
 
-            if(count($authorNames) > 1){
+            if (count($authorNames) > 1) {
                 // Last name first
-                $author         = $author .', ';
+                $author         = $author . ', ';
 
                 // Remove the last name from the array
                 array_pop($authorNames);
@@ -456,10 +456,10 @@ class Library{
             }
         }
 
-        if(!empty($author)){
+        if (!empty($author)) {
             $curValues  = get_post_meta($postId, 'author');
 
-            if(!in_array($author, $curValues)){
+            if (!in_array($author, $curValues)) {
                 // Add the author to the post meta
                 add_post_meta($postId, 'author', $author);
 
@@ -472,86 +472,86 @@ class Library{
 
     /**
      * Creates a book post in the database
-     * 
+     *
      * @param   array   $data   Array containg title, summar and optional meta values
-     * 
+     *
      * @return string
      */
-    public function createBook($data){
-        $title          = ucfirst(strtolower(sanitize_text_field( wp_unslash( $data['title']))));
-        $description    = sanitize_textarea_field( wp_unslash( $data['description']));
+    public function createBook($data) {
+        $title          = ucfirst(strtolower(sanitize_text_field(wp_unslash($data['title']))));
+        $description    = sanitize_textarea_field(wp_unslash($data['description']));
 
-        if(!empty($this->checkForDuplicates($title ))){
+        if (!empty($this->checkForDuplicates($title))) {
             return new WP_Error('duplicate', 'This book is already in the library!');
         }
 
         //New post
-		$post = array(
-			'post_type'		=> 'book',
-			'post_title'    => $title ,
-			'post_content'  => $description,
-			'post_status'   => 'publish',
-			'post_author'   => get_current_user_id()
-		);
+        $post = array(
+            'post_type'        => 'book',
+            'post_title'    => $title ,
+            'post_content'  => $description,
+            'post_status'   => 'publish',
+            'post_author'   => get_current_user_id()
+       );
 
         // Insert the post into the database.
-        $postId 	    = wp_insert_post( $post, true, false);
-        $post['ID']		= $postId;
+        $postId         = wp_insert_post($post, true, false);
+        $post['ID']        = $postId;
 
         // try again if needed
-		if(is_wp_error($postId)){
-			// check for errors
-			if(is_wp_error($postId)){
-				// most likely some invalid data in post, try to fix it.
-				if($postId->get_error_message() == "Could not update post in the database."){
-					$illigalChars	= [];
-					foreach(str_split($post['post_content']) as $index=>$chr){
-						json_encode($chr);
-						if(json_last_error() == 5){
-							$illigalChars[$index] = $chr;
-						}elseif(json_last_error() == 0 && !empty($illigalChars)){
-							$post['post_content']	= str_replace(implode('', $illigalChars), mb_convert_encoding(implode('', $illigalChars), "UTF-8", "auto"), $post['post_content']);
-							$illigalChars	= [];
-						}
-					}
+        if (is_wp_error($postId)) {
+            // check for errors
+            if (is_wp_error($postId)) {
+                // most likely some invalid data in post, try to fix it.
+                if ($postId->get_error_message() == "Could not update post in the database. ") {
+                    $illigalChars    = [];
+                    foreach (str_split($post['post_content']) as $index=>$chr) {
+                        json_encode($chr);
+                        if (json_last_error() == 5) {
+                            $illigalChars[$index] = $chr;
+                        }elseif (json_last_error() == 0 && !empty($illigalChars)) {
+                            $post['post_content']    = str_replace(implode('', $illigalChars), mb_convert_encoding(implode('', $illigalChars), "UTF-8", "auto"), $post['post_content']);
+                            $illigalChars    = [];
+                        }
+                    }
 
-					// try to update again
-					$postId 	= wp_insert_post( $post, true, false);
-					$post['ID']	= $postId;
+                    // try to update again
+                    $postId     = wp_insert_post($post, true, false);
+                    $post['ID']    = $postId;
 
-					if(is_wp_error($postId)){
-						return $postId;
-					}
-				}else{
-					return $postId;
-				}				
-			}
-		}elseif($postId === 0){
-			return new WP_Error('Inserting post error', "Could not create the book!");
-		}
+                    if (is_wp_error($postId)) {
+                        return $postId;
+                    }
+                }else{
+                    return $postId;
+                }
+            }
+        }elseif ($postId === 0) {
+            return new WP_Error('Inserting post error', "Could not create the book!");
+        }
 
         // Store metas
-        foreach(METAS as $meta => $type){
+        foreach (METAS as $meta => $type) {
             // Add post meta
-            if(!empty($_POST[$meta])){
-                if(is_array($_POST[$meta])){
+            if (!empty($_POST[$meta])) {
+                if (is_array($_POST[$meta])) {
                     $value = array_map('sanitize_text_field', $_POST[$meta]);
                 }else{
-                    $value = sanitize_text_field( wp_unslash( $_POST[$meta]));
+                    $value = sanitize_text_field(wp_unslash($_POST[$meta]));
                 }
 
-                if($meta == 'location'){
+                if ($meta == 'location') {
                     $locations   = get_post_meta($postId, 'location');
-                    
+
                     // only add a new location if needed
-                    if(in_array($value, $locations)){
+                    if (in_array($value, $locations)) {
                         continue;
                     }
 
                     wp_set_post_terms($postId, [$value], 'book-locations', true);
-                }elseif($meta == 'author'){
-                    if(is_array($value)){
-                        foreach($value as $index=>$author){
+                }elseif ($meta == 'author') {
+                    if (is_array($value)) {
+                        foreach ($value as $index=>$author) {
                             $this->processAuthor($author, $postId);
                         }
                     }
@@ -563,9 +563,9 @@ class Library{
             }
         }
 
-        if(!empty($data['category-id'])){
+        if (!empty($data['category-id'])) {
             // Store categories
-            foreach($data['category-id'] as $categoryId){
+            foreach ($data['category-id'] as $categoryId) {
                 wp_set_object_terms($postId, intval($categoryId), 'books', true);
             }
         }

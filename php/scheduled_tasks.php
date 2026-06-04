@@ -2,28 +2,28 @@
 namespace TSJIPPY\LIBRARY;
 use TSJIPPY;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+if ( ! defined('ABSPATH')) {
+    exit;
 }
 
-add_action('init', __NAMESPACE__.'\initTasks');
-function initTasks(){
-	//add action for use in scheduled task
-	add_action( 'send_book_of_the_day', __NAMESPACE__.'\sendBookOfTheDay' );
+add_action('init', __NAMESPACE__ . '\initTasks');
+function initTasks() {
+    //add action for use in scheduled task
+    add_action('send_book_of_the_day', __NAMESPACE__ . '\sendBookOfTheDay');
 }
 
-function scheduleTasks(){
+function scheduleTasks() {
     TSJIPPY\scheduleTask('send_book_of_the_day', 'quarterly');
 }
 
-function sendBookOfTheDay(){
+function sendBookOfTheDay() {
     $time = SETTINGS['book-time'] ?? false;
 
-    if(!$time){
+    if (!$time) {
         return;
     }
-    
-    if(abs(strtotime($time) - current_time('U')) < 450 ){        
+
+    if (abs(strtotime($time) - current_time('U')) < 450) {
         do_action('tsjippy-library-send-book-of-the-day', ...bookOfTheDay());
     }
 }

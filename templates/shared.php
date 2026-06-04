@@ -2,40 +2,40 @@
 namespace TSJIPPY\LIBRARY;
 use TSJIPPY;
 
-function addBooksModal(){
+function addBooksModal() {
 
-	$library		= new Library();
+    $library        = new Library();
 
     ?>
-	<div id='add-books-modal' class='modal <?php if(empty($_GET['addbooks'])){echo 'hidden';}?>'>
-		<div class="modal-content" style='max-width:100vw;'>
-			<span id="modal-close" class="close">&times;</span>
-			<div class="content">
-				<?php echo $library->getFileHtml();?>
-				<br>
-				<br>
-			</div>
-		</div>
-	</div>
+    <div id='add-books-modal' class='modal <?php if (empty($_GET['addbooks'])) {echo 'hidden';}?>'>
+        <div class="modal-content" style='max-width:100vw;'>
+            <span id="modal-close" class="close">&times;</span>
+            <div class="content">
+                <?php echo $library->getFileHtml();?>
+                <br>
+                <br>
+            </div>
+        </div>
+    </div>
     <?php
 }
 
-function displayLocationTax(){
+function displayLocationTax() {
     wp_enqueue_style('tsjippy_taxonomy_style');
 
     global $wp_query;
 
-	$skipWrapper	= false;
+    $skipWrapper    = false;
 
-    if($wp_query->is_embed){
-        $skipWrapper	= true;
+    if ($wp_query->is_embed) {
+        $skipWrapper    = true;
     }
 
-    if($skipWrapper){
+    if ($skipWrapper) {
         displayBooks();
     }else{
-        if(!isset($skipHeader) || !$skipHeader){
-            get_header(); 
+        if (!isset($skipHeader) || !$skipHeader) {
+            get_header();
         }
 
         addBooksModal();
@@ -50,48 +50,48 @@ function displayLocationTax(){
         <?php
         generate_construct_sidebars();
 
-        if(!isset($skipFooter) || !$skipFooter){
+        if (!isset($skipFooter) || !$skipFooter) {
             get_footer();
         }
     }
 }
 
-function displayBooks(){
-	$name 				= get_queried_object()->slug;
-	if ( have_posts() ){
-		do_action('tsjippy_before_archive', 'book');
+function displayBooks() {
+    $name                 = get_queried_object()->slug;
+    if ( have_posts()) {
+        do_action('tsjippy_before_archive', 'book');
 
-		//only show the map if logged in
-		if(is_user_logged_in() ){
-			$mapName			= $name."_map";
-			$mapId				= SETTINGS[$mapName] ?? false;
+        //only show the map if logged in
+        if (is_user_logged_in()) {
+            $mapName            = $name. "_map";
+            $mapId                = SETTINGS[$mapName] ?? false;
 
-			if(is_numeric($mapId)){
-				//Show the map of this category
-				echo "<div style='margin-bottom:25px;'>";
-					echo do_shortcode("[ultimate_maps id='$mapId']");
-				echo '</div>';
-			}
-		}
-	
-		while ( have_posts() ) :
-			the_post();
-			include(__DIR__.'/content.php');
-		endwhile;
+            if (is_numeric($mapId)) {
+                //Show the map of this category
+                echo "<div style='margin-bottom:25px;'>";
+                    echo do_shortcode("[ultimate_maps id='$mapId']");
+                echo '</div>';
+            }
+        }
 
-		the_posts_pagination();
-	}else{
-		//No items with this category
-		?>
-		<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-		<div class="no-results not-found">
-			<div class="inside-article">
-				<div class="entry-content">
-					<?php echo apply_filters('tsjippy-empty-taxonomy', "There are no $name books yet", 'book'); ?>
-				</div>
-			</div>
-		</div>
-		</article>
-		<?php
-	}
+        while ( have_posts()) :
+            the_post();
+            include(__DIR__ . '/content.php');
+        endwhile;
+
+        the_posts_pagination();
+    }else{
+        //No items with this category
+        ?>
+        <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+        <div class="no-results not-found">
+            <div class="inside-article">
+                <div class="entry-content">
+                    <?php echo apply_filters('tsjippy-empty-taxonomy', "There are no $name books yet", 'book'); ?>
+                </div>
+            </div>
+        </div>
+        </article>
+        <?php
+    }
 }

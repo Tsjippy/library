@@ -2,41 +2,41 @@
 namespace TSJIPPY\LIBRARY;
 use TSJIPPY;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+if ( ! defined('ABSPATH')) {
+    exit;
 }
 
 class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
 
     /**
      * AdminMenu constructor.
-     * 
+     *
      * @param array $settings The settings for the plugin
      * @param string $name The name of the plugin
      */
-    public function __construct($settings, $name){
+    public function __construct($settings, $name) {
         parent::__construct($settings, $name);
     }
 
-    public function settings($parent){
+    public function settings($parent) {
         $connectors = [];
 
-        foreach(wp_get_connectors() as $name => $connector){
-            if($connector['plugin']['is_active']()){
+        foreach (wp_get_connectors() as $name => $connector) {
+            if ($connector['plugin']['is_active']()) {
                 $connectors[$name] = $connector;
             }
         }
-        
+
         ob_start();
 
-        if(empty($connectors)){
+        if (empty($connectors)) {
             ?>
             <div class='warning'>
                 You have no active AI connectors add one <a href='<?php echo esc_url(admin_url('options-connectors.php'));?>' target='_blank'>here</a>.
             </div>
             <?php
         }
-        
+
         ?>
             <br>
             <br>
@@ -45,42 +45,42 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
                 <br>
                 <input type='time' name="book-time" value='<?php echo $this->settings['book-time'] ?? '';?>'>
             </label>
-		<?php
+        <?php
 
         TSJIPPY\addRawHtml(ob_get_clean(), $parent);
 
         return true;
     }
 
-    public function emails($parent){
+    public function emails($parent) {
 
         return false;
     }
 
-    public function data($parent=''){
+    public function data($parent='') {
 
         return false;
     }
 
-    public function functions($parent){
-        $library		= new Library();
+    public function functions($parent) {
+        $library        = new Library();
 
         ob_start();
 
-        if(!empty($_FILES['books'])){
+        if (!empty($_FILES['books'])) {
             echo $library->processImage($_FILES['books']['tmp_name']);
         }else{
             echo $library->getFileHtml();
         }
-        
-        if(!empty($_REQUEST['updatemeta'])){
+
+        if (!empty($_REQUEST['updatemeta'])) {
             wp_schedule_single_event(time(), 'tsjippy-updatemetas');
 
             ?>
             <div class='success'>
                 <p>Updating book metas in the background. This can take a while.</p>
             </div>
-            <?php	
+            <?php
         }else{
             ?>
             <br>
@@ -101,10 +101,10 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
     /**
      * Function to do extra actions from $_POST data. Overwrite if needed
      */
-    public function postActions(){
-        $library		= new Library();
+    public function postActions() {
+        $library        = new Library();
 
-        foreach($_POST['books'] as $book){
+        foreach ($_POST['books'] as $book) {
             $library->createBook($book);
         }
     }
@@ -113,7 +113,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
      * Schedules the tasks for this plugin
      *
     */
-    public function postSettingsSave(){
+    public function postSettingsSave() {
         scheduleTasks();
     }
 }
