@@ -90,7 +90,7 @@ function bookOfTheDay()
         if (file_put_contents($tempFile, $imageData)) {
             $mimeType   = mime_content_type($tempFile);
         }
-        unlink($tempFile);
+        wp_delete_file($tempFile);
 
         if ($imageData !== false && !empty($mimeType)) {
             $base64Image    = base64_encode($imageData);
