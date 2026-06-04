@@ -1,5 +1,7 @@
 <?php
+
 namespace TSJIPPY\LIBRARY;
+
 use TSJIPPY;
 
 /**
@@ -7,7 +9,7 @@ use TSJIPPY;
  * Displays all the post of the book type
  *
  */
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit; // Exit if accessed directly.
 }
 
@@ -37,7 +39,7 @@ wp_enqueue_style('tsjippy_taxonomy_style');
 
 if ($skipWrapper) {
     displayBookArchive();
-}else{
+} else {
     if (!isset($skipHeader) || !$skipHeader) {
         get_header();
     }
@@ -45,7 +47,7 @@ if ($skipWrapper) {
     require_once(__DIR__ . '/shared.php');
     addBooksModal();
 
-    ?>
+?>
     <div id="primary">
         <style>
             @media (min-width: 991px) {
@@ -56,7 +58,7 @@ if ($skipWrapper) {
         </style>
         <main id="main" class='inside-article' style='max-width:100vw;'>
             <button type='button' class='sim button add-books' onclick='Main.showModal(`add-books`)'>Add books</button>
-            <?php displayBookArchive();?>
+            <?php displayBookArchive(); ?>
         </main>
     </div>
     <?php
@@ -67,7 +69,8 @@ if ($skipWrapper) {
     }
 }
 
-function displayBookArchive() {
+function displayBookArchive()
+{
     //Variable containing the current books page we are on
     $paged         = (get_query_var('paged')) ? get_query_var('paged') : 1;
 
@@ -80,10 +83,10 @@ function displayBookArchive() {
 
     $booksQuery = new \WP_Query($args);
 
-    if ( $booksQuery->have_posts()) {
+    if ($booksQuery->have_posts()) {
         do_action('tsjippy_before_archive', 'book');
 
-        while ( $booksQuery->have_posts()) :
+        while ($booksQuery->have_posts()) :
             $booksQuery->the_post();
             include(__DIR__ . '/content.php');
         endwhile;
@@ -101,20 +104,22 @@ function displayBookArchive() {
                 'total'     => $totalPages,
                 'prev_text' => __('« prev', 'tsjippy'),
                 'next_text' => __('next »', 'tsjippy'),
-           ));
+            ));
         }
-    }else{
+    } else {
         //No books to show yet
-        ?>
-        <article id="post-<?php the_ID(); ?>" <?php post_class(); ?> <?php if (function_exists('generate_do_microdata')) {generate_do_microdata('article');} ?>>
-        <div class="no-results not-found">
-            <div class="inside-article">
-                <div class="entry-content">
-                    <?php echo apply_filters('tsjippy-empty-taxonomy', 'There are no books submitted yet. ', 'book'); ?>
+    ?>
+        <article id="post-<?php the_ID(); ?>" <?php post_class(); ?> <?php if (function_exists('generate_do_microdata')) {
+                                                                            generate_do_microdata('article');
+                                                                        } ?>>
+            <div class="no-results not-found">
+                <div class="inside-article">
+                    <div class="entry-content">
+                        <?php echo apply_filters('tsjippy-empty-taxonomy', 'There are no books submitted yet. ', 'book'); ?>
+                    </div>
                 </div>
             </div>
-        </div>
         </article>
-        <?php
+<?php
     }
 }

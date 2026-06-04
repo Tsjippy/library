@@ -1,4 +1,5 @@
 <?php
+
 namespace TSJIPPY\LIBRARY;
 
 /**
@@ -19,7 +20,7 @@ namespace TSJIPPY\LIBRARY;
  *
  * @author Ewald Harmsen
  */
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 

@@ -1,13 +1,16 @@
 <?php
+
 namespace TSJIPPY\LIBRARY;
+
 use TSJIPPY;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
 add_action('tsjippy_frontpage_before_main_content', __NAMESPACE__ . '\beforeMainContent', 30);
-function beforeMainContent() {
+function beforeMainContent()
+{
     if (!is_user_logged_in()) {
         return;
     }
@@ -17,19 +20,19 @@ function beforeMainContent() {
         return;
     }
 
-    ?>
+?>
     <style>
-        #book-of-the-day{
-            padding:            20px 80px;
-            font-size:          18px;
-            color:              #999999;
-            width:              80%;
-            max-width:          800px;
+        #book-of-the-day {
+            padding: 20px 80px;
+            font-size: 18px;
+            color: #999999;
+            width: 80%;
+            max-width: 800px;
             background-color: #8585790d;
         }
 
         @media(max-width:768px) {
-            #book-of-the-day{
+            #book-of-the-day {
                 padding: 0 60px;
             }
         }
@@ -39,19 +42,19 @@ function beforeMainContent() {
             Book of the day
         </h3>
         <p>
-            <a href='<?php echo esc_url($url);?>' target='_blank'>
+            <a href='<?php echo esc_url($url); ?>' target='_blank'>
                 <div style='text-align:center;'>
-                    <img width='200' height='200' src='<?php echo esc_url($image);?>' loading='lazy' class='book-cover' alt='book cover' decoding='async'/>
+                    <img width='200' height='200' src='<?php echo esc_url($image); ?>' loading='lazy' class='book-cover' alt='book cover' decoding='async' />
                 </div>
 
-                <h4><?php echo esc_html($title);?></h4>
+                <h4><?php echo esc_html($title); ?></h4>
             </a>
-            <?php echo $description;?>
+            <?php echo $description; ?>
             <br>
             <br>
             <strong>Find it in the library at:</strong>
             <?php echo implode(' & ', $locations); ?>.
         </p>
     </div>
-    <?php
+<?php
 }

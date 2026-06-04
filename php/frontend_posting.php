@@ -1,13 +1,16 @@
 <?php
+
 namespace TSJIPPY\LIBRARY;
+
 use TSJIPPY;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
 add_action('tsjippy_frontend_post_content_title', __NAMESPACE__ . '\contentTitle');
-function contentTitle($postType) {
+function contentTitle($postType)
+{
     // Book content title
     $class = 'property book';
     if ($postType != 'book') {
@@ -15,23 +18,24 @@ function contentTitle($postType) {
     }
 
     echo "<h4 class='$class' name='book-content-label'>";
-        echo 'Please describe the book';
+    echo 'Please describe the book';
     echo "</h4>";
 }
 
 add_action('tsjippy_after_post_save', __NAMESPACE__ . '\afterPostSave', 10, 2);
-function afterPostSave($post, $frontEndPost) {
+function afterPostSave($post, $frontEndPost)
+{
     if ($post->post_type != 'book') {
         return;
     }
 
     $library        = new Library();
 
-    foreach (METAS as $meta=>$type) {
+    foreach (METAS as $meta => $type) {
         if (isset($_POST[$meta])) {
             if (empty($_POST[$meta])) {
                 delete_post_meta($post->ID, $meta);
-            }elseif ($type == 'array') {
+            } elseif ($type == 'array') {
                 $curValues = get_post_meta($post->ID, $meta);
                 $newValues = array_map('sanitize_text_field', $_POST[$meta]);
 
@@ -53,7 +57,7 @@ function afterPostSave($post, $frontEndPost) {
                 foreach ($added as $value) {
                     if ($meta == 'author') {
                         $library->processAuthor($value, $post->ID);
-                    }else{
+                    } else {
                         add_metadata('post', $post->ID, $meta, $value);
 
                         if ($meta == 'location') {
@@ -61,7 +65,7 @@ function afterPostSave($post, $frontEndPost) {
                         }
                     }
                 }
-            }else{
+            } else {
                 //Store value
                 update_metadata('post', $post->ID, $meta, sanitize_text_field(wp_unslash($_POST[$meta])));
             }
@@ -71,7 +75,8 @@ function afterPostSave($post, $frontEndPost) {
 
 //add meta data fields
 add_action('tsjippy_frontend_post_after_content', __NAMESPACE__ . '\afterPostContent', 10, 2);
-function afterPostContent($frontendcontend) {
+function afterPostContent($frontendcontend)
+{
 
     if (!empty($frontendcontend->post) && $frontendcontend->post->post_type != 'book') {
         return;
@@ -83,16 +88,22 @@ function afterPostContent($frontendcontend) {
     $postId     = $frontendcontend->postId;
     $postName   = $frontendcontend->postName;
 
-    ?>
+?>
     <style>
-        .form-table, .form-table th, .form-table, td{
+        .form-table,
+        .form-table th,
+        .form-table,
+        td {
             border: none;
         }
-        .form-table{
+
+        .form-table {
             text-align: left;
         }
     </style>
-    <div id="book-attributes" class="property book<?php if ($postName != 'book') {echo ' hidden';} ?>">
+    <div id="book-attributes" class="property book<?php if ($postName != 'book') {
+                                                        echo ' hidden';
+                                                    } ?>">
         <input type='hidden' class='no-reset' name='static-content' value='static-content'>
 
         <fieldset id="book" class="frontend-form">
@@ -102,8 +113,8 @@ function afterPostContent($frontendcontend) {
 
             <table class="form-table">
                 <?php
-                foreach (METAS as $meta=>$type) {
-                    if ($type=='url') {
+                foreach (METAS as $meta => $type) {
+                    if ($type == 'url') {
                         $type   = 'text';
                     }
 
@@ -112,9 +123,9 @@ function afterPostContent($frontendcontend) {
                             $text   = $meta;
                     }
 
-                    ?>
+                ?>
                     <tr>
-                        <th><label for="<?php echo esc_attr($meta);?>"><?php echo ucfirst($text);?></label></th>
+                        <th><label for="<?php echo esc_attr($meta); ?>"><?php echo ucfirst($text); ?></label></th>
                         <td>
                             <?php
                             if ($type == 'array') {
@@ -125,32 +136,32 @@ function afterPostContent($frontendcontend) {
                                     $values = [];
                                 }
 
-                                ?>
+                            ?>
                                 <div class="clone-divs-wrapper">
                                     <?php
-                                    foreach ($values as $index=>$value) {
+                                    foreach ($values as $index => $value) {
                                         if (is_array($value)) {
                                             $value = implode(',', $value);
                                         }
 
-                                        ?>
-                                        <div id="<?php echo esc_attr($meta);?>-div-<?php echo esc_attr($index);?>" class="clone-div" data-div-id="<?php echo esc_attr($index);?>">
+                                    ?>
+                                        <div id="<?php echo esc_attr($meta); ?>-div-<?php echo esc_attr($index); ?>" class="clone-div" data-div-id="<?php echo esc_attr($index); ?>">
                                             <div class='button-wrapper'>
-                                                <input type='<?php echo esc_attr($type);?>' class='formbuilder' name='<?php echo esc_attr($meta);?>[]' value='<?php echo esc_attr($value); ?>' style='width: calc(100% - 70px);'>
+                                                <input type='<?php echo esc_attr($type); ?>' class='formbuilder' name='<?php echo esc_attr($meta); ?>[]' value='<?php echo esc_attr($value); ?>' style='width: calc(100% - 70px);'>
                                                 <button type="button" class="add button" style="flex: 1;">+</button>
                                                 <button type="button" class="remove button" style="flex: 1;">-</button>
                                             </div>
                                         </div>
-                                        <?php
+                                    <?php
                                     }
                                     ?>
                                 </div>
-                                <?php
-                            }else{
+                            <?php
+                            } else {
                                 $value = get_post_meta($postId, $meta, true);
-                                ?>
-                                <input type='<?php echo esc_attr($type);?>' class='formbuilder' name='<?php echo esc_attr($meta);?>' value='<?php echo esc_attr($value); ?>'>
-                                <?php
+                            ?>
+                                <input type='<?php echo esc_attr($type); ?>' class='formbuilder' name='<?php echo esc_attr($meta); ?>' value='<?php echo esc_attr($value); ?>'>
+                            <?php
                             }
                             ?>
                         </td>
@@ -161,5 +172,5 @@ function afterPostContent($frontendcontend) {
             </table>
         </fieldset>
     </div>
-    <?php
+<?php
 }

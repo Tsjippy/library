@@ -1,18 +1,21 @@
 <?php
+
 namespace TSJIPPY\LIBRARY;
+
 use TSJIPPY;
 use WP_Error;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
 add_action('rest_api_init', __NAMESPACE__ . '\restApiInit');
-function restApiInit() {
+function restApiInit()
+{
 
     //add_book
     register_rest_route(
-        RESTAPIPREFIX. '/library',
+        RESTAPIPREFIX . '/library',
         '/add_book',
         array(
             'methods'                 => 'POST',
@@ -23,19 +26,20 @@ function restApiInit() {
             'args'                    => array(
                 'title'        => array(
                     'required'    => true
-               ),
+                ),
                 'description'    => array(
                     'required'    => true
-               ),
+                ),
                 'author'    => array(
                     'required'    => true
-               )
-           )
-       )
-   );
+                )
+            )
+        )
+    );
 }
 
-function addBook() {
+function addBook()
+{
 
     $library    = new Library();
 

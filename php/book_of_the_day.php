@@ -1,28 +1,32 @@
 <?php
+
 namespace TSJIPPY\LIBRARY;
+
 use TSJIPPY;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
 /**
  * Filter to ensure that the post content is not empty
  */
-function filterWhereContentNotEmpty($where = '') {
+function filterWhereContentNotEmpty($where = '')
+{
     $where .= " AND post_content IS NOT NULL AND post_content != ''";
 
     return $where;
 }
 
 /**
-* Book of the day
-*
-* Gets a random book which has a picture and a description
+ * Book of the day
+ *
+ * Gets a random book which has a picture and a description
 
-* @return array|boolean   Array of text, base64 image and url, or false if there are not enough books
-*/
-function bookOfTheDay() {
+ * @return array|boolean   Array of text, base64 image and url, or false if there are not enough books
+ */
+function bookOfTheDay()
+{
     global $post;
 
     // get random book post with a picture and description
@@ -40,24 +44,24 @@ function bookOfTheDay() {
                 array(
                     'key'       => 'image',
                     'compare'   => 'EXISTS',
-               ),
+                ),
                 array(
                     'key'     => 'image',
                     'value'   => '',
                     'compare' => '!=',
-               ),
+                ),
                 array(
                     'key'       => 'url',
                     'compare'   => 'EXISTS',
-               ),
+                ),
                 array(
                     'key'     => 'url',
                     'value'   => '',
                     'compare' => '!=',
-               ),
-           ),
-       )
-   );
+                ),
+            ),
+        )
+    );
 
     remove_filter('posts_where', __NAMESPACE__ . '\filterWhereContentNotEmpty');
 

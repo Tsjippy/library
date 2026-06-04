@@ -1,23 +1,26 @@
 <?php
+
 namespace TSJIPPY\LIBRARY;
 
 use WP_Error;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
-class Library{
+class Library
+{
     public  string          $imagePath;
     private string|false    $imageMimeType;
     public  string          $tableName;
 
-    public function __construct() {
+    public function __construct()
+    {
         global $wpdb;
 
         $this->imagePath        = '';
         $this->imageMimeType    = '';
-        $this->tableName        = $wpdb->prefix. 'tsjippy_books';
+        $this->tableName        = $wpdb->prefix . 'tsjippy_books';
     }
 
     /**
@@ -27,7 +30,8 @@ class Library{
      *
      * @return  string|WP_Error The HTML
      */
-    public function processImage($path) {
+    public function processImage($path)
+    {
         if (!is_file($path)) {
             return new WP_Error('library', 'Invalid filepath given');
         }
@@ -44,7 +48,8 @@ class Library{
         return $this->getTable($result);
     }
 
-    public function openLibrary($title = '', $author = '') {
+    public function openLibrary($title = '', $author = '')
+    {
         $url = "https://openlibrary.org/search.json?q=";
 
         if (!empty($title)) {
@@ -92,7 +97,8 @@ class Library{
         return $data['docs'][0];
     }
 
-    public function wpAiClient() {
+    public function wpAiClient()
+    {
         $schema = array(
             'type'  => 'array',
             'items' => array(
@@ -101,18 +107,18 @@ class Library{
                     'title' => array('type' => 'string'),
                     'authors'    => array('type' => 'string'),
                     'description' => array('type' => 'string'),
-               )
-           ),
-       );
+                )
+            ),
+        );
 
         $result = wp_ai_client_prompt('Check this bookshelf picture from left to right, give JSON output with titles, optional authors, optional description from internet')
             ->as_json_response($schema)
             ->with_file($this->imagePath, $this->imageMimeType)
             ->generate_text();
 
-        if ( is_wp_error($result)) {
+        if (is_wp_error($result)) {
             // Handle error.
-              return $result;
+            return $result;
         }
 
         return $result;
@@ -121,7 +127,8 @@ class Library{
     /**
      * Get book locations from the database
      */
-    public function getLocations() {
+    public function getLocations()
+    {
         global $wpdb;
 
         $sql = $wpdb->prepare(
@@ -132,7 +139,7 @@ class Library{
             AND p.post_type = %s",
             'location',
             'book'
-       );
+        );
 
         return $wpdb->get_col($sql);
     }
@@ -140,15 +147,16 @@ class Library{
     /**
      * Prints the html to select a file
      */
-    public function getFileHtml() {
+    public function getFileHtml()
+    {
         ob_start();
         wp_enqueue_script('tsjippy_library_script');
 
-        ?>
+?>
         <div class='file-upload-wrap'>
             <div id="progress-wrapper" class="hidden">
                 <progress id="upload-progress" value="0" max="100"></progress>
-                <span id="progress-percentage">   0%</span>
+                <span id="progress-percentage"> 0%</span>
             </div>
 
             <div class='image-selector-wrap'>
@@ -156,29 +164,30 @@ class Library{
                 <input type='text' class='book-location' placeholder='Enter the location of the books' required style='width: -webkit-fill-available;' list='book-locations'>
                 <datalist id='book-locations'>
                     <?php
-                        foreach ($this->getLocations() as $location) {
-                            echo "<option value='$location'>";
-                        }
+                    foreach ($this->getLocations() as $location) {
+                        echo "<option value='$location'>";
+                    }
                     ?>
                 </datalist>
 
                 <h4>Select picture</h4>
                 <label>
                     Select one or multiple picture(s) to check for a book or multiple books on bookshelf<br><br>
-                    <input type='file' name='image-selector' accept='<?php apply_filters('tsjippy-library-accepted-files', 'image/png, image/jpeg, image/webp');?>' class='formbuilder' multiple>
+                    <input type='file' name='image-selector' accept='<?php apply_filters('tsjippy-library-accepted-files', 'image/png, image/jpeg, image/webp'); ?>' class='formbuilder' multiple>
                 </label>
             </div>
         </div>
 
 
-        <?php
+    <?php
         return ob_get_clean();
     }
 
     /**
      * Checks if a book is already in the database
      */
-    private function checkForDuplicates($title) {
+    private function checkForDuplicates($title)
+    {
         // Check if already there
         return get_posts(
             array(
@@ -190,11 +199,12 @@ class Library{
                 'update_post_meta_cache' => false,
                 'orderby'                => 'post_date ID',
                 'order'                  => 'ASC',
-           )
-       );
+            )
+        );
     }
 
-    private function existingBookRow($posts, $data, $categories, $location) {
+    private function existingBookRow($posts, $data, $categories, $location)
+    {
         // Already in the database, so skip
         if (count($posts) > 1) {
             foreach ($posts as $post) {
@@ -203,7 +213,7 @@ class Library{
                     break;
                 }
             }
-        }else{
+        } else {
             $post           = $posts[0];
         }
 
@@ -214,70 +224,71 @@ class Library{
 
         $image              = "<img src='https://covers.openlibrary.org/b/id/$imageId-S.jpg' class='book-image' loading='lazy'>";
 
-        ?>
-            <tr class='existing-book processed'>
-                <td class='image'>
-                    <?php echo $image; ?>
-                </td>
-                <td>
-                    <?php echo esc_attr($data->title); ?>
-                </td>
-                <td>
-                    <?php echo implode("<br>", $data->authors); ?>
-                </td>
-                <td>
-                    <?php echo get_post_meta($post->ID, 'subtitle', true);?>
-                </td>
-                <td>
-                    <?php echo get_post_meta($post->ID, 'series', true);?>
-                </td>
-                <td>
-                    <?php echo get_post_meta($post->ID, 'year', true);?>
-                </td>
-                <td>
-                    <?php echo get_post_meta($post->ID, 'language', true);?>
-                </td>
-                <td>
-                    <?php echo get_post_meta($post->ID, 'pages', true);?>
-                </td>
-                <td style='min-width: 300px;text-wrap: auto;'>
-                    <?php echo $data->description;?>
-                </td>
-                <td>
-                    <?php
-                        $postCats   = wp_get_object_terms($post->ID, 'books', ['fields' => 'ids']);
-                        foreach ($categories as $category) {
-                            if (in_array($category->term_id, $postCats)) {
-                                echo $category->name. '<br>';
-                            }
-                        }
-                    ?>
-                </td>
-                <td class='url'>
-                    <a href='<?php echo get_post_meta($post->ID, 'url', true);?>' target='_blank'>View on OpenLibrary</a>
-                </td>
-                <td>
-                    This book is already in the library.<br>
-                    <?php
-                    $locations    = get_post_meta($post->ID, 'location');
-
-                    if (!in_array($location, $locations)) {
-                        add_post_meta($post->ID, 'location', $location);
-
-                        ?>
-                        <br>
-                        I have added the location <strong><?php echo esc_attr($location); ?></strong> to this book.<br>
-                        <?php
+    ?>
+        <tr class='existing-book processed'>
+            <td class='image'>
+                <?php echo $image; ?>
+            </td>
+            <td>
+                <?php echo esc_attr($data->title); ?>
+            </td>
+            <td>
+                <?php echo implode("<br>", $data->authors); ?>
+            </td>
+            <td>
+                <?php echo get_post_meta($post->ID, 'subtitle', true); ?>
+            </td>
+            <td>
+                <?php echo get_post_meta($post->ID, 'series', true); ?>
+            </td>
+            <td>
+                <?php echo get_post_meta($post->ID, 'year', true); ?>
+            </td>
+            <td>
+                <?php echo get_post_meta($post->ID, 'language', true); ?>
+            </td>
+            <td>
+                <?php echo get_post_meta($post->ID, 'pages', true); ?>
+            </td>
+            <td style='min-width: 300px;text-wrap: auto;'>
+                <?php echo $data->description; ?>
+            </td>
+            <td>
+                <?php
+                $postCats   = wp_get_object_terms($post->ID, 'books', ['fields' => 'ids']);
+                foreach ($categories as $category) {
+                    if (in_array($category->term_id, $postCats)) {
+                        echo $category->name . '<br>';
                     }
+                }
+                ?>
+            </td>
+            <td class='url'>
+                <a href='<?php echo get_post_meta($post->ID, 'url', true); ?>' target='_blank'>View on OpenLibrary</a>
+            </td>
+            <td>
+                This book is already in the library.<br>
+                <?php
+                $locations    = get_post_meta($post->ID, 'location');
 
-                    ?>
-                    <a href='<?php echo get_permalink($post->ID); ?>' target='_blank'>View it here.</a>
-                </td>
-            </tr>
-        <?php
+                if (!in_array($location, $locations)) {
+                    add_post_meta($post->ID, 'location', $location);
+
+                ?>
+                    <br>
+                    I have added the location <strong><?php echo esc_attr($location); ?></strong> to this book.<br>
+                <?php
+                }
+
+                ?>
+                <a href='<?php echo get_permalink($post->ID); ?>' target='_blank'>View it here.</a>
+            </td>
+        </tr>
+    <?php
     }
 
-    public function getTable($json) {
+    public function getTable($json)
+    {
         wp_enqueue_script('tsjippy_library_script');
 
         $categories    = get_categories(array(
@@ -285,18 +296,18 @@ class Library{
             'order'           => 'ASC',
             'taxonomy'        => 'books',
             'hide_empty'     => false,
-       ));
+        ));
 
         $location   = $_REQUEST['location'];
 
-        $icon        = "<img class='visibility-icon visible' src='" .\TSJIPPY\PICTURESURL. "/visible.png' width=20 height=20 loading='lazy' >";
+        $icon        = "<img class='visibility-icon visible' src='" . \TSJIPPY\PICTURESURL . "/visible.png' width=20 height=20 loading='lazy' >";
 
         ob_start();
-        ?>
+    ?>
         <style>
-        .tsjippy.table body tr:not(:first-child) {
-            display: none;
-        }
+            .tsjippy.table body tr:not(:first-child) {
+                display: none;
+            }
         </style>
         <div class='book table-wrapper' style='max-width:100vw;'>
             <h4>Books Identified in the picture</h4>
@@ -325,77 +336,77 @@ class Library{
 
                 <tbody>
                     <?php
-                        foreach ($json as $index => $data) {
-                            if (empty($data->authors)) {
-                                $data->authors    = '';
-                            }else{
-                                $data->authors    = trim(preg_split("/([\/&,+]|\bwith\b|\band\b)/", $data->authors)[0]);
-                            }
-
-                            $posts      = $this->checkForDuplicates($data->title);
-
-                            if (count($posts) > 0) {
-                                $this->existingBookRow($posts, $data, $categories, $location);
-                            }else{
-                                ?>
-                                    <tr>
-                                        <td class='image'>
-                                        </td>
-                                        <td>
-                                            <input type='text' name='title' class='title' value="<?php echo esc_attr($data->title); ?>">
-                                        </td>
-                                        <td>
-                                            <div class="authors clone-divs-wrapper">
-                                                <?php
-                                                $authors = array_map('trim', explode(',', $data->authors));
-                                                foreach ($authors as $index => $author) {
-                                                    ?>
-                                                    <div id="<?php echo esc_attr($author);?>-div-<?php echo esc_attr($index);?>" class="clone-div" data-div-id="<?php echo esc_attr($index);?>">
-                                                        <div class='button-wrapper'>
-                                                            <input type='text' name='author[]' class='author' value="<?php echo esc_attr($author); ?>">
-                                                            <button type="button" class="add button" style="flex: 1;">+</button>
-                                                            <button type="button" class="remove button" style="flex: 1;">-</button>
-                                                        </div>
-                                                    </div>
-                                                    <?php
-                                                }
-                                                ?>
-                                            </div>
-                                        </td>
-                                        <td class='placeholder' colspan='7' style='text-align: center;'>
-                                            <div class="loader-image-trigger" data-size="30" data-text="Fetching the book details... "></div>
-                                        </td>
-                                        <td>
-                                            <textarea name='description' class='description' style='min-width: 300px;text-wrap: auto;' rows=2><?php echo $data->description; ?></textarea>
-                                        </td>
-                                        <td class='categories' style='text-align: left;'>
-                                            <?php
-                                                foreach ($categories as $category) {
-                                                    echo "<label class='option-label category-select'>";
-                                                        echo "<input type='checkbox' name='category-id[]' value='$category->cat_ID' data-name='$category->name'>";
-                                                        echo "$category->name";
-                                                    echo "</label><br>";
-                                                }
-                                            ?>
-                                        </td>
-                                        <td class='url'>
-                                            <a href='https://www.google.com/search?q=<?php echo urlencode("$data->title $data->authors book");?>' target='_blank'>Search on Google</a>
-                                        </td>
-                                        <td class='location hidden'><input type='text' name='location' value="<?php echo $location; ?>"></td>
-                                        <td>
-                                            <div class="loader-image-trigger" data-size="50" data-text="Adding the book... "></div>
-                                            <button type='button' class='add-book sim button'>Add book to the library</button>
-                                            <button type='button' class='delete-book sim button'>Delete</button>
-                                        </td>
-                                    </tr>
-                                <?php
-                            }
+                    foreach ($json as $index => $data) {
+                        if (empty($data->authors)) {
+                            $data->authors    = '';
+                        } else {
+                            $data->authors    = trim(preg_split("/([\/&,+]|\bwith\b|\band\b)/", $data->authors)[0]);
                         }
+
+                        $posts      = $this->checkForDuplicates($data->title);
+
+                        if (count($posts) > 0) {
+                            $this->existingBookRow($posts, $data, $categories, $location);
+                        } else {
+                    ?>
+                            <tr>
+                                <td class='image'>
+                                </td>
+                                <td>
+                                    <input type='text' name='title' class='title' value="<?php echo esc_attr($data->title); ?>">
+                                </td>
+                                <td>
+                                    <div class="authors clone-divs-wrapper">
+                                        <?php
+                                        $authors = array_map('trim', explode(',', $data->authors));
+                                        foreach ($authors as $index => $author) {
+                                        ?>
+                                            <div id="<?php echo esc_attr($author); ?>-div-<?php echo esc_attr($index); ?>" class="clone-div" data-div-id="<?php echo esc_attr($index); ?>">
+                                                <div class='button-wrapper'>
+                                                    <input type='text' name='author[]' class='author' value="<?php echo esc_attr($author); ?>">
+                                                    <button type="button" class="add button" style="flex: 1;">+</button>
+                                                    <button type="button" class="remove button" style="flex: 1;">-</button>
+                                                </div>
+                                            </div>
+                                        <?php
+                                        }
+                                        ?>
+                                    </div>
+                                </td>
+                                <td class='placeholder' colspan='7' style='text-align: center;'>
+                                    <div class="loader-image-trigger" data-size="30" data-text="Fetching the book details... "></div>
+                                </td>
+                                <td>
+                                    <textarea name='description' class='description' style='min-width: 300px;text-wrap: auto;' rows=2><?php echo $data->description; ?></textarea>
+                                </td>
+                                <td class='categories' style='text-align: left;'>
+                                    <?php
+                                    foreach ($categories as $category) {
+                                        echo "<label class='option-label category-select'>";
+                                        echo "<input type='checkbox' name='category-id[]' value='$category->cat_ID' data-name='$category->name'>";
+                                        echo "$category->name";
+                                        echo "</label><br>";
+                                    }
+                                    ?>
+                                </td>
+                                <td class='url'>
+                                    <a href='https://www.google.com/search?q=<?php echo urlencode("$data->title $data->authors book"); ?>' target='_blank'>Search on Google</a>
+                                </td>
+                                <td class='location hidden'><input type='text' name='location' value="<?php echo $location; ?>"></td>
+                                <td>
+                                    <div class="loader-image-trigger" data-size="50" data-text="Adding the book... "></div>
+                                    <button type='button' class='add-book sim button'>Add book to the library</button>
+                                    <button type='button' class='delete-book sim button'>Delete</button>
+                                </td>
+                            </tr>
+                    <?php
+                        }
+                    }
                     ?>
                 </tbody>
             </table>
         </div>
-        <?php
+<?php
 
         return ob_get_clean();
     }
@@ -403,7 +414,8 @@ class Library{
     /**
      * Creates a post with type book
      */
-    public function storeInDb(array $data) {
+    public function storeInDb(array $data)
+    {
         global $wpdb;
 
         // Check if already in the database
@@ -411,7 +423,7 @@ class Library{
         $wpdb->insert(
             $this->tableName,
             $data
-       );
+        );
 
         if (!empty($wpdb->last_error)) {
             return new \WP_Error('error', $wpdb->print_error());
@@ -428,7 +440,8 @@ class Library{
      *
      * @return array
      */
-    public function processAuthor($author, $postId) {
+    public function processAuthor($author, $postId)
+    {
         if (empty($author)) {
             return [];
         }
@@ -477,7 +490,8 @@ class Library{
      *
      * @return string
      */
-    public function createBook($data) {
+    public function createBook($data)
+    {
         $title          = ucfirst(strtolower(sanitize_text_field(wp_unslash($data['title']))));
         $description    = sanitize_textarea_field(wp_unslash($data['description']));
 
@@ -488,11 +502,11 @@ class Library{
         //New post
         $post = array(
             'post_type'        => 'book',
-            'post_title'    => $title ,
+            'post_title'    => $title,
             'post_content'  => $description,
             'post_status'   => 'publish',
             'post_author'   => get_current_user_id()
-       );
+        );
 
         // Insert the post into the database.
         $postId         = wp_insert_post($post, true, false);
@@ -505,11 +519,11 @@ class Library{
                 // most likely some invalid data in post, try to fix it.
                 if ($postId->get_error_message() == "Could not update post in the database. ") {
                     $illigalChars    = [];
-                    foreach (str_split($post['post_content']) as $index=>$chr) {
+                    foreach (str_split($post['post_content']) as $index => $chr) {
                         json_encode($chr);
                         if (json_last_error() == 5) {
                             $illigalChars[$index] = $chr;
-                        }elseif (json_last_error() == 0 && !empty($illigalChars)) {
+                        } elseif (json_last_error() == 0 && !empty($illigalChars)) {
                             $post['post_content']    = str_replace(implode('', $illigalChars), mb_convert_encoding(implode('', $illigalChars), "UTF-8", "auto"), $post['post_content']);
                             $illigalChars    = [];
                         }
@@ -522,11 +536,11 @@ class Library{
                     if (is_wp_error($postId)) {
                         return $postId;
                     }
-                }else{
+                } else {
                     return $postId;
                 }
             }
-        }elseif ($postId === 0) {
+        } elseif ($postId === 0) {
             return new WP_Error('Inserting post error', "Could not create the book!");
         }
 
@@ -536,7 +550,7 @@ class Library{
             if (!empty($_POST[$meta])) {
                 if (is_array($_POST[$meta])) {
                     $value = array_map('sanitize_text_field', $_POST[$meta]);
-                }else{
+                } else {
                     $value = sanitize_text_field(wp_unslash($_POST[$meta]));
                 }
 
@@ -549,9 +563,9 @@ class Library{
                     }
 
                     wp_set_post_terms($postId, [$value], 'book-locations', true);
-                }elseif ($meta == 'author') {
+                } elseif ($meta == 'author') {
                     if (is_array($value)) {
-                        foreach ($value as $index=>$author) {
+                        foreach ($value as $index => $author) {
                             $this->processAuthor($author, $postId);
                         }
                     }

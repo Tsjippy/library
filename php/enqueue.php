@@ -1,14 +1,17 @@
 <?php
+
 namespace TSJIPPY\LIBRARY;
+
 use TSJIPPY;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
 add_action('wp_enqueue_scripts', __NAMESPACE__ . '\loadAssets');
 add_action('admin_enqueue_scripts', __NAMESPACE__ . '\loadAssets');
-function loadAssets() {
-    wp_register_style('tsjippy_library_style', TSJIPPY\pathToUrl(PLUGINPATH. 'css/library.min.css'), array(), PLUGINVERSION);
-    wp_register_script('tsjippy_library_script', TSJIPPY\pathToUrl(PLUGINPATH. 'js/library.min.js'), ['tsjippy_formsubmit_script'], PLUGINVERSION, true);
+function loadAssets()
+{
+    wp_register_style('tsjippy_library_style', TSJIPPY\pathToUrl(PLUGINPATH . 'css/library.min.css'), array(), PLUGINVERSION);
+    wp_register_script('tsjippy_library_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/library.min.js'), ['tsjippy_formsubmit_script'], PLUGINVERSION, true);
 }

@@ -1,12 +1,15 @@
 <?php
+
 namespace TSJIPPY\LIBRARY;
+
 use TSJIPPY;
+
 /**
  * The template for displaying all items of a particular category.
  *
  */
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit; // Exit if accessed directly.
 }
 

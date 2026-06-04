@@ -1,22 +1,27 @@
 <?php
+
 namespace TSJIPPY\LIBRARY;
+
 use TSJIPPY;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
 add_action('init', __NAMESPACE__ . '\initTasks');
-function initTasks() {
+function initTasks()
+{
     //add action for use in scheduled task
     add_action('send_book_of_the_day', __NAMESPACE__ . '\sendBookOfTheDay');
 }
 
-function scheduleTasks() {
+function scheduleTasks()
+{
     TSJIPPY\scheduleTask('send_book_of_the_day', 'quarterly');
 }
 
-function sendBookOfTheDay() {
+function sendBookOfTheDay()
+{
     $time = SETTINGS['book-time'] ?? false;
 
     if (!$time) {
