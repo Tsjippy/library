@@ -15,7 +15,7 @@ function restApiInit()
 
     //add_book
     register_rest_route(
-        RESTAPIPREFIX . '/library',
+        TSJIPPY\RESTAPIPREFIX . '/library',
         '/add_book',
         array(
             'methods'                 => 'POST',
