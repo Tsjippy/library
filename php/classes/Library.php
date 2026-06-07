@@ -446,7 +446,7 @@ class Library
             return [];
         }
 
-        $author = sanitize_text_field(wp_unslash($author));
+        $author = TSJIPPY\sanitize($author);
 
         // Lastname first
         preg_match('/([a-zA-Z]+),\s*([a-zA-Z\s]+)/', $author, $matches);
@@ -492,7 +492,7 @@ class Library
      */
     public function createBook($data)
     {
-        $title          = ucfirst(strtolower(sanitize_text_field(wp_unslash($data['title']))));
+        $title          = ucfirst(strtolower(TSJIPPY\sanitize($data['title'])));
         $description    = sanitize_textarea_field(wp_unslash($data['description']));
 
         if (!empty($this->checkForDuplicates($title))) {
@@ -548,11 +548,7 @@ class Library
         foreach (METAS as $meta => $type) {
             // Add post meta
             if (!empty($_POST[$meta])) {
-                if (is_array($_POST[$meta])) {
-                    $value = array_map('sanitize_text_field', $_POST[$meta]);
-                } else {
-                    $value = sanitize_text_field(wp_unslash($_POST[$meta]));
-                }
+                $value = TSJIPPY\sanitize($_POST[$meta]);
 
                 if ($meta == 'location') {
                     $locations   = get_post_meta($postId, 'location');

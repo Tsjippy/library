@@ -113,7 +113,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
     {
         $library        = new Library();
 
-        foreach ($_POST['books'] as $book) {
+        foreach (TSJIPPY\sanitize($_POST['books'] ?? []) as $book) {
             $library->createBook($book);
         }
     }

@@ -43,7 +43,7 @@ function addBook()
 
     $library    = new Library();
 
-    $result        = $library->createBook($_POST);
+    $result        = $library->createBook(TSJIPPY\sanitize($_POST));
 
     return $result;
 }

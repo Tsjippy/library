@@ -171,26 +171,26 @@ function updateBookMetas()
 
     $books = get_posts(
         array(
-            'orderby'         => 'post_title',
-            'order'         => 'asc',
-            'post_status'     => 'any',
-            'post_type'     => 'book',
+            'orderby'        => 'post_title',
+            'order'          => 'asc',
+            'post_status'    => 'publish',
+            'post_type'      => 'book',
             'posts_per_page' => -1
         )
     );
 
     $categories    = get_categories(array(
-        'orderby'         => 'name',
-        'order'           => 'ASC',
-        'taxonomy'        => 'books',
+        'orderby'        => 'name',
+        'order'          => 'ASC',
+        'taxonomy'       => 'books',
         'hide_empty'     => false,
         'fields'         => 'names',
         'posts_per_page' => -1
     ));
 
     foreach ($books as $book) {
-        $title        = $book->post_title;
-        $authors    = get_post_meta($book->ID, 'author');
+        $title       = $book->post_title;
+        $authors     = get_post_meta($book->ID, 'author');
         $data        = $library->openLibrary($title, $authors[0] ?? '');
 
         if (empty($data) || empty($data['author_name'])) {

@@ -75,8 +75,8 @@ function displayBookArchive()
     $paged         = (get_query_var('paged')) ? get_query_var('paged') : 1;
 
     $args        = [
-        'post_type'            => 'book',
-        'post_status'        => 'publish',
+        'post_type'           => 'book',
+        'post_status'         => 'publish',
         'paged'               => $paged,
         'posts_per_page'      => 50, // Show all books
     ];

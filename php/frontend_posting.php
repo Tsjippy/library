@@ -37,7 +37,7 @@ function afterPostSave($post, $frontEndPost)
                 delete_post_meta($post->ID, $meta);
             } elseif ($type == 'array') {
                 $curValues = get_post_meta($post->ID, $meta);
-                $newValues = array_map('sanitize_text_field', $_POST[$meta]);
+                $newValues = TSJIPPY\sanitize($_POST[$meta]);
 
                 $deleted  = array_diff($curValues, $newValues);
                 foreach ($deleted as $value) {
@@ -67,7 +67,7 @@ function afterPostSave($post, $frontEndPost)
                 }
             } else {
                 //Store value
-                update_metadata('post', $post->ID, $meta, sanitize_text_field(wp_unslash($_POST[$meta])));
+                update_metadata('post', $post->ID, $meta, TSJIPPY\sanitize($_POST[$meta]));
             }
         }
     }
