@@ -1,0 +1,14 @@
+#book-of-the-day {
+  padding: 20px 80px;
+  font-size: 18px;
+  color: #999999;
+  width: 80%;
+  max-width: 800px;
+  background-color: #8585790d;
+}
+
+@media (max-width: 768px) {
+  #book-of-the-day {
+    padding: 0 60px;
+  }
+}

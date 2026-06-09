@@ -302,13 +302,9 @@ class Library
 
         $icon        = "<img class='visibility-icon visible' src='" . \TSJIPPY\PICTURESURL . "/visible.png' width=20 height=20 loading='lazy' >";
 
+        wp_enqueue_style('tsjippy_library_table', TSJIPPY\pathToUrl(PLUGINPATH . 'css/table.min.css'), array(), PLUGINVERSION);
         ob_start();
     ?>
-        <style>
-            .tsjippy.table body tr:not(:first-child) {
-                display: none;
-            }
-        </style>
         <div class='book table-wrapper' style='max-width:100vw;'>
             <h4>Books Identified in the picture</h4>
             <p>
@@ -316,7 +312,7 @@ class Library
             </p>
             <button type='button' class='hide-existing-books sim button'>Hide books already in the library</button>
             <button type='button' class='hide-processed-books sim button'>Hide processed books</button>
-            <table class='tsjippy table'>
+            <table class='library tsjippy table '>
                 <thead>
                     <tr>
                         <th>Picture <?php echo $icon; ?></th>

@@ -15,15 +15,10 @@ if (! defined('ABSPATH')) {
 if (!isset($skipHeader) || !$skipHeader) {
     get_header();
 }
+
+wp_enqueue_style('tsjippy_template');
 ?>
 <div id="primary">
-    <style>
-        @media (min-width: 991px) {
-            #primary:not(:only-child) {
-                width: 70%;
-            }
-        }
-    </style>
     <main id="main">
         <?php
         while (have_posts()) :

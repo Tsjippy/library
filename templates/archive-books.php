@@ -47,15 +47,10 @@ if ($skipWrapper) {
     require_once(__DIR__ . '/shared.php');
     addBooksModal();
 
+    wp_enqueue_style('tsjippy_template');
+
 ?>
     <div id="primary">
-        <style>
-            @media (min-width: 991px) {
-                #primary:not(:only-child) {
-                    width: 70%;
-                }
-            }
-        </style>
         <main id="main" class='inside-article' style='max-width:100vw;'>
             <button type='button' class='sim button add-books' onclick='Main.showModal(`add-books`)'>Add books</button>
             <?php displayBookArchive(); ?>

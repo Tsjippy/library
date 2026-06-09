@@ -20,23 +20,9 @@ function beforeMainContent()
         return;
     }
 
-?>
-    <style>
-        #book-of-the-day {
-            padding: 20px 80px;
-            font-size: 18px;
-            color: #999999;
-            width: 80%;
-            max-width: 800px;
-            background-color: #8585790d;
-        }
+    wp_enqueue_style('tsjippy_library_frontpage', TSJIPPY\pathToUrl(PLUGINPATH . 'css/frontpage.min.css'), array(), PLUGINVERSION);
 
-        @media(max-width:768px) {
-            #book-of-the-day {
-                padding: 0 60px;
-            }
-        }
-    </style>
+?>
     <div id='book-of-the-day'>
         <h3 style='text-align: center;color: #444;font-weight: 500;'>
             Book of the day
