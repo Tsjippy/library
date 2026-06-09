@@ -10,6 +10,7 @@
 - namespaced all constants
 - sanitize all posts and get vars
 - moved inline style to scss file
+- moved inline style to scss file
 
 ### Fixed
 - spacing problem
