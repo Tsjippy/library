@@ -17,48 +17,9 @@ if (is_tax() || is_archive()) {
     $archive    = true;
 }
 
+wp_enqueue_style('tsjippy_library_template', TSJIPPY\pathToUrl(TSJIPPY\PLUGINPATH . 'css/template.min.css'), array(), STYLEVERSION);
+
 ?>
-<style>
-    .metas {
-        margin-top: 10px;
-        display: flex;
-        flex-wrap: wrap;
-    }
-
-    .book.meta {
-        margin-right: 10px;
-    }
-
-    .cat-card {
-        padding: 10px;
-    }
-
-    div.picture {
-        margin-top: 10px;
-        text-align: center;
-    }
-
-    .book-image {
-        min-width: 150px;
-        padding: 10px;
-    }
-
-    @media only screen and (min-width: 600px) {
-        .entry-content {
-            display: flex;
-        }
-
-        .book-image {
-            padding-top: 50px;
-        }
-    }
-
-    @media only screen and (max-width: 600px) {
-        .book.meta {
-            flex-basis: 45%;
-        }
-    }
-</style>
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
     <div class="cat-card<?php if ($archive) {
                             echo ' inside-article';
