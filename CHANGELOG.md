@@ -2,6 +2,17 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Updated
+
+## [10.1.7] - 2026-06-09
+
+
+### Added
 - shared functionality loader
 
 ### Changed
@@ -15,8 +26,6 @@
 ### Fixed
 - spacing problem
 - use pluginversion
-
-### Updated
 
 ## [10.1.6] - 2026-06-03
 
