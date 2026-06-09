@@ -89,18 +89,6 @@ function afterPostContent($frontendcontend)
     $postName   = $frontendcontend->postName;
 
 ?>
-    <style>
-        .form-table,
-        .form-table th,
-        .form-table,
-        td {
-            border: none;
-        }
-
-        .form-table {
-            text-align: left;
-        }
-    </style>
     <div id="book-attributes" class="property book<?php if ($postName != 'book') {
                                                         echo ' hidden';
                                                     } ?>">
@@ -111,7 +99,7 @@ function afterPostContent($frontendcontend)
                 <h4>Book details</h4>
             </legend>
 
-            <table class="form-table">
+            <table class="table left no-border">
                 <?php
                 foreach (METAS as $meta => $type) {
                     if ($type == 'url') {
