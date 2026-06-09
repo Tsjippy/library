@@ -17,7 +17,7 @@ if (is_tax() || is_archive()) {
     $archive    = true;
 }
 
-wp_enqueue_style('tsjippy_library_template', TSJIPPY\pathToUrl(TSJIPPY\PLUGINPATH . 'css/template.min.css'), array(), STYLEVERSION);
+wp_enqueue_style('tsjippy_library_template', TSJIPPY\pathToUrl(TSJIPPY\PLUGINPATH . 'css/template.min.css'), array(), PLUGINVERSION);
 
 ?>
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
