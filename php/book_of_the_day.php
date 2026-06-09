@@ -74,27 +74,27 @@ function bookOfTheDay()
     $book       = $books[0];
 
     // add the book picture
-    $id        = get_post_meta($book->ID, 'image', true);
+    $id        = get_post_meta($book->ID, 'tsjippy_image', true);
     if (!empty($id)) {
-        $size    = 'M';
-        $url    = "https://covers.openlibrary.org/b/id/$id-$size.jpg";
-    }
+        $size       = 'M';
+        $url        = "https://covers.openlibrary.org/b/id/$id-$size.jpg";
 
-    $imageData  = file_get_contents($url);
+        $imageData  = file_get_contents($url);
 
-    if ($imageData) {
-        $tempFile   = tempnam(sys_get_temp_dir(), 'mime_check_');
+        if ($imageData) {
+            $tempFile   = tempnam(sys_get_temp_dir(), 'mime_check_');
 
-        $mimeType   = '';
+            $mimeType   = '';
 
-        if (file_put_contents($tempFile, $imageData)) {
-            $mimeType   = mime_content_type($tempFile);
-        }
-        wp_delete_file($tempFile);
+            if (file_put_contents($tempFile, $imageData)) {
+                $mimeType   = mime_content_type($tempFile);
+            }
+            wp_delete_file($tempFile);
 
-        if ($imageData !== false && !empty($mimeType)) {
-            $base64Image    = base64_encode($imageData);
-            $picture        = 'data:' . $mimeType . ';base64,' . $base64Image;
+            if ($imageData !== false && !empty($mimeType)) {
+                $base64Image    = base64_encode($imageData);
+                $picture        = 'data:' . $mimeType . ';base64,' . $base64Image;
+            }
         }
     }
 
@@ -110,6 +110,6 @@ function bookOfTheDay()
         'title'         => $book->post_title,
         'image'         => $picture,
         'url'           => $url,
-        'locations'     => get_post_meta($book->ID, 'location'),
+        'locations'     => get_post_meta($book->ID, 'tsjippy_location'),
     ];
 }

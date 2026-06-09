@@ -70,9 +70,9 @@ add_filter('pre_get_posts', __NAMESPACE__ . '\includeBooksInSearch');
  */
 function createBookTaxonomies($single)
 {
-    $taxonomyName        = $single . 's';
-    $single                = ucfirst(str_replace('book-', '', $single));
-    $plural                = $single . 's';
+    $taxonomyName = $single . 's';
+    $single       = ucfirst(str_replace('book-', '', $single));
+    $plural       = $single . 's';
 
     /*
         CREATE CATEGORIES
@@ -190,7 +190,7 @@ function updateBookMetas()
 
     foreach ($books as $book) {
         $title       = $book->post_title;
-        $authors     = get_post_meta($book->ID, 'author');
+        $authors     = get_post_meta($book->ID, 'tsjippy_author');
         $data        = $library->openLibrary($title, $authors[0] ?? '');
 
         if (empty($data) || empty($data['author_name'])) {
@@ -202,14 +202,14 @@ function updateBookMetas()
         }
 
         if ($data['author_name'] != $authors) {
-            delete_post_meta($book->ID, 'author');
+            delete_post_meta($book->ID, 'tsjippy_author');
             wp_delete_object_term_relationships($book->ID, 'authors');
 
             foreach ($data['author_name'] as $author) {
                 $library->processAuthor($author, $book->ID);
             }
 
-            update_post_meta($book->ID, 'image', $data['cover_i']);
+            update_post_meta($book->ID, 'tsjippy_image', $data['cover_i']);
 
             if ($title != $data['title']) {
                 wp_update_post(
@@ -220,9 +220,9 @@ function updateBookMetas()
                 );
             }
 
-            delete_post_meta($book->ID, 'subtitle');
+            delete_post_meta($book->ID, 'tsjippy_subtitle');
             if (!empty($data['subtitle'])) {
-                update_post_meta($book->ID, 'subtitle', $data['subtitle']);
+                update_post_meta($book->ID, 'tsjippy_subtitle', $data['subtitle']);
             }
         }
 
@@ -231,7 +231,7 @@ function updateBookMetas()
         }
 
         if (!empty($data['key'])) {
-            update_post_meta($book->ID, 'url', 'https://openlibrary.org/' . $data['key']);
+            update_post_meta($book->ID, 'tsjippy_url', 'https://openlibrary.org/' . $data['key']);
         }
     }
 

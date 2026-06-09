@@ -208,7 +208,7 @@ class Library
         // Already in the database, so skip
         if (count($posts) > 1) {
             foreach ($posts as $post) {
-                if (in_array($data->authors, get_post_meta($post->ID, 'author'))) {
+                if (in_array($data->authors, get_post_meta($post->ID, 'tsjippy_author'))) {
                     // More than one book found, we show this one
                     break;
                 }
@@ -218,9 +218,9 @@ class Library
         }
 
         // More than one book found, we show the last one
-        $data->authors      = get_post_meta($post->ID, 'author');
+        $data->authors      = get_post_meta($post->ID, 'tsjippy_author');
         $data->description  = $post->post_content;
-        $imageId            = get_post_meta($post->ID, 'image', true);
+        $imageId            = get_post_meta($post->ID, 'tsjippy_image', true);
 
         $image              = "<img src='https://covers.openlibrary.org/b/id/$imageId-S.jpg' class='book-image' loading='lazy'>";
 
@@ -236,19 +236,19 @@ class Library
                 <?php echo implode("<br>", $data->authors); ?>
             </td>
             <td>
-                <?php echo get_post_meta($post->ID, 'subtitle', true); ?>
+                <?php echo get_post_meta($post->ID, 'tsjippy_subtitle', true); ?>
             </td>
             <td>
-                <?php echo get_post_meta($post->ID, 'series', true); ?>
+                <?php echo get_post_meta($post->ID, 'tsjippy_series', true); ?>
             </td>
             <td>
-                <?php echo get_post_meta($post->ID, 'year', true); ?>
+                <?php echo get_post_meta($post->ID, 'tsjippy_year', true); ?>
             </td>
             <td>
-                <?php echo get_post_meta($post->ID, 'language', true); ?>
+                <?php echo get_post_meta($post->ID, 'tsjippy_language', true); ?>
             </td>
             <td>
-                <?php echo get_post_meta($post->ID, 'pages', true); ?>
+                <?php echo get_post_meta($post->ID, 'tsjippy_pages', true); ?>
             </td>
             <td style='min-width: 300px;text-wrap: auto;'>
                 <?php echo $data->description; ?>
@@ -264,12 +264,12 @@ class Library
                 ?>
             </td>
             <td class='url'>
-                <a href='<?php echo get_post_meta($post->ID, 'url', true); ?>' target='_blank'>View on OpenLibrary</a>
+                <a href='<?php echo get_post_meta($post->ID, 'tsjippy_url', true); ?>' target='_blank'>View on OpenLibrary</a>
             </td>
             <td>
                 This book is already in the library.<br>
                 <?php
-                $locations    = get_post_meta($post->ID, 'location');
+                $locations    = get_post_meta($post->ID, 'tsjippy_location');
 
                 if (!in_array($location, $locations)) {
                     add_post_meta($post->ID, 'location', $location);
@@ -466,11 +466,11 @@ class Library
         }
 
         if (!empty($author)) {
-            $curValues  = get_post_meta($postId, 'author');
+            $curValues  = get_post_meta($postId, 'tsjippy_author');
 
             if (!in_array($author, $curValues)) {
                 // Add the author to the post meta
-                add_post_meta($postId, 'author', $author);
+                add_post_meta($postId, 'tsjippy_author', $author);
 
                 wp_set_post_terms($postId, [$author], 'authors', true);
             }
@@ -547,7 +547,7 @@ class Library
                 $value = TSJIPPY\sanitize($_POST[$meta]);
 
                 if ($meta == 'location') {
-                    $locations   = get_post_meta($postId, 'location');
+                    $locations   = get_post_meta($postId, 'tsjippy_location');
 
                     // only add a new location if needed
                     if (in_array($value, $locations)) {

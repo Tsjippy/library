@@ -37,7 +37,7 @@ wp_enqueue_style('tsjippy_library_template', TSJIPPY\pathToUrl(TSJIPPY\PLUGINPAT
                                         echo ' archive';
                                     } ?>'>
             <?php
-            $id            = get_post_meta(get_the_ID(), 'image', true);
+            $id            = get_post_meta(get_the_ID(), 'tsjippy_image', true);
 
             if (!empty($id)) {
                 $size    = 'M';
