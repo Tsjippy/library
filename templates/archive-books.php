@@ -97,8 +97,8 @@ function displayBookArchive()
                 'format'     => '/page/%#%',
                 'current'     => $currentPage,
                 'total'     => $totalPages,
-                'prev_text' => __('« prev', 'tsjippy'),
-                'next_text' => __('next »', 'tsjippy'),
+                'prev_text' => __('« prev', '%TEXTDOMAIN%'),
+                'next_text' => __('next »', '%TEXTDOMAIN%'),
             ));
         }
     } else {
