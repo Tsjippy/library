@@ -15,7 +15,13 @@ function beforeMainContent()
         return;
     }
 
-    extract(bookOfTheDay());
+    $books  = bookOfTheDay();
+
+    if(!$books){
+        return;
+    }
+    
+    extract($books);
     if (!$title || !$image || !$url) {
         return;
     }

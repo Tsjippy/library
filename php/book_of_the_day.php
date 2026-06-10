@@ -73,6 +73,8 @@ function bookOfTheDay()
     // Only use the first book
     $book       = $books[0];
 
+    $picture    = '';
+
     // add the book picture
     $id        = get_post_meta($book->ID, 'tsjippy_image', true);
     if (!empty($id)) {
