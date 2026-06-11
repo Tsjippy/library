@@ -42,20 +42,20 @@ function bookOfTheDay()
             'meta_query'        => array(
                 'relation'      => 'AND',
                 array(
-                    'key'       => 'image',
+                    'key'       => 'tsjippy_image',
                     'compare'   => 'EXISTS',
                 ),
                 array(
-                    'key'     => 'image',
+                    'key'     => 'tsjippy_image',
                     'value'   => '',
                     'compare' => '!=',
                 ),
                 array(
-                    'key'       => 'url',
+                    'key'       => 'tsjippy_url',
                     'compare'   => 'EXISTS',
                 ),
                 array(
-                    'key'     => 'url',
+                    'key'     => 'tsjippy_url',
                     'value'   => '',
                     'compare' => '!=',
                 ),
