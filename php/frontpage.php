@@ -36,7 +36,7 @@ function beforeMainContent()
         <p>
             <a href='<?php echo esc_url($url); ?>' target='_blank'>
                 <div style='text-align:center;'>
-                    <img width='200' height='200' src='<?php echo esc_url($image); ?>' loading='lazy' class='book-cover' alt='book cover' decoding='async' />
+                    <img width='200' height='200' src='<?php echo esc_attr($image); ?>' loading='lazy' class='book-cover' alt='book cover' decoding='async' />
                 </div>
 
                 <h4><?php echo esc_html($title); ?></h4>
