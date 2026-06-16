@@ -79,7 +79,7 @@ function displayBookArchive()
     $booksQuery = new \WP_Query($args);
 
     if ($booksQuery->have_posts()) {
-        do_action('tsjippy_before_archive', 'book');
+        do_action('tsjippy-before-archive', 'book');
 
         while ($booksQuery->have_posts()) :
             $booksQuery->the_post();

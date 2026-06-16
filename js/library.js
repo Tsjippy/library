@@ -48,7 +48,7 @@ async function fileUpload(target, location) {
   let formData = new FormData();
 
   //Add the ajax action name
-  formData.append("action", "process_library_upload");
+  formData.append("action", "tsjippy-process-library-upload");
 
   formData.append("location", location);
 

@@ -29,7 +29,7 @@ wp_enqueue_style('tsjippy_library_template', TSJIPPY\pathToUrl(TSJIPPY\PLUGINPAT
             $url = get_permalink(get_the_ID());
             echo the_title("<h3 class='archivetitle'><a href='$url'>", '</a></h3>');
         } else {
-            do_action('tsjippy_before_content');
+            do_action('tsjippy-before-content');
         }
         ?>
         <div 
@@ -200,7 +200,7 @@ wp_enqueue_style('tsjippy_library_template', TSJIPPY\pathToUrl(TSJIPPY\PLUGINPAT
                         <?php
                     }
 
-                    do_action('tsjippy_inside_book_metas');
+                    do_action('tsjippy-inside-book-metas');
                     ?>
                 </div>
 
@@ -218,7 +218,7 @@ wp_enqueue_style('tsjippy_library_template', TSJIPPY\pathToUrl(TSJIPPY\PLUGINPAT
                         //Show everything including category specific content
                     } else {
                         if (empty($post->post_content)) {
-                            echo apply_filters('tsjippy_empty_description', 'No content found... ', $post);
+                            echo apply_filters('tsjippy-empty-description', 'No content found... ', $post);
                         }
 
                         the_content();

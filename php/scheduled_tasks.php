@@ -12,12 +12,12 @@ add_action('init', __NAMESPACE__ . '\initTasks');
 function initTasks()
 {
     //add action for use in scheduled task
-    add_action('send_book_of_the_day', __NAMESPACE__ . '\sendBookOfTheDay');
+    add_action('tsjippy-send-book-of-the-day', __NAMESPACE__ . '\sendBookOfTheDay');
 }
 
 function scheduleTasks()
 {
-    TSJIPPY\scheduleTask('send_book_of_the_day', 'quarterly');
+    TSJIPPY\scheduleTask('tsjippy-send-book-of-the-day', 'quarterly');
 }
 
 function sendBookOfTheDay()

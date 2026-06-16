@@ -8,7 +8,7 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
-add_action('tsjippy_frontend_post_content_title', __NAMESPACE__ . '\contentTitle');
+add_action('tsjippy-frontend-post-content-title', __NAMESPACE__ . '\contentTitle');
 function contentTitle($postType)
 {
     // Book content title
@@ -22,7 +22,7 @@ function contentTitle($postType)
     echo "</h4>";
 }
 
-add_action('tsjippy_after_post_save', __NAMESPACE__ . '\afterPostSave', 10, 2);
+add_action('tsjippy-after-post-save', __NAMESPACE__ . '\afterPostSave', 10, 2);
 function afterPostSave($post, $frontEndPost)
 {
     if ($post->post_type != 'book') {
@@ -74,7 +74,7 @@ function afterPostSave($post, $frontEndPost)
 }
 
 //add meta data fields
-add_action('tsjippy_frontend_post_after_content', __NAMESPACE__ . '\afterPostContent', 10, 2);
+add_action('tsjippy-frontend-post-after-content', __NAMESPACE__ . '\afterPostContent', 10, 2);
 function afterPostContent($frontendcontend)
 {
 

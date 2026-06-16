@@ -22,7 +22,7 @@ function changeTamplatePath($templateFile)
     return str_replace(['/tsjippy-books/', '/tsjippy-book-locations/', '/tsjippy-authors/'], '/tsjippy-library/', $templateFile);
 }
 
-add_action('wp_ajax_process_library_upload', __NAMESPACE__ . '\ajaxUploadFiles');
+add_action('wp_ajax_tsjippy-process-library-upload', __NAMESPACE__ . '\ajaxUploadFiles');
 function ajaxUploadFiles()
 {
     if (!empty($_FILES['files'])) {
