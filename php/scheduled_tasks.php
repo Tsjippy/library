@@ -11,7 +11,7 @@ if (! defined('ABSPATH')) {
 add_action('init', __NAMESPACE__ . '\scheduleTasks');
 function scheduleTasks()
 {
-    TSJIPPY\scheduleTask('tsjippy-library-send-book-of-the-day', 'quarterly', __NAMESPACE__, 'sendBookOfTheDay');
+    TSJIPPY\scheduleTask('tsjippy-library-send-book-of-the-day-task', 'quarterly', __NAMESPACE__, 'sendBookOfTheDay');
 }
 
 function sendBookOfTheDay()
