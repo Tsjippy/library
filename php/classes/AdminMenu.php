@@ -82,7 +82,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
         }
 
         if (!empty($_REQUEST['updatemeta'])) {
-            wp_schedule_single_event(time(), 'tsjippy-updatemetas');
+            wp_schedule_single_event(time(), 'tsjippy-library-update-metas');
 
         ?>
             <div class='success'>
@@ -116,14 +116,5 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
         foreach (TSJIPPY\sanitize($_POST['books'] ?? []) as $book) {
             $library->createBook($book);
         }
-    }
-
-    /**
-     * Schedules the tasks for this plugin
-     *
-     */
-    public function postSettingsSave()
-    {
-        scheduleTasks();
     }
 }

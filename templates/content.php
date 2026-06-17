@@ -200,7 +200,7 @@ wp_enqueue_style('tsjippy_library_template', TSJIPPY\pathToUrl(TSJIPPY\PLUGINPAT
                         <?php
                     }
 
-                    do_action('tsjippy-inside-book-metas');
+                    do_action('tsjippy-library-inside-book-metas');
                     ?>
                 </div>
 

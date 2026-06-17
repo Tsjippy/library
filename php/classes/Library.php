@@ -36,7 +36,7 @@ class Library
             return new WP_Error('library', 'Invalid filepath given');
         }
 
-        $this->imagePath      = apply_filters('tsjippy-file-upload-path', $path);
+        $this->imagePath      = apply_filters('tsjippy-library-file-upload-path', $path);
         $this->imageMimeType  = mime_content_type($this->imagePath);
 
         $result = $this->wpAiClient();

@@ -8,16 +8,10 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
-add_action('init', __NAMESPACE__ . '\initTasks');
-function initTasks()
-{
-    //add action for use in scheduled task
-    add_action('tsjippy-send-book-of-the-day', __NAMESPACE__ . '\sendBookOfTheDay');
-}
-
+add_action('init', __NAMESPACE__ . '\scheduleTasks');
 function scheduleTasks()
 {
-    TSJIPPY\scheduleTask('tsjippy-send-book-of-the-day', 'quarterly');
+    TSJIPPY\scheduleTask('tsjippy-library-send-book-of-the-day', 'quarterly', __NAMESPACE__, 'sendBookOfTheDay');
 }
 
 function sendBookOfTheDay()

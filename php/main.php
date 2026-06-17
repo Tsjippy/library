@@ -139,7 +139,7 @@ add_action('init', function () {
         }
     );
 
-    add_action('tsjippy-updatemetas', function () {
+    add_action('tsjippy-library-update-metas', function () {
         updateBookMetas();
     });
 }, 0);
