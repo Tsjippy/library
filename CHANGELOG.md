@@ -4,12 +4,19 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [10.2.5] - 2026-06-18
+
+
+### Changed
 - hook and filter name update
 
 ### Fixed
 - duplicate action name
-
-### Updated
 
 ## [10.2.3] - 2026-06-15
 
