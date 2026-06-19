@@ -292,15 +292,15 @@ class Library
         wp_enqueue_script('tsjippy_library_script');
 
         $categories    = get_categories(array(
-            'orderby'         => 'name',
-            'order'           => 'ASC',
-            'taxonomy'        => 'books',
-            'hide_empty'     => false,
+            'orderby'    => 'name',
+            'order'      => 'ASC',
+            'taxonomy'   => 'books',
+            'hide_empty' => false,
         ));
 
-        $location   = $_REQUEST['location'];
+        $location = TSJIPPY\sanitize($_REQUEST['location'] ?? '');
 
-        $icon        = "<img class='visibility-icon visible' src='" . \TSJIPPY\PICTURESURL . "/visible.png' width=20 height=20 loading='lazy' >";
+        $icon     = "<img class='visibility-icon visible' src='" . \TSJIPPY\PICTURESURL . "/visible.png' width=20 height=20 loading='lazy' >";
 
         wp_enqueue_style('tsjippy_library_table', TSJIPPY\pathToUrl(PLUGINPATH . 'css/table.min.css'), array(), PLUGINVERSION);
         ob_start();
