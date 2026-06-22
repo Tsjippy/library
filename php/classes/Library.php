@@ -410,20 +410,14 @@ class Library
      */
     public function storeInDb(array $data)
     {
-        global $wpdb;
-
         // Check if already in the database
 
-        $wpdb->insert(
+        return TSJIPPY\insertInDb(
             $this->tableName,
-            $data
+            $data,
+            [],
+            'library'
         );
-
-        if (!empty($wpdb->last_error)) {
-            return new \WP_Error('error', $wpdb->print_error());
-        }
-
-        return $wpdb->insert_id;
     }
 
     /**
