@@ -130,18 +130,16 @@ class Library
     public function getLocations()
     {
         global $wpdb;
-
-        $sql = $wpdb->prepare(
-            "SELECT DISTINCT pm.meta_value
-            FROM {$wpdb->postmeta} pm
-            LEFT JOIN {$wpdb->posts} p ON p.ID = pm.post_id
-            WHERE pm.meta_key = %s
-            AND p.post_type = %s",
+        
+        return TSJIPPY\getFromDb(
+            "book_locations",
+            "library",
+            "SELECT DISTINCT pm.meta_value FROM %i pm LEFT JOIN %i p ON p.ID = pm.post_id  WHERE pm.meta_key = %s  AND p.post_type = %s",
+            $wpdb->postmeta,
+            $wpdb->posts,
             'location',
             'book'
         );
-
-        return $wpdb->get_col($sql);
     }
 
     /**
