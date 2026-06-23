@@ -14,7 +14,7 @@ function addBooksModal()
                                                 echo 'hidden';
                                             } ?>'>
         <div class="modal-content" style='max-width:100vw;'>
-            <span id="modal-close" class="close">&times;</span>
+            <?php echo TSJIPPY\addCloseButtton();?>
             <div class="content">
                 <?php echo $library->getFileHtml(); ?>
                 <br>
