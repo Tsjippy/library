@@ -557,7 +557,7 @@ class Library
                     continue;
                 }
 
-                add_post_meta($postId, $meta, $value);
+                add_post_meta($postId, 'tsjippy_'.$meta, $value);
             }
         }
 

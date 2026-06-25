@@ -34,16 +34,16 @@ define(__NAMESPACE__ . '\PLUGINSLUG', basename(__FILE__, '.php'));
 define(__NAMESPACE__ . '\SETTINGS', get_option('tsjippy_library_settings', []));
 
 const METAS = [
-    'tsjippy_subtitle'  => 'text',
-    'tsjippy_author'    => 'array',
-    'tsjippy_series'    => 'text',
-    'tsjippy_year'      => 'number',
-    'tsjippy_languague' => 'text',
-    'tsjippy_age'       => 'text',
-    'tsjippy_pages'     => 'number',
-    'tsjippy_image'     => 'text',
-    'tsjippy_location'  => 'array',
-    'tsjippy_url'       => 'url',
+    'subtitle'  => 'text',
+    'author'    => 'array',
+    'series'    => 'text',
+    'year'      => 'number',
+    'languague' => 'text',
+    'age'       => 'text',
+    'pages'     => 'number',
+    'image'     => 'text',
+    'location'  => 'array',
+    'url'       => 'url',
 ];
 
 // Load shared code

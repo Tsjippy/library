@@ -36,12 +36,12 @@ function afterPostSave($post, $frontEndPost)
             if (empty($_POST[$meta])) {
                 delete_post_meta($post->ID, $meta);
             } elseif ($type == 'array') {
-                $curValues = get_post_meta($post->ID, $meta);
+                $curValues = get_post_meta($post->ID, 'tsjippy_'.$meta);
                 $newValues = TSJIPPY\sanitize($_POST[$meta]);
 
                 $deleted  = array_diff($curValues, $newValues);
                 foreach ($deleted as $value) {
-                    delete_metadata('post', $post->ID, $meta, $value);
+                    delete_metadata('post', $post->ID, 'tsjippy_'.$meta, $value);
 
                     if ($meta == 'author' || $meta == 'location') {
                         $taxonomy = $meta == 'author' ? 'authors' : 'book-locations';
@@ -58,7 +58,7 @@ function afterPostSave($post, $frontEndPost)
                     if ($meta == 'author') {
                         $library->processAuthor($value, $post->ID);
                     } else {
-                        add_metadata('post', $post->ID, $meta, $value);
+                        add_metadata('post', $post->ID, 'tsjippy_'.$meta, $value);
 
                         if ($meta == 'location') {
                             wp_set_post_terms($post->ID, [$value], 'book-locations', true);
@@ -67,14 +67,14 @@ function afterPostSave($post, $frontEndPost)
                 }
             } else {
                 //Store value
-                update_metadata('post', $post->ID, $meta, TSJIPPY\sanitize($_POST[$meta]));
+                update_metadata('post', $post->ID, 'tsjippy_'.$meta, TSJIPPY\sanitize($_POST[$meta]));
             }
         }
     }
 }
 
 //add meta data fields
-add_action('tsjippy-frontend-content-post-after-content', __NAMESPACE__ . '\afterPostContent', 20, 2);
+add_action('tsjippy-frontend-content-post-before-default-options-content', __NAMESPACE__ . '\afterPostContent', 20, 2);
 function afterPostContent($frontendcontend)
 {
 
@@ -91,7 +91,7 @@ function afterPostContent($frontendcontend)
 ?>
     <div 
     id="book-attributes" 
-    class="property book expand-wrapper
+    class="property book
     <?php if ($postName != 'book') {
         echo ' hidden';
     } ?>">
@@ -101,11 +101,10 @@ function afterPostContent($frontendcontend)
             <legend>
                 <h4>
                     Book details
-                    <button class="button small expand" type='button'>&#9660;</button>
                 </h4>
             </legend>
 
-            <table class="table left no-border hidden expandable">
+            <table class="table left no-border">
                 <?php
                 foreach (METAS as $meta => $type) {
                     if ($type == 'url') {
@@ -125,7 +124,7 @@ function afterPostContent($frontendcontend)
                             if ($type == 'array') {
                                 $type   = 'text';
 
-                                $values = get_post_meta($postId, $meta);
+                                $values = get_post_meta($postId, 'tsjippy_'.$meta);
                                 if (empty($values)) {
                                     $values = [];
                                 }
@@ -152,7 +151,7 @@ function afterPostContent($frontendcontend)
                                 </div>
                             <?php
                             } else {
-                                $value = get_post_meta($postId, $meta, true);
+                                $value = get_post_meta($postId, 'tsjippy_'.$meta, true);
                             ?>
                                 <input type='<?php echo esc_attr($type); ?>' class='formbuilder' name='<?php echo esc_attr($meta); ?>' value='<?php echo esc_attr($value); ?>'>
                             <?php

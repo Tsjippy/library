@@ -130,13 +130,11 @@ wp_enqueue_style('tsjippy_library_template', TSJIPPY\pathToUrl(TSJIPPY\PLUGINPAT
                             $single   = false;
                         }
 
-                        $value        = get_post_meta(get_the_ID(), $meta, $single);
+                        $value        = get_post_meta(get_the_ID(), 'tsjippy_'.$meta, $single);
 
                         if (empty($value)) {
                             continue;
                         }
-
-                        $meta   = str_replace('tsjippy_', '', $meta);
 
                         if ($type == 'url') {
                             $value = "<a href='$value' target='_blank'>" . basename($value) . "</a>";
