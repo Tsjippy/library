@@ -4,12 +4,19 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [10.3.5] - 2026-06-25
+
+
+### Changed
 - wrapped front-end options in a collapsible
 
 ### Fixed
 - meta prefixing
-
-### Updated
 
 ## [10.3.4] - 2026-06-24
 
