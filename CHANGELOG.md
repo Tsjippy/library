@@ -7,6 +7,7 @@
 - wrapped front-end options in a collapsible
 
 ### Fixed
+- meta prefixing
 
 ### Updated
 
