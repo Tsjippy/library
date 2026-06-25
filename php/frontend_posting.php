@@ -74,7 +74,7 @@ function afterPostSave($post, $frontEndPost)
 }
 
 //add meta data fields
-add_action('tsjippy-frontend-content-post-after-content', __NAMESPACE__ . '\afterPostContent', 10, 2);
+add_action('tsjippy-frontend-content-post-after-content', __NAMESPACE__ . '\afterPostContent', 20, 2);
 function afterPostContent($frontendcontend)
 {
 
