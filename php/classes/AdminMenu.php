@@ -107,13 +107,13 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
     }
 
     /**
-     * Function to do extra actions from $_POST data. Overwrite if needed
+     * Function to do extra actions from $request data. Overwrite if needed
      */
-    public function postActions()
+    public function postActions($request)
     {
         $library        = new Library();
 
-        foreach (TSJIPPY\sanitize($_POST['books'] ?? []) as $book) {
+        foreach (TSJIPPY\sanitize($request['books'] ?? []) as $book) {
             $library->createBook($book);
         }
     }

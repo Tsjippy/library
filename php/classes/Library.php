@@ -480,7 +480,7 @@ class Library
      */
     public function createBook($data)
     {
-        $title          = ucfirst(strtolower(TSJIPPY\sanitize($data['title'])));
+        $title          = ucfirst(strtolower($data['title']));
         $description    = sanitize_textarea_field(wp_unslash($data['description']));
 
         if (!empty($this->checkForDuplicates($title))) {
@@ -489,7 +489,7 @@ class Library
 
         //New post
         $post = array(
-            'post_type'        => 'book',
+            'post_type'     => 'book',
             'post_title'    => $title,
             'post_content'  => $description,
             'post_status'   => 'publish',
