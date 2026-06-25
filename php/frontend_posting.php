@@ -89,17 +89,23 @@ function afterPostContent($frontendcontend)
     $postName   = $frontendcontend->postName;
 
 ?>
-    <div id="book-attributes" class="property book<?php if ($postName != 'book') {
-                                                        echo ' hidden';
-                                                    } ?>">
+    <div 
+    id="book-attributes" 
+    class="property book expand-wrapper
+    <?php if ($postName != 'book') {
+        echo ' hidden';
+    } ?>">
         <input type='hidden' class='no-reset' name='static-content' value='static-content'>
 
         <fieldset id="book" class="frontend-form">
             <legend>
-                <h4>Book details</h4>
+                <h4>
+                    Book details
+                    <button class="button small expand" type='button'>&#9660;</button>
+                </h4>
             </legend>
 
-            <table class="table left no-border">
+            <table class="table left no-border hidden expandable">
                 <?php
                 foreach (METAS as $meta => $type) {
                     if ($type == 'url') {
