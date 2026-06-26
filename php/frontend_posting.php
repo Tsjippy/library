@@ -43,7 +43,7 @@ function afterPostSave($post, $frontEndPost, $request)
     foreach (METAS as $meta => $type) {
         if (isset($request[$meta])) {
             if (empty($request[$meta])) {
-                delete_post_meta($post->ID, $meta);
+                delete_post_meta($post->ID, "tsjippy_$meta");
             } elseif ($type == 'array') {
                 $curValues = get_post_meta($post->ID, 'tsjippy_' . $meta);
                 $newValues = $request[$meta];

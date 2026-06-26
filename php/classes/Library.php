@@ -264,7 +264,7 @@ class Library
                 $locations    = get_post_meta($post->ID, 'tsjippy_location');
 
                 if (!in_array($location, $locations)) {
-                    add_post_meta($post->ID, 'location', $location);
+                    add_post_meta($post->ID, "tsjippy_location", $location);
 
                 ?>
                     <br>
