@@ -15,9 +15,7 @@ function addBooksModal()
     <div
         id='add-books-modal'
         class='modal 
-    <?php if (empty($_GET['addbooks'])) {
-        echo 'hidden';
-    } ?>'>
+    <?php if (empty($_GET['addbooks'])) echo 'hidden'; ?>'>
         <div class="modal-content" style='max-width:100vw;'>
             <?php TSJIPPY\addCloseButtton(); ?>
             <div class="content">

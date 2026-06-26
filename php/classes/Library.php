@@ -248,7 +248,7 @@ class Library
                 $postCats   = wp_get_object_terms($post->ID, 'books', ['fields' => 'ids']);
                 foreach ($categories as $category) {
                     if (in_array($category->term_id, $postCats)) {
-                        echo esc_attr($category->name) . '<br>';
+                        echo esc_html($category->name) . '<br>';
                     }
                 }
                 ?>

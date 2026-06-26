@@ -23,9 +23,7 @@ wp_enqueue_style('tsjippy_library_template', TSJIPPY\pathToUrl(TSJIPPY\PLUGINPAT
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
     <div
         class="cat-card
-            <?php if ($archive) {
-                echo ' inside-article';
-            } ?>">
+            <?php if ($archive) echo ' inside-article'; ?>">
         <?php
         if ($archive) {
             $url = get_permalink(get_the_ID());
@@ -36,9 +34,7 @@ wp_enqueue_style('tsjippy_library_template', TSJIPPY\pathToUrl(TSJIPPY\PLUGINPAT
         ?>
         <div
             class='entry-content
-            <?php if ($archive) {
-                echo ' archive';
-            } ?>'>
+            <?php if ($archive) echo ' archive'; ?>'>
             <?php
             $id            = get_post_meta(get_the_ID(), 'tsjippy_image', true);
 
