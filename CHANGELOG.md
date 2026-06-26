@@ -9,6 +9,7 @@
 - print close buttont in funtion
 
 ### Fixed
+- non-prefixd post meta's
 
 ### Updated
 
