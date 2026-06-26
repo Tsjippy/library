@@ -21,20 +21,24 @@ wp_enqueue_style('tsjippy_library_template', TSJIPPY\pathToUrl(TSJIPPY\PLUGINPAT
 
 ?>
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-    <div 
+    <div
         class="cat-card
-            <?php if ($archive) {  echo ' inside-article';  } ?>">
+            <?php if ($archive) {
+                echo ' inside-article';
+            } ?>">
         <?php
         if ($archive) {
             $url = get_permalink(get_the_ID());
-            echo the_title("<h3 class='archivetitle'><a href='$url'>", '</a></h3>');
+            echo the_title("<h3 class='archivetitle'><a href='" . esc_url($url) . "'>", '</a></h3>');
         } else {
             do_action('tsjippy-before-content');
         }
         ?>
-        <div 
+        <div
             class='entry-content
-            <?php if ($archive) { echo ' archive'; } ?>'>
+            <?php if ($archive) {
+                echo ' archive';
+            } ?>'>
             <?php
             $id            = get_post_meta(get_the_ID(), 'tsjippy_image', true);
 
@@ -44,7 +48,7 @@ wp_enqueue_style('tsjippy_library_template', TSJIPPY\pathToUrl(TSJIPPY\PLUGINPAT
 
             ?>
                 <div class='picture'>
-                    <img src='<?php echo $url; ?>' class='book-image' loading='lazy'>
+                    <img src='<?php echo esc_url($url); ?>' class='book-image' loading='lazy'>
                 </div>
             <?php
             }
@@ -56,7 +60,10 @@ wp_enqueue_style('tsjippy_library_template', TSJIPPY\pathToUrl(TSJIPPY\PLUGINPAT
                 if (is_user_logged_in()) {
                 ?>
                     <div class='author'>
-                        Shared by: <a href='<?php echo TSJIPPY\maybeGetUserPageUrl(get_the_author_meta('ID')) ?>'><?php echo get_the_author(); ?></a>
+                        Shared by: 
+                        <a href='<?php echo esc_url(TSJIPPY\maybeGetUserPageUrl(get_the_author_meta('ID'))); ?>'>
+                            <?php echo esc_html(get_the_author()); ?>
+                        </a>
                     </div>
                 <?php
                 }
@@ -81,7 +88,7 @@ wp_enqueue_style('tsjippy_library_template', TSJIPPY\pathToUrl(TSJIPPY\PLUGINPAT
                             <?php
                             $url    = plugins_url('pictures/category.png', PLUGIN);
                             ?>
-                            <img src='<?php echo esc_url($url);?>' alt='category' loading='lazy' class='book-icon'>
+                            <img src='<?php echo esc_url($url); ?>' alt='category' loading='lazy' class='book-icon'>
                             <?php
 
                             //First loop over the cat to see if any parent cat needs to be removed
@@ -105,11 +112,11 @@ wp_enqueue_style('tsjippy_library_template', TSJIPPY\pathToUrl(TSJIPPY\PLUGINPAT
                                 $url      = get_term_link($id);
                                 $category = ucfirst($category);
 
-                                ?>
-                                <a href='<?php esc_url($url);?>' target='_blank'>
+                            ?>
+                                <a href='<?php esc_url($url); ?>' target='_blank'>
                                     <?php echo wp_kses_post($category); ?>
                                 </a>
-                                <?php
+                            <?php
 
                                 if ($id != $lastKey) {
                                     echo ', ';
@@ -130,7 +137,7 @@ wp_enqueue_style('tsjippy_library_template', TSJIPPY\pathToUrl(TSJIPPY\PLUGINPAT
                             $single   = false;
                         }
 
-                        $value        = get_post_meta(get_the_ID(), 'tsjippy_'.$meta, $single);
+                        $value        = get_post_meta(get_the_ID(), 'tsjippy_' . $meta, $single);
 
                         if (empty($value)) {
                             continue;
@@ -186,16 +193,16 @@ wp_enqueue_style('tsjippy_library_template', TSJIPPY\pathToUrl(TSJIPPY\PLUGINPAT
 
                         $imageUrl     = TSJIPPY\pathToUrl(PLUGINPATH . "pictures/{$meta}.png");
 
-                        ?>
+                    ?>
                         <div class='$meta book meta'>
                             <div class='flex meta-wrapper'>
-                                <img src='<?php echo esc_url($imageUrl);?>' alt='<?php echo esc_attr($meta);?>' loading='lazy' class='book-icon' title='<?php echo esc_attr($meta);?>'>
+                                <img src='<?php echo esc_url($imageUrl); ?>' alt='<?php echo esc_attr($meta); ?>' loading='lazy' class='book-icon' title='<?php echo esc_attr($meta); ?>'>
                                 <div>
-                                    <?php echo wp_kses_post($value);?>
+                                    <?php echo wp_kses_post($value); ?>
                                 </div>
                             </div>
                         </div>
-                        <?php
+                    <?php
                     }
 
                     do_action('tsjippy-library-inside-book-metas');
@@ -209,14 +216,20 @@ wp_enqueue_style('tsjippy_library_template', TSJIPPY\pathToUrl(TSJIPPY\PLUGINPAT
                         $excerpt = force_balance_tags(wp_kses_post(get_the_excerpt()));
                         if (empty($excerpt)) {
                             $url = get_permalink();
-                            echo "<br><a href='$url'>View description »</a>";
+                            ?>
+                            <br>
+                            <a href='<?php echo esc_url($url);?>'>
+                                View description »
+                            </a>
+                            <?php
                         } else {
-                            echo $excerpt;
+                            echo wp_kses_post($excerpt);
                         }
                         //Show everything including category specific content
                     } else {
                         if (empty($post->post_content)) {
-                            echo apply_filters('tsjippy-empty-description', 'No content found... ', $post);
+                            /** @disregard $P1008 */ 
+                            echo wp_kses_post(apply_filters('tsjippy-empty-description', 'No content found... ', $post));
                         }
 
                         the_content();

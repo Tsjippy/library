@@ -17,9 +17,11 @@ function contentTitle($postType)
         $class .= ' hidden';
     }
 
-    echo "<h4 class='$class' name='book-content-label'>";
-    echo 'Please describe the book';
-    echo "</h4>";
+?>
+    <h4 class='<?php echo esc_attr($class); ?>' name='book-content-label'>
+        Please describe the book
+    </h4>
+<?php
 }
 
 /**
@@ -43,12 +45,12 @@ function afterPostSave($post, $frontEndPost, $request)
             if (empty($request[$meta])) {
                 delete_post_meta($post->ID, $meta);
             } elseif ($type == 'array') {
-                $curValues = get_post_meta($post->ID, 'tsjippy_'.$meta);
+                $curValues = get_post_meta($post->ID, 'tsjippy_' . $meta);
                 $newValues = $request[$meta];
 
                 $deleted  = array_diff($curValues, $newValues);
                 foreach ($deleted as $value) {
-                    delete_metadata('post', $post->ID, 'tsjippy_'.$meta, $value);
+                    delete_metadata('post', $post->ID, 'tsjippy_' . $meta, $value);
 
                     if ($meta == 'author' || $meta == 'location') {
                         $taxonomy = $meta == 'author' ? 'authors' : 'book-locations';
@@ -65,7 +67,7 @@ function afterPostSave($post, $frontEndPost, $request)
                     if ($meta == 'author') {
                         $library->processAuthor($value, $post->ID);
                     } else {
-                        add_metadata('post', $post->ID, 'tsjippy_'.$meta, $value);
+                        add_metadata('post', $post->ID, 'tsjippy_' . $meta, $value);
 
                         if ($meta == 'location') {
                             wp_set_post_terms($post->ID, [$value], 'book-locations', true);
@@ -74,7 +76,7 @@ function afterPostSave($post, $frontEndPost, $request)
                 }
             } else {
                 //Store value
-                update_metadata('post', $post->ID, 'tsjippy_'.$meta, $request[$meta]);
+                update_metadata('post', $post->ID, 'tsjippy_' . $meta, $request[$meta]);
             }
         }
     }
@@ -96,9 +98,9 @@ function afterPostContent($frontendcontend)
     $postName   = $frontendcontend->postName;
 
 ?>
-    <div 
-    id="book-attributes" 
-    class="property book
+    <div
+        id="book-attributes"
+        class="property book
     <?php if ($postName != 'book') {
         echo ' hidden';
     } ?>">
@@ -125,13 +127,17 @@ function afterPostContent($frontendcontend)
 
                 ?>
                     <tr>
-                        <th><label for="<?php echo esc_attr($meta); ?>"><?php echo ucfirst($text); ?></label></th>
+                        <th>
+                            <label for="<?php echo esc_attr($meta); ?>">
+                                <?php echo esc_html(ucfirst($text)); ?>
+                            </label>
+                        </th>
                         <td>
                             <?php
                             if ($type == 'array') {
                                 $type   = 'text';
 
-                                $values = get_post_meta($postId, 'tsjippy_'.$meta);
+                                $values = get_post_meta($postId, 'tsjippy_' . $meta);
                                 if (empty($values)) {
                                     $values = [];
                                 }
@@ -158,7 +164,7 @@ function afterPostContent($frontendcontend)
                                 </div>
                             <?php
                             } else {
-                                $value = get_post_meta($postId, 'tsjippy_'.$meta, true);
+                                $value = get_post_meta($postId, 'tsjippy_' . $meta, true);
                             ?>
                                 <input type='<?php echo esc_attr($type); ?>' class='formbuilder' name='<?php echo esc_attr($meta); ?>' value='<?php echo esc_attr($value); ?>'>
                             <?php

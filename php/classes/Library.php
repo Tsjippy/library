@@ -27,10 +27,11 @@ class Library
      * Feeds an image to an AI model to extract book data
      *
      * @param   string  $path   the path to the file
+     * @param   bool    $echo    Wherther we should print to screen
      *
      * @return  string|WP_Error The HTML
      */
-    public function processImage($path)
+    public function processImage($path, $echo)
     {
         if (!is_file($path)) {
             return new WP_Error('library', 'Invalid filepath given');
@@ -45,7 +46,7 @@ class Library
             return $result;
         }
 
-        return $this->getTable($result);
+        return $this->getTable($result, $echo);
     }
 
     public function openLibrary($title = '', $author = '')
@@ -60,13 +61,9 @@ class Library
             $url .= urlencode(" author: $author");
         }
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "$url&fields=key,title,author_name,subtitle,alternative_subtitle,cover_i,language,number_of_pages_median,first_publish_year,description,subjects");
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $response = curl_exec($ch);
-        curl_close($ch);
+        $response = wp_remote_get("$url&fields=key,title,author_name,subtitle,alternative_subtitle,cover_i,language,number_of_pages_median,first_publish_year,description,subjects");
 
-        $data = json_decode($response, true);
+        $data     = json_decode($response['body'], true);
 
         if (empty($data) || empty($data['docs'])) {
             return [];
@@ -78,13 +75,9 @@ class Library
             }
 
             if (!empty($doc['key'])) {
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL, "https://openlibrary.org{$doc['key']}.json");
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                $response = curl_exec($ch);
-                curl_close($ch);
+                $response   = wp_remote_get("https://openlibrary.org{$doc['key']}.json");
 
-                $workData   = json_decode($response, true);
+                $workData   = json_decode($response['body'], true);
 
                 if (!empty($workData)) {
                     $doc        = array_merge($doc, $workData);
@@ -130,7 +123,7 @@ class Library
     public function getLocations()
     {
         global $wpdb;
-        
+
         return TSJIPPY\getFromDb(
             "book_locations",
             "library",
@@ -147,7 +140,6 @@ class Library
      */
     public function getFileHtml()
     {
-        ob_start();
         wp_enqueue_script('tsjippy_library_script');
 
 ?>
@@ -163,9 +155,11 @@ class Library
                 <datalist id='book-locations'>
                     <?php
                     foreach ($this->getLocations() as $location) {
-                        echo "<option value='$location'>";
-                    }
                     ?>
+                        <option value='<?php echo esc_html($location); ?>'>
+                        <?php
+                    }
+                        ?>
                 </datalist>
 
                 <h4>Select picture</h4>
@@ -176,9 +170,7 @@ class Library
             </div>
         </div>
 
-
     <?php
-        return ob_get_clean();
     }
 
     /**
@@ -220,49 +212,51 @@ class Library
         $data->description  = $post->post_content;
         $imageId            = get_post_meta($post->ID, 'tsjippy_image', true);
 
-        $image              = "<img src='https://covers.openlibrary.org/b/id/$imageId-S.jpg' class='book-image' loading='lazy'>";
+        $image              = "";
 
     ?>
         <tr class='existing-book processed'>
             <td class='image'>
-                <?php echo $image; ?>
+                <img src='https://covers.openlibrary.org/b/id/<?php echo esc_attr($imageId);?>-S.jpg' class='book-image' loading='lazy'>
             </td>
             <td>
                 <?php echo esc_attr($data->title); ?>
             </td>
             <td>
-                <?php echo implode("<br>", $data->authors); ?>
+                <?php echo wp_kses_post(implode("<br>", $data->authors)); ?>
             </td>
             <td>
-                <?php echo get_post_meta($post->ID, 'tsjippy_subtitle', true); ?>
+                <?php echo esc_html(get_post_meta($post->ID, 'tsjippy_subtitle', true)); ?>
             </td>
             <td>
-                <?php echo get_post_meta($post->ID, 'tsjippy_series', true); ?>
+                <?php echo esc_html(get_post_meta($post->ID, 'tsjippy_series', true)); ?>
             </td>
             <td>
-                <?php echo get_post_meta($post->ID, 'tsjippy_year', true); ?>
+                <?php echo esc_html(get_post_meta($post->ID, 'tsjippy_year', true)); ?>
             </td>
             <td>
-                <?php echo get_post_meta($post->ID, 'tsjippy_language', true); ?>
+                <?php echo esc_html(get_post_meta($post->ID, 'tsjippy_language', true)); ?>
             </td>
             <td>
-                <?php echo get_post_meta($post->ID, 'tsjippy_pages', true); ?>
+                <?php echo esc_html(get_post_meta($post->ID, 'tsjippy_pages', true)); ?>
             </td>
             <td style='min-width: 300px;text-wrap: auto;'>
-                <?php echo $data->description; ?>
+                <?php echo wp_kses_post($data->description); ?>
             </td>
             <td>
                 <?php
                 $postCats   = wp_get_object_terms($post->ID, 'books', ['fields' => 'ids']);
                 foreach ($categories as $category) {
                     if (in_array($category->term_id, $postCats)) {
-                        echo $category->name . '<br>';
+                        echo esc_attr($category->name) . '<br>';
                     }
                 }
                 ?>
             </td>
             <td class='url'>
-                <a href='<?php echo get_post_meta($post->ID, 'tsjippy_url', true); ?>' target='_blank'>View on OpenLibrary</a>
+                <a href='<?php echo esc_url(get_post_meta($post->ID, 'tsjippy_url', true)); ?>' target='_blank'>
+                    View on OpenLibrary
+                </a>
             </td>
             <td>
                 This book is already in the library.<br>
@@ -279,13 +273,15 @@ class Library
                 }
 
                 ?>
-                <a href='<?php echo get_permalink($post->ID); ?>' target='_blank'>View it here.</a>
+                <a href='<?php echo esc_url(get_permalink($post->ID)); ?>' target='_blank'>
+                    View it here.
+                </a>
             </td>
         </tr>
     <?php
     }
 
-    public function getTable($json)
+    public function getTable($json, $echo)
     {
         wp_enqueue_script('tsjippy_library_script');
 
@@ -296,35 +292,66 @@ class Library
             'hide_empty' => false,
         ));
 
+        // phpcs:ignore
         $location = TSJIPPY\sanitize($_REQUEST['location'] ?? '');
 
         $icon     = "<img class='visibility-icon visible' src='" . \TSJIPPY\PICTURESURL . "/visible.png' width=20 height=20 loading='lazy' >";
 
         wp_enqueue_style('tsjippy_library_table', TSJIPPY\pathToUrl(PLUGINPATH . 'css/table.min.css'), array(), PLUGINVERSION);
-        ob_start();
+
+        if (!$echo) {
+            ob_start();
+        }
     ?>
         <div class='book table-wrapper' style='max-width:100vw;'>
             <h4>Books Identified in the picture</h4>
             <p>
                 Please check the details below and change them where needed before adding them to the library.
             </p>
-            <button type='button' class='hide-existing-books sim button'>Hide books already in the library</button>
-            <button type='button' class='hide-processed-books sim button'>Hide processed books</button>
+            <button type='button' class='hide-existing-books sim button'>
+                Hide books already in the library
+            </button>
+            <button type='button' class='hide-processed-books sim button'>
+                Hide processed books
+            </button>
             <table class='library tsjippy table '>
                 <thead>
                     <tr>
-                        <th>Picture <?php echo $icon; ?></th>
-                        <th>Title</th>
-                        <th>Authors</th>
-                        <th>Subtitle <?php echo $icon; ?></th>
-                        <th>Series <?php echo $icon; ?></th>
-                        <th>Year <?php echo $icon; ?></th>
-                        <th>Languague <?php echo $icon; ?></th>
-                        <th>Pages <?php echo $icon; ?></th>
-                        <th>Description <?php echo $icon; ?></th>
-                        <th>Categories</th>
-                        <th>URL <?php echo $icon; ?></th>
-                        <th>Actions</th>
+                        <th>
+                            Picture <?php echo wp_kses_post($icon); ?>
+                        </th>
+                        <th>
+                            Title
+                        </th>
+                        <th>
+                            Authors
+                        </th>
+                        <th>
+                            Subtitle <?php echo wp_kses_post($icon); ?>
+                        </th>
+                        <th>
+                            Series <?php echo wp_kses_post($icon); ?>
+                        </th>
+                        <th>
+                            Year <?php echo wp_kses_post($icon); ?>
+                        </th>
+                        <th>
+                            Languague <?php echo wp_kses_post($icon); ?>
+                        </th>
+                        <th>
+                            Pages <?php echo wp_kses_post($icon); ?>
+                        </th>
+                        <th>
+                            Description <?php echo wp_kses_post($icon); ?>
+                        </th>
+                        <th>
+                            Categories</th>
+                        <th>
+                            URL <?php echo wp_kses_post($icon); ?>
+                        </th>
+                        <th>
+                            Actions
+                        </th>
                     </tr>
                 </thead>
 
@@ -353,13 +380,17 @@ class Library
                                     <div class="authors clone-divs-wrapper">
                                         <?php
                                         $authors = array_map('trim', explode(',', $data->authors));
-                                        foreach ($authors as $index => $author) {
+                                        foreach ($authors as $i => $author) {
                                         ?>
-                                            <div id="<?php echo esc_attr($author); ?>-div-<?php echo esc_attr($index); ?>" class="clone-div" data-div-id="<?php echo esc_attr($index); ?>">
+                                            <div id="<?php echo esc_attr($author); ?>-div-<?php echo esc_attr($i); ?>" class="clone-div" data-div-id="<?php echo esc_attr($index); ?>">
                                                 <div class='button-wrapper'>
                                                     <input type='text' name='author[]' class='author' value="<?php echo esc_attr($author); ?>">
-                                                    <button type="button" class="add button" style="flex: 1;">+</button>
-                                                    <button type="button" class="remove button" style="flex: 1;">-</button>
+                                                    <button type="button" class="add button" style="flex: 1;">
+                                                        +
+                                                    </button>
+                                                    <button type="button" class="remove button" style="flex: 1;">
+                                                        -
+                                                    </button>
                                                 </div>
                                             </div>
                                         <?php
@@ -371,26 +402,37 @@ class Library
                                     <div class="loader-image-trigger" data-size="30" data-text="Fetching the book details... "></div>
                                 </td>
                                 <td>
-                                    <textarea name='description' class='description' style='min-width: 300px;text-wrap: auto;' rows=2><?php echo $data->description; ?></textarea>
+                                    <textarea name='description' class='description' style='min-width: 300px;text-wrap: auto;' rows=2>
+                                        <?php echo wp_kses_post($data->description); ?>
+                                    </textarea>
                                 </td>
                                 <td class='categories' style='text-align: left;'>
                                     <?php
                                     foreach ($categories as $category) {
-                                        echo "<label class='option-label category-select'>";
-                                        echo "<input type='checkbox' name='category-id[]' value='$category->cat_ID' data-name='$category->name'>";
-                                        echo "$category->name";
-                                        echo "</label><br>";
+                                        ?>
+                                        <label class='option-label category-select'>
+                                            <input type='checkbox' name='category-id[]' value='<?php echo esc_attr($category->cat_ID);?>' data-name='<?php echo esc_attr($category->name);?>'>";
+                                            <?php echo esc_html($category->name);?>
+                                        </label>
+                                        <br>
+                                        <?php
                                     }
                                     ?>
                                 </td>
                                 <td class='url'>
-                                    <a href='https://www.google.com/search?q=<?php echo urlencode("$data->title $data->authors book"); ?>' target='_blank'>Search on Google</a>
+                                    <a href='https://www.google.com/search?q=<?php echo esc_url(urlencode("$data->title $data->authors book")); ?>' target='_blank'>
+                                        Search on Google
+                                    </a>
                                 </td>
-                                <td class='location hidden'><input type='text' name='location' value="<?php echo $location; ?>"></td>
+                                <td class='location hidden'><input type='text' name='location' value="<?php echo esc_attr($location); ?>"></td>
                                 <td>
                                     <div class="loader-image-trigger" data-size="50" data-text="Adding the book... "></div>
-                                    <button type='button' class='add-book sim button'>Add book to the library</button>
-                                    <button type='button' class='delete-book sim button'>Delete</button>
+                                    <button type='button' class='add-book sim button'>
+                                        Add book to the library
+                                    </button>
+                                    <button type='button' class='delete-book sim button'>
+                                        Delete
+                                    </button>
                                 </td>
                             </tr>
                     <?php
@@ -400,9 +442,13 @@ class Library
                 </tbody>
             </table>
         </div>
-<?php
+    <?php
 
-        return ob_get_clean();
+        if (!$echo) {
+            return ob_get_clean();
+        }
+
+        return true;
     }
 
     /**
@@ -481,7 +527,7 @@ class Library
     public function createBook($data)
     {
         $title          = ucfirst(strtolower($data['title']));
-        $description    = sanitize_textarea_field(wp_unslash($data['description']));
+        $description    = TSJIPPY\sanitize($data['description'], 'textarea');
 
         if (!empty($this->checkForDuplicates($title))) {
             return new WP_Error('duplicate', 'This book is already in the library!');
@@ -497,8 +543,8 @@ class Library
         );
 
         // Insert the post into the database.
-        $postId         = wp_insert_post($post, true, false);
-        $post['ID']        = $postId;
+        $postId     = wp_insert_post($post, true, false);
+        $post['ID'] = $postId;
 
         // try again if needed
         if (is_wp_error($postId)) {
@@ -535,8 +581,8 @@ class Library
         // Store metas
         foreach (METAS as $meta => $type) {
             // Add post meta
-            if (!empty($_POST[$meta])) {
-                $value = TSJIPPY\sanitize($_POST[$meta]);
+            if (!empty($data[$meta])) {
+                $value = $data[$meta];
 
                 if ($meta == 'location') {
                     $locations   = get_post_meta($postId, 'tsjippy_location');
@@ -557,7 +603,7 @@ class Library
                     continue;
                 }
 
-                add_post_meta($postId, 'tsjippy_'.$meta, $value);
+                add_post_meta($postId, 'tsjippy_' . $meta, $value);
             }
         }
 

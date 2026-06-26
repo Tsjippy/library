@@ -26,17 +26,17 @@ wp_enqueue_style('tsjippy_template');
             include(__DIR__ . '/content.php');
         endwhile;
 
-        /*?> <nav id='post-navigation'>
-                <span id='prev'>
-                    <?php previous_post_link(); ?>
-                </span>
-                <span id='next' style='float:right;'>
-                    <?php next_post_link(); ?>
-                </span>
-            </nav>
+        ?><nav id='post-navigation'>
+            <span id='prev'>
+                <?php previous_post_link(); ?>
+            </span>
+            <span id='next' style='float:right;'>
+                <?php next_post_link(); ?>
+            </span>
+        </nav>
 
-            <?php */
-        echo apply_filters('tsjippy-single-template-bottom', '', 'book');
+        <?php
+        echo wp_kses_post(apply_filters('tsjippy-single-template-bottom', '', 'book'));
         ?>
     </main>
 

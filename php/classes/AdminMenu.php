@@ -48,7 +48,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
         <label>
             What time should I send a book of the day message?
             <br>
-            <input type='time' name="book-time" value='<?php echo $this->settings['book-time'] ?? ''; ?>'>
+            <input type='time' name="book-time" value='<?php echo esc_attr($this->settings['book-time'] ?? ''); ?>'>
         </label>
         <?php
 
@@ -75,12 +75,14 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
 
         ob_start();
 
+        // phpcs:ignore
         if (!empty($_FILES['books'])) {
-            echo $library->processImage($_FILES['books']['tmp_name']);
+            $library->processImage(TSJIPPY\sanitize($_FILES['books']['tmp_name']), true);
         } else {
-            echo $library->getFileHtml();
+            $library->getFileHtml();
         }
 
+        // phpcs:ignore
         if (!empty($_REQUEST['updatemeta'])) {
             wp_schedule_single_event(time(), 'tsjippy-library-update-metas');
 

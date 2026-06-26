@@ -14,7 +14,8 @@ if (! defined('ABSPATH')) {
 }
 
 // Redirect to the first term if no term is specified
-$exploded     = explode('/books/', $_SERVER['REQUEST_URI']);
+// phpcs:ignore
+$exploded     = explode('/books/', TSJIPPY\sanitize($_SERVER['REQUEST_URI'] ?? ''));
 if (!empty($exploded[1])) {
     $taxonomy    = trim($exploded[1], '/');
 
@@ -22,8 +23,7 @@ if (!empty($exploded[1])) {
     $terms = get_terms($taxonomy);
 
     if (!empty($terms)) {
-        $link    = get_category_link($terms[0]->term_id);
-        wp_redirect($link);
+        wp_safe_redirect(get_category_link($terms[0]->term_id));
         exit;
     }
 }
@@ -92,25 +92,29 @@ function displayBookArchive()
         if ($totalPages > 1) {
             $currentPage = max(1, get_query_var('paged'));
 
-            echo paginate_links(array(
-                'base'         => get_pagenum_link(1) . '%_%',
-                'format'     => '/page/%#%',
-                'current'     => $currentPage,
+            echo wp_kses_post(paginate_links(array(
+                'base'      => get_pagenum_link(1) . '%_%',
+                'format'    => '/page/%#%',
+                'current'   => $currentPage,
                 'total'     => $totalPages,
-                'prev_text' => __('« prev', '%TEXTDOMAIN%'),
-                'next_text' => __('next »', '%TEXTDOMAIN%'),
-            ));
+                'prev_text' => '« ' . __('prev', '%TEXTDOMAIN%'),
+                'next_text' => __('next', '%TEXTDOMAIN%') . ' »',
+            )));
         }
     } else {
         //No books to show yet
     ?>
-        <article id="post-<?php the_ID(); ?>" <?php post_class(); ?> <?php if (function_exists('generate_do_microdata')) {
-                                                                            generate_do_microdata('article');
-                                                                        } ?>>
+        <article
+            id="post-<?php the_ID(); ?>"
+            <?php
+            post_class();
+            if (function_exists('generate_do_microdata')) {
+                generate_do_microdata('article');
+            } ?>>
             <div class="no-results not-found">
                 <div class="inside-article">
                     <div class="entry-content">
-                        <?php echo apply_filters('tsjippy-empty-taxonomy', 'There are no books submitted yet. ', 'book'); ?>
+                        <?php echo wp_kses_post(apply_filters('tsjippy-empty-taxonomy', 'There are no books submitted yet. ', 'book')); ?>
                     </div>
                 </div>
             </div>

@@ -25,14 +25,16 @@ function changeTamplatePath($templateFile)
 add_action('wp_ajax_tsjippy-process-library-upload', __NAMESPACE__ . '\ajaxUploadFiles');
 function ajaxUploadFiles()
 {
+    // phpcs:ignore
     if (!empty($_FILES['files'])) {
-        $library        = new Library();
-        $files            = $_FILES['files'];
-        $result         = '';
+        $library = new Library();
+        // phpcs:ignore
+        $files   = $_FILES['files'];
+        $result  = '';
 
         foreach ($files['tmp_name'] as $key => $path) {
             if (is_file($path)) {
-                $r    = $library->processImage($path);
+                $r    = $library->processImage($path, false);
 
                 if (is_wp_error($r)) {
                     if (empty($result)) {

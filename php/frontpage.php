@@ -41,11 +41,11 @@ function beforeMainContent()
 
                 <h4><?php echo esc_html($title); ?></h4>
             </a>
-            <?php echo $description; ?>
+            <?php echo wp_kses_post($description); ?>
             <br>
             <br>
             <strong>Find it in the library at:</strong>
-            <?php echo implode(' & ', $locations); ?>.
+            <?php echo wp_kses_post(implode(' & ', $locations)); ?>.
         </p>
     </div>
 <?php
