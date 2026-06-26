@@ -6,6 +6,7 @@
 ### Changed
 - pass sanitized request to tsjippy-frontend-content-after-post-save
 - sanitize post on original function
+- print close buttont in funtion
 
 ### Fixed
 
