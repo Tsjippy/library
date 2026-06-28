@@ -5,6 +5,7 @@
 - attribute escaping
 
 ### Changed
+- replaced in_array with isset
 
 ### Fixed
 
