@@ -151,7 +151,7 @@ function afterPostContent($frontendcontend)
                                     ?>
                                         <div id="<?php echo esc_attr($meta); ?>-div-<?php echo esc_attr($index); ?>" class="clone-div" data-div-id="<?php echo esc_attr($index); ?>">
                                             <div class='button-wrapper'>
-                                                <input type='<?php echo esc_attr($type); ?>' class='formbuilder' name='<?php echo esc_attr($meta); ?>[]' value='<?php echo esc_attr($value); ?>' style='width: calc(100% - 70px);'>
+                                                <input type='<?php echo esc_attr($type); ?>' class='formbuilder' name='<?php echo esc_attr($meta); ?>[<?php echo esc_attr($value); ?>]' value='<?php echo esc_attr($value); ?>' style='width: calc(100% - 70px);'>
                                                 <button type="button" class="add button" style="flex: 1;">+</button>
                                                 <button type="button" class="remove button" style="flex: 1;">-</button>
                                             </div>

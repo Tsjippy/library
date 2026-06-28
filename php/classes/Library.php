@@ -384,7 +384,7 @@ class Library
                                         ?>
                                             <div id="<?php echo esc_attr($author); ?>-div-<?php echo esc_attr($i); ?>" class="clone-div" data-div-id="<?php echo esc_attr($index); ?>">
                                                 <div class='button-wrapper'>
-                                                    <input type='text' name='author[]' class='author' value="<?php echo esc_attr($author); ?>">
+                                                    <input type='text' name='author[<?php echo esc_attr($author); ?>]' class='author' value="<?php echo esc_attr($author); ?>">
                                                     <button type="button" class="add button" style="flex: 1;">
                                                         +
                                                     </button>
@@ -411,7 +411,7 @@ class Library
                                     foreach ($categories as $category) {
                                         ?>
                                         <label class='option-label category-select'>
-                                            <input type='checkbox' name='category-id[]' value='<?php echo esc_attr($category->cat_ID);?>' data-name='<?php echo esc_attr($category->name);?>'>";
+                                            <input type='checkbox' name='category-id[<?php echo esc_attr($category->cat_ID);?>]' value='1' data-name='<?php echo esc_attr($category->name);?>'>";
                                             <?php echo esc_html($category->name);?>
                                         </label>
                                         <br>
