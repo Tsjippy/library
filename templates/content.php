@@ -57,7 +57,7 @@ wp_enqueue_style('tsjippy_library_template', TSJIPPY\pathToUrl(TSJIPPY\PLUGINPAT
                 ?>
                     <div class='author'>
                         Shared by: 
-                        <a href='<?php echo esc_url(TSJIPPY\maybeGetUserPageUrl(get_the_author_meta('ID'))); ?>'>
+                        <a href='<?php echo esc_url(get_author_posts_url(get_the_author_meta('ID'))); ?>'>
                             <?php echo esc_html(get_the_author()); ?>
                         </a>
                     </div>
