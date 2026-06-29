@@ -35,7 +35,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
         ob_start();
 
         if (empty($connectors)) {
-?>
+            ?>
             <div class='warning'>
                 You have no active AI connectors add one <a href='<?php echo esc_url(admin_url('options-connectors.php')); ?>' target='_blank'>here</a>.
             </div>

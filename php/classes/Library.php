@@ -2,6 +2,7 @@
 
 namespace TSJIPPY\LIBRARY;
 
+use TSJIPPY;
 use WP_Error;
 
 if (! defined('ABSPATH')) {
