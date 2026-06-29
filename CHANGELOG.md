@@ -6,6 +6,7 @@
 
 ### Changed
 - replaced in_array with isset
+- use get_author_posts_url
 
 ### Fixed
 
