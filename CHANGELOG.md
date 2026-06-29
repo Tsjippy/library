@@ -9,6 +9,7 @@
 - use get_author_posts_url
 
 ### Fixed
+- namespace bug
 
 ### Updated
 
