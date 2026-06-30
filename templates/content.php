@@ -109,7 +109,7 @@ wp_enqueue_style('tsjippy_library_template', TSJIPPY\pathToUrl(TSJIPPY\PLUGINPAT
                                 $category = ucfirst($category);
 
                             ?>
-                                <a href='<?php esc_url($url); ?>' target='_blank'>
+                                <a href='<?php echo esc_url($url); ?>' target='_blank'>
                                     <?php echo wp_kses_post($category); ?>
                                 </a>
                             <?php
