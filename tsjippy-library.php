@@ -24,8 +24,6 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
-
-
 // Define constants
 define(__NAMESPACE__ . '\PLUGIN', plugin_basename(__FILE__));
 define(__NAMESPACE__ . '\PLUGINPATH', __DIR__ . '/');
@@ -50,3 +48,14 @@ const METAS = [
 if(file_exists(__DIR__  . '/shared-functionality/loader.php')){
     require_once(__DIR__  . '/shared-functionality/loader.php');
 }
+
+// run right before activation
+register_activation_hook(__FILE__, function () {
+    if(file_exists(__DIR__  . '/shared-functionality/loader.php')){
+        require_once(__DIR__  . '/shared-functionality/loader.php');
+    }
+
+    if(function_exists('TSJIPPY\activate')){
+        \TSJIPPY\activate();
+    }
+});
