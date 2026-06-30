@@ -3,6 +3,7 @@
 
 ### Added
 - attribute escaping
+- activate shared code function
 
 ### Changed
 - replaced in_array with isset
