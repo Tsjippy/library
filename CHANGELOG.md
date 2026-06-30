@@ -10,6 +10,7 @@
 
 ### Fixed
 - namespace bug
+- missing echo call
 
 ### Updated
 
