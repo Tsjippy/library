@@ -35,7 +35,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
         ob_start();
 
         if (empty($connectors)) {
-            ?>
+?>
             <div class='warning'>
                 You have no active AI connectors add one <a href='<?php echo esc_url(admin_url('options-connectors.php')); ?>' target='_blank'>here</a>.
             </div>
@@ -95,7 +95,9 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
         ?>
             <br>
             <br>
-            <h4>Sync Books with OpenLibrary.org</h4>
+            <h4>
+                Sync Books with OpenLibrary.org
+            </h4>
             <form method='post'>
                 <input type='hidden' class='no-reset' name='updatemeta' value='updatemeta'>
                 <button class='button sim small'>Update Book Metas</button>

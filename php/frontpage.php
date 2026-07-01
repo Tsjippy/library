@@ -17,10 +17,10 @@ function beforeMainContent()
 
     $books  = bookOfTheDay();
 
-    if(!$books){
+    if (!$books) {
         return;
     }
-    
+
     extract($books);
     if (!$title || !$image || !$url) {
         return;
@@ -39,7 +39,9 @@ function beforeMainContent()
                     <img width='200' height='200' src='<?php echo esc_attr($image); ?>' loading='lazy' class='book-cover' alt='book cover' decoding='async' />
                 </div>
 
-                <h4><?php echo esc_html($title); ?></h4>
+                <h4>
+                    <?php echo esc_html($title); ?>
+                </h4>
             </a>
             <?php echo wp_kses_post($description); ?>
             <br>

@@ -151,7 +151,9 @@ class Library
             </div>
 
             <div class='image-selector-wrap'>
-                <h4>Book location</h4>
+                <h4>
+                    Book location
+                </h4>
                 <input type='text' class='book-location' placeholder='Enter the location of the books' required style='width: -webkit-fill-available;' list='book-locations'>
                 <datalist id='book-locations'>
                     <?php
@@ -163,7 +165,9 @@ class Library
                         ?>
                 </datalist>
 
-                <h4>Select picture</h4>
+                <h4>
+                    Select picture
+                </h4>
                 <label>
                     Select one or multiple picture(s) to check for a book or multiple books on bookshelf<br><br>
                     <input type='file' name='image-selector' accept='<?php apply_filters('tsjippy-library-accepted-files', 'image/png, image/jpeg, image/webp'); ?>' class='formbuilder' multiple>
@@ -218,7 +222,7 @@ class Library
     ?>
         <tr class='existing-book processed'>
             <td class='image'>
-                <img src='https://covers.openlibrary.org/b/id/<?php echo esc_attr($imageId);?>-S.jpg' class='book-image' loading='lazy'>
+                <img src='https://covers.openlibrary.org/b/id/<?php echo esc_attr($imageId); ?>-S.jpg' class='book-image' loading='lazy'>
             </td>
             <td>
                 <?php echo esc_attr($data->title); ?>
@@ -305,7 +309,9 @@ class Library
         }
     ?>
         <div class='book table-wrapper' style='max-width:100vw;'>
-            <h4>Books Identified in the picture</h4>
+            <h4>
+                Books Identified in the picture
+            </h4>
             <p>
                 Please check the details below and change them where needed before adding them to the library.
             </p>
@@ -410,13 +416,13 @@ class Library
                                 <td class='categories' style='text-align: left;'>
                                     <?php
                                     foreach ($categories as $category) {
-                                        ?>
+                                    ?>
                                         <label class='option-label category-select'>
-                                            <input type='checkbox' name='category-id[<?php echo esc_attr($category->cat_ID);?>]' value='1' data-name='<?php echo esc_attr($category->name);?>'>";
-                                            <?php echo esc_html($category->name);?>
+                                            <input type='checkbox' name='category-id[<?php echo esc_attr($category->cat_ID); ?>]' value='1' data-name='<?php echo esc_attr($category->name); ?>'>";
+                                            <?php echo esc_html($category->name); ?>
                                         </label>
                                         <br>
-                                        <?php
+                                    <?php
                                     }
                                     ?>
                                 </td>
@@ -443,7 +449,7 @@ class Library
                 </tbody>
             </table>
         </div>
-    <?php
+<?php
 
         if (!$echo) {
             return ob_get_clean();

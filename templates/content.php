@@ -56,7 +56,7 @@ wp_enqueue_style('tsjippy_library_template', TSJIPPY\pathToUrl(TSJIPPY\PLUGINPAT
                 if (is_user_logged_in()) {
                 ?>
                     <div class='author'>
-                        Shared by: 
+                        Shared by:
                         <a href='<?php echo esc_url(get_author_posts_url(get_the_author_meta('ID'))); ?>'>
                             <?php echo esc_html(get_the_author()); ?>
                         </a>
@@ -80,7 +80,9 @@ wp_enqueue_style('tsjippy_library_template', TSJIPPY\pathToUrl(TSJIPPY\PLUGINPAT
                     if (!empty($categories)) {
                     ?>
                         <div class='category book meta'>
-                            <h4>Genres</h4>
+                            <h4>
+                                Genres
+                            </h4>
                             <?php
                             $url    = plugins_url('pictures/category.png', PLUGIN);
                             ?>
@@ -212,19 +214,19 @@ wp_enqueue_style('tsjippy_library_template', TSJIPPY\pathToUrl(TSJIPPY\PLUGINPAT
                         $excerpt = force_balance_tags(wp_kses_post(get_the_excerpt()));
                         if (empty($excerpt)) {
                             $url = get_permalink();
-                            ?>
+                    ?>
                             <br>
-                            <a href='<?php echo esc_url($url);?>'>
+                            <a href='<?php echo esc_url($url); ?>'>
                                 View description »
                             </a>
-                            <?php
+                    <?php
                         } else {
                             echo wp_kses_post($excerpt);
                         }
                         //Show everything including category specific content
                     } else {
                         if (empty($post->post_content)) {
-                            /** @disregard $P1008 */ 
+                            /** @disregard $P1008 */
                             echo wp_kses_post(apply_filters('tsjippy-empty-description', 'No content found... ', $post));
                         }
 
