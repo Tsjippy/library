@@ -10,6 +10,11 @@ if (! defined('ABSPATH')) {
 
 add_action('wp_enqueue_scripts', __NAMESPACE__ . '\loadAssets');
 add_action('admin_enqueue_scripts', __NAMESPACE__ . '\loadAssets');
+/**
+ * Load assets for the library.
+ *
+ * @return void
+ */
 function loadAssets()
 {
     wp_register_style('tsjippy_library_style', TSJIPPY\pathToUrl(PLUGINPATH . 'css/library.min.css'), array(), PLUGINVERSION);
