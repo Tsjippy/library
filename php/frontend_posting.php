@@ -9,6 +9,11 @@ if (! defined('ABSPATH')) {
 }
 
 add_action('tsjippy-frontend-content-post-content-title', __NAMESPACE__ . '\contentTitle');
+/**
+ * Display content title for book post type
+ * 
+ * @param   string  $postType   The post type of the current post
+ */
 function contentTitle($postType)
 {
     // Book content title
@@ -32,7 +37,14 @@ function contentTitle($postType)
  * @param   array       $request    The sanitized request data
  */
 add_action('tsjippy-frontend-content-after-post-save', __NAMESPACE__ . '\afterPostSave', 10, 3);
-function afterPostSave($post, $frontEndPost, $request)
+/**
+ * Update the book metas for all books in the library.
+ * 
+ * @param   \WP_Post    $post       The new or updated post
+ * @param   object      $object     FrontEndContent Instance
+ * @param   array       $request    The sanitized request data
+ */
+function afterPostSave($post, $object, $request)
 {
     if ($post->post_type != 'book') {
         return;
@@ -84,18 +96,23 @@ function afterPostSave($post, $frontEndPost, $request)
 
 //add meta data fields
 add_action('tsjippy-frontend-content-post-before-default-options-content', __NAMESPACE__ . '\afterPostContent', 20, 2);
-function afterPostContent($frontendcontend)
+/**
+ * Display book meta data fields
+ * 
+ * @param   object  $object    FrontEndContent Instance
+ */
+function afterPostContent($object)
 {
 
-    if (!empty($frontendcontend->post) && $frontendcontend->post->post_type != 'book') {
+    if (!empty($object->post) && $object->post->post_type != 'book') {
         return;
     }
 
     //Load js
     wp_enqueue_script('tsjippy_book_script');
 
-    $postId     = $frontendcontend->postId;
-    $postName   = $frontendcontend->postName;
+    $postId     = $object->postId;
+    $postName   = $object->postName;
 
 ?>
     <div

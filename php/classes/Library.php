@@ -15,6 +15,9 @@ class Library
     private string|false    $imageMimeType;
     public  string          $tableName;
 
+    /**
+     * Library constructor.
+     */
     public function __construct()
     {
         global $wpdb;
@@ -50,6 +53,14 @@ class Library
         return $this->getTable($result, $echo);
     }
 
+    /**
+     * Feeds an image to an AI model to extract book data
+     *
+     * @param   string  $title  The title of the book
+     * @param   string  $author The author of the book
+     *
+     * @return  array|false     The book data or false if not found
+     */
     public function openLibrary($title = '', $author = '')
     {
         $url = "https://openlibrary.org/search.json?q=";
@@ -91,6 +102,11 @@ class Library
         return $data['docs'][0];
     }
 
+    /**
+     * Feeds an image to an AI model to extract book data
+     *
+     * @return  array|WP_Error The book data or WP_Error if failed
+     */
     public function wpAiClient()
     {
         $schema = array(
@@ -180,6 +196,8 @@ class Library
 
     /**
      * Checks if a book is already in the database
+     * 
+     * @param   string  $title  The title of the book
      */
     private function checkForDuplicates($title)
     {
@@ -198,6 +216,14 @@ class Library
         );
     }
 
+    /**
+     * Prints a row for an existing book in the database
+     *
+     * @param   array   $posts      The posts found in the database
+     * @param   object  $data       The data from the AI model
+     * @param   array   $categories The categories from the database
+     * @param   string  $location   The location of the book
+     */
     private function existingBookRow($posts, $data, $categories, $location)
     {
         // Already in the database, so skip
@@ -286,6 +312,12 @@ class Library
     <?php
     }
 
+    /**
+     * Prints the html table with the books found in the image
+     * 
+     * @param   array   $json   The data from the AI model
+     * @param   bool    $echo   Whether to print the table or return it
+     */
     public function getTable($json, $echo)
     {
         wp_enqueue_script('tsjippy_library_script');

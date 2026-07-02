@@ -9,6 +9,9 @@ if (! defined('ABSPATH')) {
 }
 
 add_action('tsjippy-theme-frontpage-before-main-content', __NAMESPACE__ . '\beforeMainContent', 30);
+/**
+ * Display the book of the day on the front page.
+ */
 function beforeMainContent()
 {
     if (!is_user_logged_in()) {

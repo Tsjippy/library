@@ -22,6 +22,12 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
         parent::__construct($settings, $name);
     }
 
+    /**
+     * Function to display the settings page
+     *
+     * @param   string  $parent The parent menu slug
+     * @return  bool            True if the settings page was displayed, false otherwise
+     */
     public function settings($parent)
     {
         $connectors = [];
@@ -57,18 +63,36 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
         return true;
     }
 
+    /**
+     * Function to display the emails page
+     *
+     * @param   string  $parent The parent menu slug
+     * @return  bool            True if the emails page was displayed, false otherwise
+     */
     public function emails($parent)
     {
 
         return false;
     }
 
+    /**
+     * Function to display the data page
+     *
+     * @param   string  $parent The parent menu slug
+     * @return  bool            True if the data page was displayed, false otherwise
+     */
     public function data($parent = '')
     {
 
         return false;
     }
 
+    /**
+     * Function to display the functions page
+     *
+     * @param   string  $parent The parent menu slug
+     * @return  bool            True if the functions page was displayed, false otherwise
+     */
     public function functions($parent)
     {
         $library        = new Library();
@@ -112,6 +136,9 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
 
     /**
      * Function to do extra actions from $request data. Overwrite if needed
+     * 
+     * @param   array   $request    The request data
+     * @return  void
      */
     public function postActions($request)
     {

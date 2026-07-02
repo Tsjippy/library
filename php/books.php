@@ -14,6 +14,12 @@ add_action('init', function () {
 }, 999);
 
 add_filter('widget_categories_args', __NAMESPACE__ . '\widgetCats');
+/**
+ * Filter the widget categories args to show book types instead of categories on book pages
+ *
+ * @param   array   $catArgs    The widget categories args
+ * @return  array               The modified widget categories args
+ */
 function widgetCats($catArgs)
 {
     //if we are on a books page, change to display the book types

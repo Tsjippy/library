@@ -23,6 +23,9 @@ function changeTamplatePath($templateFile)
 }
 
 add_action('wp_ajax_tsjippy-process-library-upload', __NAMESPACE__ . '\ajaxUploadFiles');
+/**
+ * Handle the AJAX request to upload files.
+ */
 function ajaxUploadFiles()
 {
     // phpcs:ignore
@@ -56,6 +59,13 @@ function ajaxUploadFiles()
     }
 }
 
+/**
+ * Include books in search results.
+ *
+ * @param \WP_Query $query The current query object.
+ *
+ * @return \WP_Query The modified query object.
+ */
 function includeBooksInSearch($query)
 {
     if ($query->is_search && !is_admin()) {
@@ -69,6 +79,8 @@ add_filter('pre_get_posts', __NAMESPACE__ . '\includeBooksInSearch');
  * Register a 'authors' taxonomy for post type 'book', with a rewrite to match book CPT slug.
  *
  * @see register_post_type for registering post types.
+ * 
+ * @param string $single The singular name of the taxonomy.
  */
 function createBookTaxonomies($single)
 {
@@ -147,6 +159,14 @@ add_action('init', function () {
 }, 0);
 
 add_filter('tsjippy-theme-archive-page-title', __NAMESPACE__ . '\changeArchiveTitle', 10, 2);
+/**
+ * Change the archive title for authors and book locations.
+ *
+ * @param string $title The current archive title.
+ * @param object $category The current category object.
+ *
+ * @return string The modified archive title.
+ */
 function changeArchiveTitle($title, $category)
 {
     if ($category->taxonomy == 'authors') {
@@ -166,6 +186,9 @@ function changeArchiveTitle($title, $category)
     return $title;
 }
 
+/**
+ * Update the book metas for all books in the library.
+ */
 function updateBookMetas()
 {
     TSJIPPY\printArray('Starting Updating Metas');
