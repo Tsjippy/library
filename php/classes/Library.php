@@ -347,10 +347,10 @@ class Library
             <p>
                 Please check the details below and change them where needed before adding them to the library.
             </p>
-            <button type='button' class='hide-existing-books sim button'>
+            <button type='button' class='hide-existing-books tsjippy button'>
                 Hide books already in the library
             </button>
-            <button type='button' class='hide-processed-books sim button'>
+            <button type='button' class='hide-processed-books tsjippy button'>
                 Hide processed books
             </button>
             <table class='library tsjippy table '>
@@ -466,10 +466,10 @@ class Library
                                 <td class='location hidden'><input type='text' name='location' value="<?php echo esc_attr($location); ?>"></td>
                                 <td>
                                     <div class="loader-image-trigger" data-size="50" data-text="Adding the book... "></div>
-                                    <button type='button' class='add-book sim button'>
+                                    <button type='button' class='add-book tsjippy button'>
                                         Add book to the library
                                     </button>
-                                    <button type='button' class='delete-book sim button'>
+                                    <button type='button' class='delete-book tsjippy button'>
                                         Delete
                                     </button>
                                 </td>

@@ -124,7 +124,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
             </h4>
             <form method='post'>
                 <input type='hidden' class='no-reset' name='updatemeta' value='updatemeta'>
-                <button class='button sim small'>Update Book Metas</button>
+                <button class='button tsjippy small'>Update Book Metas</button>
     <?php
         }
 

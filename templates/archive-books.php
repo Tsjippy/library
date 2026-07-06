@@ -52,7 +52,7 @@ if ($skipWrapper) {
 ?>
     <div id="primary">
         <main id="main" class='inside-article' style='max-width:100vw;'>
-            <button type='button' class='sim button add-books' onclick='Main.showModal(`add-books`)'>Add books</button>
+            <button type='button' class='tsjippy button add-books' onclick='Main.showModal(`add-books`)'>Add books</button>
             <?php displayBookArchive(); ?>
         </main>
     </div>
