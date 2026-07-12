@@ -41,11 +41,11 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
         ob_start();
 
         if (empty($connectors)) {
-?>
+            ?>
             <div class='warning'>
                 You have no active AI connectors add one <a href='<?php echo esc_url(admin_url('options-connectors.php')); ?>' target='_blank'>here</a>.
             </div>
-        <?php
+            <?php
         }
 
         ?>
@@ -67,6 +67,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
      * Function to display the emails page
      *
      * @param   string  $parent The parent menu slug
+     * 
      * @return  bool            True if the emails page was displayed, false otherwise
      */
     public function emails($parent)
