@@ -24,7 +24,7 @@ function initBlocks()
             'supports'        => array(
                 'autoRegister' => true,
             ),
-            'icon'  => 'book'
+            'icon'  => 'book (alt)'
         )
     );
 }
