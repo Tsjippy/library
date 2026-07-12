@@ -9,6 +9,9 @@ if (! defined('ABSPATH')) {
 }
 
 add_action('init', __NAMESPACE__ . '\scheduleTasks');
+/**
+ * Schedule all tasks for this plugin
+ */
 function scheduleTasks()
 {
     TSJIPPY\scheduleTask('tsjippy-library-send-book-of-the-day-task', 'quarterly', __NAMESPACE__, 'sendBookOfTheDay');
