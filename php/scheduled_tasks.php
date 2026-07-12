@@ -17,6 +17,9 @@ function scheduleTasks()
     TSJIPPY\scheduleTask('tsjippy-library-send-book-of-the-day-task', 'quarterly', __NAMESPACE__, 'sendBookOfTheDay');
 }
 
+/**
+ * Sends a promotianla message about a book
+ */
 function sendBookOfTheDay()
 {
     $time = SETTINGS['book-time'] ?? false;
