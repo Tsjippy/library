@@ -52,6 +52,7 @@ function randomBook()
 
     wp_enqueue_style('tsjippy_library_frontpage', TSJIPPY\pathToUrl(PLUGINPATH . 'css/frontpage.min.css'), array(), PLUGINVERSION);
 
+    ob_start();
     ?>
     <div id='book-of-the-day'>
         <h3 style='text-align: center;color: #444;font-weight: 500;'>
@@ -75,4 +76,5 @@ function randomBook()
         </p>
     </div>
     <?php
+    return ob_get_clean();
 }
