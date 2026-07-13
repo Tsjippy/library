@@ -2,14 +2,21 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- random book block
 
 ### Changed
 
 ### Fixed
-- block output
 
 ### Updated
+
+## [10.4.9] - 2026-07-13
+
+
+### Added
+- random book block
+
+### Fixed
+- block output
 
 ## [10.4.7] - 2026-07-12
 
