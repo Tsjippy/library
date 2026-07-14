@@ -46,19 +46,9 @@ function bookOfTheDay()
                     'compare'   => 'EXISTS',
                 ),
                 array(
-                    'key'     => 'tsjippy_image',
-                    'value'   => '',
-                    'compare' => '!=',
-                ),
-                array(
                     'key'       => 'tsjippy_url',
                     'compare'   => 'EXISTS',
-                ),
-                array(
-                    'key'     => 'tsjippy_url',
-                    'value'   => '',
-                    'compare' => '!=',
-                ),
+                )
             ),
         )
     );

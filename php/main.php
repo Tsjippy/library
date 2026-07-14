@@ -234,7 +234,11 @@ function updateBookMetas()
                 $library->processAuthor($author, $book->ID);
             }
 
-            update_post_meta($book->ID, 'tsjippy_image', $data['cover_i']);
+            if(empty($data['cover_i'])){
+                delete_post_meta($book->ID, 'tsjippy_image');
+            }else{
+                update_post_meta($book->ID, 'tsjippy_image', $data['cover_i']);
+            }
 
             if ($title != $data['title']) {
                 wp_update_post(
@@ -255,7 +259,9 @@ function updateBookMetas()
             wp_set_object_terms($book->ID, array_uintersect($categories, $data['subjects'], 'strcasecmp'), 'books', true);
         }
 
-        if (!empty($data['key'])) {
+        if (empty($data['key'])) {
+            delete_post_meta($book->ID, 'tsjippy_url');
+        }else{
             update_post_meta($book->ID, 'tsjippy_url', 'https://openlibrary.org/' . $data['key']);
         }
     }

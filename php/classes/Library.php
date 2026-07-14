@@ -245,7 +245,7 @@ class Library
 
         $image              = "";
 
-    ?>
+        ?>
         <tr class='existing-book processed'>
             <td class='image'>
                 <img src='https://covers.openlibrary.org/b/id/<?php echo esc_attr($imageId); ?>-S.jpg' class='book-image' loading='lazy'>
