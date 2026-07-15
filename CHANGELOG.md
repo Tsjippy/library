@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- pass block attributes to block
 
 ### Updated
 
