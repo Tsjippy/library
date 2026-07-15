@@ -32,7 +32,7 @@ function initBlocks()
 /**
  * Display the book of the day on the front page.
  */
-function randomBook()
+function randomBook($attributes)
 {
     $books  = bookOfTheDay();
 
@@ -43,7 +43,7 @@ function randomBook()
     if (!$books || !$title || !$image || !$url) {
         if(($_REQUEST['action'] ?? $_REQUEST['context'] ?? '') == 'edit'){
             return "<div class='warning'>No Book to display</div>";
-        }elseif($attributes['default-message']){
+        }elseif($attributes['default-message'] ?? false){
             return "<div>".$attributes['default-message']."</div>";
         }
 
