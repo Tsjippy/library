@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- pass block attributes to block
 
 ### Updated
+
+## [10.5.4] - 2026-07-15
+
+
+### Fixed
+- pass block attributes to block
 
 ## [10.5.3] - 2026-07-14
 
