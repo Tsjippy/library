@@ -5,14 +5,14 @@ namespace TSJIPPY\LIBRARY;
 /**
  * Plugin Name:          Tsjippy Library
  * Description:          This plugin adds the possibility to scan book from pictures and add them to the library
- * Version:              10.6.3
+ * Version:              10.6.4
  * Author:               Ewald Harmsen
  * AuthorURI:            harmseninnigeria.nl
- * Requires at least:    7.0
+ * Requires at least:    7.1
  * Requires PHP:         8.3
- * Tested up to:         7.0
+ * Tested up to:         7.1
  * Plugin URI:            https://github.com/Tsjippy/library
- * Tested:                7.0
+ * Tested:                7.1
  * TextDomain:            tsjippy
  * Requires Plugins:    
  * License: GPLv2 or later
