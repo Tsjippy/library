@@ -10,7 +10,6 @@ namespace TSJIPPY\LIBRARY;
  * AuthorURI:            harmseninnigeria.nl
  * Requires at least:    7.1
  * Requires PHP:         8.3
- * Tested up to:         7.1
  * Plugin URI:            https://github.com/Tsjippy/library
  * Tested:                7.1
  * TextDomain:            tsjippy
