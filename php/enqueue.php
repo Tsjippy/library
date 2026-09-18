@@ -18,5 +18,5 @@ add_action('admin_enqueue_scripts', __NAMESPACE__ . '\loadAssets');
 function loadAssets()
 {
     wp_register_style('tsjippy_library_style', TSJIPPY\pathToUrl(PLUGINPATH . 'css/library.min.css'), array(), PLUGINVERSION);
-    wp_register_script('tsjippy_library_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/library.min.js'), ['tsjippy_formsubmit_script'], PLUGINVERSION, true);
+    wp_register_script_module('@tsjippy/library_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/library.min.js'), ['@tsjippy/formsubmit_script'], PLUGINVERSION);
 }

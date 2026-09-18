@@ -157,7 +157,7 @@ class Library
      */
     public function getFileHtml()
     {
-        wp_enqueue_script('tsjippy_library_script');
+        wp_enqueue_script_module('@tsjippy/library_script');
 
 ?>
         <div class='file-upload-wrap'>
@@ -320,7 +320,7 @@ class Library
      */
     public function getTable($json, $echo)
     {
-        wp_enqueue_script('tsjippy_library_script');
+        wp_enqueue_script_module('@tsjippy/library_script');
 
         $categories    = get_categories(array(
             'orderby'    => 'name',

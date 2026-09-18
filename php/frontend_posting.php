@@ -102,7 +102,7 @@ function afterPostContent($object)
     }
 
     //Load js
-    wp_enqueue_script('tsjippy_book_script');
+    wp_enqueue_script_module('@tsjippy/book_script');
 
     $postId     = $object->postId;
     $postName   = $object->postName;

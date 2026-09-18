@@ -1,5 +1,10 @@
 import { cloneNode } from "../../tsjippy-forms/js/form_exports.js";
 
+import{
+  fetchRestApi
+} from "../../tsjippy-forms/js/form_submit_functions.js";
+
+
 console.log("library.js loaded");
 
 async function addBook(target) {
@@ -20,7 +25,7 @@ async function addBook(target) {
   target.classList.add("hidden");
   cell.querySelector(`.loader-wrapper`).classList.remove("hidden");
 
-  let response = await FormSubmit.fetchRestApi("library/add_book", formData);
+  let response = await fetchRestApi("library/add_book", formData);
 
   if (response) {
     cell.innerHTML = response;
