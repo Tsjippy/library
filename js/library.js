@@ -4,13 +4,18 @@ import{
   fetchRestApi
 } from "../../tsjippy-forms/js/form_submit_functions.js";
 
-
 console.log("library.js loaded");
 
 async function addBook(target) {
   let cell = target.closest("td");
   let row = target.closest("tr");
   let formData = new FormData();
+
+  const data   = JSON.parse(
+    document.getElementById(
+        'wp-script-module-data-@tsjippy/library_script'
+    ).textContent
+  );
 
   row.querySelectorAll("input, textarea").forEach((input) => {
     if (input.type != "checkbox" || input.checked) {
@@ -72,7 +77,7 @@ async function fileUpload(target, location) {
   //Listen to the upload status
   request.upload.addEventListener("progress", fileUploadProgress, false);
 
-  request.open("POST", tsjippy.ajaxUrl, true);
+  request.open("POST", data.ajaxUrl, true);
 
   //Send AJAX request
   target.closest(".modal").querySelector(".loader-text").textContent =
@@ -190,7 +195,7 @@ async function fileUploadSucces(result) {
   if (hidden != undefined) {
     hidden.forEach((col) =>
       SimTableFunctions.hideColumn(
-        div.querySelectorAll(`.tsjippy.table th`)[col],
+        div.querySelectorAll(`.table th`)[col],
       ),
     );
   }

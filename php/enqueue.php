@@ -19,4 +19,10 @@ function loadAssets()
 {
     wp_register_style('tsjippy_library_style', TSJIPPY\pathToUrl(PLUGINPATH . 'css/library.min.css'), array(), PLUGINVERSION);
     wp_register_script_module('@tsjippy/library_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/library.min.js'), ['@tsjippy/formsubmit_script'], PLUGINVERSION);
+
+    add_filter( 'script_module_data_@tsjippy/library_script', function($data){
+        $data['ajaxUrl'] = admin_url( 'admin-ajax.php' );
+
+        return $data; 
+    } );
 }

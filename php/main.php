@@ -92,36 +92,36 @@ function createBookTaxonomies($single)
         CREATE CATEGORIES
     */
     $labels = array(
-        'name'                             => "$plural Types",
-        'singular_name'                 => "$plural Types",
-        'search_items'                     => "Search $plural Types",
-        'popular_items'                 => "Popular $plural Types",
-        'all_items'                     => "All $plural Types",
-        'parent_item'                     => "Parent $single Type",
-        'parent_item_colon'             => "Parent $single Type:",
-        'edit_item'                     => "Edit $single Type",
-        'update_item'                     => "Update $single Type",
-        'add_new_item'                     => "Add New $single Type",
-        'new_item_name'                 => "New $single Type Name",
-        'separate_items_with_commas'     => "Separate $single type with commas",
-        'add_or_remove_items'             => "Add or remove $single type",
-        'choose_from_most_used'         => "Choose from the most used $single types",
-        'menu_name'                     => $plural,
+        'name'                       => "$plural Types",
+        'singular_name'              => "$plural Types",
+        'search_items'               => "Search $plural Types",
+        'popular_items'              => "Popular $plural Types",
+        'all_items'                  => "All $plural Types",
+        'parent_item'                => "Parent $single Type",
+        'parent_item_colon'          => "Parent $single Type:",
+        'edit_item'                  => "Edit $single Type",
+        'update_item'                => "Update $single Type",
+        'add_new_item'               => "Add New $single Type",
+        'new_item_name'              => "New $single Type Name",
+        'separate_items_with_commas' => "Separate $single type with commas",
+        'add_or_remove_items'        => "Add or remove $single type",
+        'choose_from_most_used'      => "Choose from the most used $single types",
+        'menu_name'                  => $plural,
     );
 
     $args = array(
-        'labels'             => $labels,
-        'public'             => true,
-        'show_ui'             => true,
-        'show_in_rest'         => true,
-        'hierarchical'         => false,
-        'rewrite'             => array(
-            'slug'             => 'book/' . $taxonomyName,    //archive pages on /plural/
-            'hierarchical'     => false,
-            'has_archive'    => true
+        'labels'            => $labels,
+        'public'            => true,
+        'show_ui'           => true,
+        'show_in_rest'      => true,
+        'hierarchical'      => false,
+        'rewrite'           => array(
+            'slug'          => 'book/' . $taxonomyName,    //archive pages on /plural/
+            'hierarchical'  => false,
+            'has_archive'   => true
         ),
         'query_var'         => true,
-        'singular_label'     => "$plural Type",
+        'singular_label'    => "$plural Type",
         'show_admin_column' => true,
     );
 
