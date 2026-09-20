@@ -6,6 +6,7 @@
 ### Changed
 - js to modules
 - localized js module
+- js update
 
 ### Fixed
 
