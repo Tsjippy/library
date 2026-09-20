@@ -7,6 +7,7 @@
 - js to modules
 - localized js module
 - js update
+- load minification js depending on SCRIPT_DEBUG constant
 
 ### Fixed
 
