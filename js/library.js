@@ -4,6 +4,15 @@ import{
   fetchRestApi
 } from "../../tsjippy-forms/js/form_submit_functions.js";
 
+import { 
+  showLoader 
+} from "../../tsjippy-shared-functionality/js/partials/show_loader.js";
+
+
+import { 
+  displayMessage 
+} from "../../tsjippy-shared-functionality/js/partials/display_message.js";
+
 console.log("library.js loaded");
 
 async function addBook(target) {
@@ -35,7 +44,7 @@ async function addBook(target) {
   if (response) {
     cell.innerHTML = response;
 
-    Main.displayMessage(response.message);
+    displayMessage(response.message);
 
     row.classList.add("processed");
   } else {
@@ -88,7 +97,7 @@ async function fileUpload(target, location) {
     request.send(formData);
   } catch (e) {
     console.error("Error fetching book data:", e);
-    Main.displayMessage(e);
+    displayMessage(e);
   }
 }
 
@@ -135,7 +144,7 @@ function readyStateChanged(e) {
       //Error
     } else {
       console.error(request.responseText);
-      Main.displayMessage(JSON.parse(request.responseText).error, "error");
+      displayMessage(JSON.parse(request.responseText).error, "error");
     }
 
     //Hide loading gif
@@ -152,7 +161,7 @@ async function fileUploadSucces(result) {
   let json = JSON.parse(result);
 
   if (!json.success) {
-    Main.displayMessage(
+    displayMessage(
       `The files failed to process:<br>${json.data[0].message}`,
       "error",
     );
@@ -172,7 +181,7 @@ async function fileUploadSucces(result) {
   div.innerHTML = json.data;
   fileUploadWrap.prepend(div);
 
-  Main.displayMessage(
+  displayMessage(
     "The files have been processed succesfully.",
     "success",
     1500,
@@ -398,7 +407,7 @@ document.addEventListener("change", async (event) => {
     fileUploadWrap = target.closest(".file-upload-wrap");
 
     // Show loading gif
-    Main.showLoader(fileUploadWrap, false, 30, "Preparing upload");
+    showLoader(fileUploadWrap, false, 30, "Preparing upload");
 
     // Remove the old table if any
     fileUploadWrap
@@ -410,7 +419,7 @@ document.addEventListener("change", async (event) => {
     const isValid = location.reportValidity();
     if (!isValid) {
       target.value = "";
-      Main.displayMessage("Please select a location for the book.", "error");
+      displayMessage("Please select a location for the book.", "error");
       return;
     }
     location = location.value;
@@ -452,7 +461,7 @@ document.addEventListener("change", async (event) => {
 
     tr.style.position = "relative";
 
-    let loader = Main.showLoader(
+    let loader = showLoader(
       tr.lastChild,
       false,
       tr.offsetHeight - 100,
