@@ -4,8 +4,9 @@
   "description": "library",
   "main": "./library.js",
   "scripts": {
-    "library": "webpack --entry ./library.js --output-path . --output-filename library.min.js --progress --mode=production --devtool source-map",
-    "all": "run-p library"
+    "build": "webpack --progress",
+    "watch": "webpack --watch --progress",
+    "all": "npm run build"
   },
   "author": "Ewald Harmsen",
   "license": "ISC",
