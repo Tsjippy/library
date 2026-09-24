@@ -26,11 +26,7 @@ function loadAssets()
         "@tsjippy/display_message"
     ] :
     [];
+
+    $deps[] = "@tsjippy/nonce_script";
     wp_register_script_module('@tsjippy/library_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/library' . TSJIPPY\JSEXTENSION), $deps, PLUGINVERSION);
-
-    add_filter( 'script_module_data_@tsjippy/library_script', function($data){
-        $data['ajaxUrl'] = admin_url( 'admin-ajax.php' );
-
-        return $data; 
-    } );
 }

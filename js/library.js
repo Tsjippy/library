@@ -8,23 +8,24 @@ import {
   showLoader 
 } from "@tsjippy/show_loader";
 
-
 import { 
   displayMessage 
 } from "@tsjippy/display_message";
 
+import "@tsjippy/nonce_script";
+
 console.log("library.js loaded");
+
+const data   = JSON.parse(
+  document.getElementById(
+      'wp-script-module-data-@tsjippy/nonce_script'
+  ).textContent
+);
 
 async function addBook(target) {
   let cell = target.closest("td");
   let row = target.closest("tr");
   let formData = new FormData();
-
-  const data   = JSON.parse(
-    document.getElementById(
-        'wp-script-module-data-@tsjippy/library_script'
-    ).textContent
-  );
 
   row.querySelectorAll("input, textarea").forEach((input) => {
     if (input.type != "checkbox" || input.checked) {
@@ -397,7 +398,7 @@ document.addEventListener("click", (event) => {
     return;
   }
 
-  event.stopImmediatePropagation();
+  event.stopPropagation();
 });
 
 document.addEventListener("change", async (event) => {
@@ -487,5 +488,5 @@ document.addEventListener("change", async (event) => {
     return;
   }
 
-  event.stopImmediatePropagation();
+  event.stopPropagation();
 });
