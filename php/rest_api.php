@@ -43,7 +43,7 @@ function addBook()
 
     $library    = new Library();
 
-    $result        = $library->createBook(TSJIPPY\sanitize($_POST));
+    $result        = $library->createBook(TSJIPPY\sanitize($_POST, 'wp_kses_post'));
 
     return $result;
 }
